@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Grid } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
 import PlayerList from "../dashboard/PlayerList";
@@ -14,7 +14,9 @@ interface IProps {
   setSelectedPlayer: (player: IPlayer | null) => void;
   createPlayer: (player: IPlayer) => void;
   editPlayer: (player: IPlayer) => void;
-  deletePlayer: (id: number) => void;
+  deletePlayer: (event: SyntheticEvent<HTMLButtonElement>, id: number) => void;
+  submitting: boolean;
+  target: number;
 }
 
 const PlayerDashboard: React.FC<IProps> = ({
@@ -27,6 +29,8 @@ const PlayerDashboard: React.FC<IProps> = ({
   createPlayer,
   editPlayer,
   deletePlayer,
+  submitting,
+  target,
 }) => {
   return (
     <Grid>
@@ -35,6 +39,8 @@ const PlayerDashboard: React.FC<IProps> = ({
           players={players}
           selectPlayer={selectPlayer}
           deletePlayer={deletePlayer}
+          submitting={submitting}
+          target={target}
         />
       </Grid.Column>
       <Grid.Column width={6}>
@@ -52,6 +58,7 @@ const PlayerDashboard: React.FC<IProps> = ({
             player={selectedPlayer!}
             createPlayer={createPlayer}
             editPlayer={editPlayer}
+            submitting={submitting}
           />
         )}
       </Grid.Column>

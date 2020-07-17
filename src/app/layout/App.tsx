@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, SyntheticEvent } from "react";
 import { Container, Button, Grid, GridColumn } from "semantic-ui-react";
 import NavBar from "../../features/nav/NavBar";
 import PlayerDashboard from "../../features/players/dashboard/PlayerDashboard";
@@ -11,6 +11,8 @@ const App = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [target, setTarget] = useState(0);
 
   const handleSelectPlayer = (id: number) => {
     setSelectedPlayer(players.filter((p) => p.id === id)[0]);
@@ -23,29 +25,42 @@ const App = () => {
   };
 
   const handleCreatePlayer = (player: IPlayer) => {
-    agent.Players.create(player).then((id: number) => {
-      let createdPlayer = {
-        ...player,
-        id,
-      };
-      setPlayers([...players, createdPlayer]);
-      setSelectedPlayer(createdPlayer);
-      setEditMode(false);
-    });
+    setSubmitting(true);
+    agent.Players.create(player)
+      .then((id: number) => {
+        let createdPlayer = {
+          ...player,
+          id,
+        };
+        setPlayers([...players, createdPlayer]);
+        setSelectedPlayer(createdPlayer);
+        setEditMode(false);
+      })
+      .then(() => setSubmitting(false));
   };
 
   const handleEditPlayer = (player: IPlayer) => {
-    agent.Players.update(player).then(() => {
-      setPlayers([...players.filter((p) => p.id !== player.id), player]);
-      setSelectedPlayer(player);
-      setEditMode(false);
-    });
+    setSubmitting(true);
+    agent.Players.update(player)
+      .then(() => {
+        setPlayers([...players.filter((p) => p.id !== player.id), player]);
+        setSelectedPlayer(player);
+        setEditMode(false);
+      })
+      .then(() => setSubmitting(false));
   };
 
-  const handleDeletePlayer = (id: number) => {
-    agent.Players.delete(id).then(() => {
-      setPlayers([...players.filter((p) => p.id !== id)]);
-    });
+  const handleDeletePlayer = (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    setSubmitting(true);
+    setTarget(Number(event.currentTarget.name));
+    agent.Players.delete(id)
+      .then(() => {
+        setPlayers([...players.filter((p) => p.id !== id)]);
+      })
+      .then(() => setSubmitting(false));
   };
 
   useEffect(() => {
@@ -61,7 +76,7 @@ const App = () => {
       .then(() => setLoading(false));
   }, []);
 
-  if (loading) return <LoadingComponent />;
+  if (loading) return <LoadingComponent content="Loading players..." />;
 
   return (
     <>
@@ -89,6 +104,8 @@ const App = () => {
           createPlayer={handleCreatePlayer}
           editPlayer={handleEditPlayer}
           deletePlayer={handleDeletePlayer}
+          submitting={submitting}
+          target={target}
         />
       </Container>
     </>

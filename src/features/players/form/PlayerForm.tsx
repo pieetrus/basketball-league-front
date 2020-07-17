@@ -7,6 +7,7 @@ interface IProps {
   player: IPlayer;
   createPlayer: (player: IPlayer) => void;
   editPlayer: (player: IPlayer) => void;
+  submitting: boolean;
 }
 
 const PlayerForm: React.FC<IProps> = ({
@@ -14,6 +15,7 @@ const PlayerForm: React.FC<IProps> = ({
   player: initialFormState,
   createPlayer,
   editPlayer,
+  submitting,
 }) => {
   const initializeForm = () => {
     if (initialFormState) {
@@ -93,6 +95,7 @@ const PlayerForm: React.FC<IProps> = ({
           positive
           type="submit"
           content="Submit"
+          loading={submitting}
         />
         <Button
           onClick={() => setEditMode(false)}
