@@ -1,22 +1,21 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useContext } from "react";
 import { Item, Button, Segment, Label } from "semantic-ui-react";
-import { IPlayer } from "../../../app/models/player";
+import PlayerStore from "../../../app/stores/playerStore";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
-  players: IPlayer[];
-  selectPlayer: (id: number) => void;
   deletePlayer: (event: SyntheticEvent<HTMLButtonElement>, id: number) => void;
   target: number;
   submitting: boolean;
 }
 
 const ActivityList: React.FC<IProps> = ({
-  players,
-  selectPlayer,
   deletePlayer,
   submitting,
   target,
 }) => {
+  const playerStore = useContext(PlayerStore);
+  const { players, selectPlayer } = playerStore;
   return (
     <Segment clearing>
       <Item.Group divided>
@@ -57,4 +56,4 @@ const ActivityList: React.FC<IProps> = ({
   );
 };
 
-export default ActivityList;
+export default observer(ActivityList);

@@ -1,11 +1,12 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
+import { observer } from "mobx-react-lite";
+import PlayerStore from "../../../app/stores/playerStore";
 
 interface IProps {
   setEditMode: (editMode: boolean) => void;
   player: IPlayer;
-  createPlayer: (player: IPlayer) => void;
   editPlayer: (player: IPlayer) => void;
   submitting: boolean;
 }
@@ -13,10 +14,12 @@ interface IProps {
 const PlayerForm: React.FC<IProps> = ({
   setEditMode,
   player: initialFormState,
-  createPlayer,
   editPlayer,
   submitting,
 }) => {
+  const playerStore = useContext(PlayerStore);
+  const { createPlayer } = playerStore;
+
   const initializeForm = () => {
     if (initialFormState) {
       return initialFormState;
@@ -108,4 +111,4 @@ const PlayerForm: React.FC<IProps> = ({
   );
 };
 
-export default PlayerForm;
+export default observer(PlayerForm);
