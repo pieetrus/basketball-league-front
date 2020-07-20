@@ -1,21 +1,17 @@
-import React, { SyntheticEvent, useContext } from "react";
+import React, { useContext } from "react";
 import { Item, Button, Segment, Label } from "semantic-ui-react";
 import PlayerStore from "../../../app/stores/playerStore";
 import { observer } from "mobx-react-lite";
 
-interface IProps {
-  deletePlayer: (event: SyntheticEvent<HTMLButtonElement>, id: number) => void;
-  target: number;
-  submitting: boolean;
-}
-
-const ActivityList: React.FC<IProps> = ({
-  deletePlayer,
-  submitting,
-  target,
-}) => {
+const ActivityList: React.FC = () => {
   const playerStore = useContext(PlayerStore);
-  const { players, selectPlayer } = playerStore;
+  const {
+    playersBySurname: players,
+    selectPlayer,
+    deletePlayer,
+    submitting,
+    target,
+  } = playerStore;
   return (
     <Segment clearing>
       <Item.Group divided>

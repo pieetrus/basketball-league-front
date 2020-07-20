@@ -5,7 +5,11 @@ import PlayerStore from "../../../app/stores/playerStore";
 
 const PlayerDetails: React.FC = () => {
   const playerStore = useContext(PlayerStore);
-  const { selectedPlayer: player, selectPlayer } = playerStore;
+  const {
+    selectedPlayer: player,
+    openEditForm,
+    cancelSelectedPlayer,
+  } = playerStore;
   return (
     <Card fluid>
       <Image src="/assets/player-icon.png" wrapped ui={false} />
@@ -21,13 +25,13 @@ const PlayerDetails: React.FC = () => {
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => selectPlayer(0)}
+            onClick={() => openEditForm(player!.id)}
             basic
             color="blue"
             content="Edit"
           />
           <Button
-            onClick={() => selectPlayer(0)}
+            onClick={cancelSelectedPlayer}
             basic
             color="grey"
             content="Cancel"

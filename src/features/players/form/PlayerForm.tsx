@@ -5,20 +5,12 @@ import { observer } from "mobx-react-lite";
 import PlayerStore from "../../../app/stores/playerStore";
 
 interface IProps {
-  setEditMode: (editMode: boolean) => void;
   player: IPlayer;
-  editPlayer: (player: IPlayer) => void;
-  submitting: boolean;
 }
 
-const PlayerForm: React.FC<IProps> = ({
-  setEditMode,
-  player: initialFormState,
-  editPlayer,
-  submitting,
-}) => {
+const PlayerForm: React.FC<IProps> = ({ player: initialFormState }) => {
   const playerStore = useContext(PlayerStore);
-  const { createPlayer } = playerStore;
+  const { createPlayer, editPlayer, submitting, cancelOpenForm } = playerStore;
 
   const initializeForm = () => {
     if (initialFormState) {
@@ -101,7 +93,7 @@ const PlayerForm: React.FC<IProps> = ({
           loading={submitting}
         />
         <Button
-          onClick={() => setEditMode(false)}
+          onClick={cancelOpenForm}
           floated="right"
           type="submit"
           content="Cancel"
