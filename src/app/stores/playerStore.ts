@@ -7,10 +7,8 @@ configure({ enforceActions: "always" });
 
 class PlayerStore {
   @observable playersRegistry = new Map();
-  @observable players: IPlayer[] = [];
-  @observable selectedPlayer: IPlayer | undefined;
+  @observable player: IPlayer | null = null;
   @observable loadingInitial = false;
-  @observable editMode = false;
   @observable submitting = false;
   @observable target = 0;
 
@@ -41,9 +39,33 @@ class PlayerStore {
     }
   };
 
-  @action selectPlayer = (id: number) => {
-    this.selectedPlayer = this.playersRegistry.get(id);
-    this.editMode = false;
+  @action loadPlayer = async (id: number) => {
+    let player = this.getPlayer(id);
+    if (player) {
+      this.player = player;
+    } else {
+      this.loadingInitial = true;
+      try {
+        player = await agent.Players.details(id);
+        runInAction("loading player", () => {
+          this.player = player;
+          this.loadingInitial = false;
+        });
+      } catch (error) {
+        runInAction("load player error", () => {
+          this.loadingInitial = false;
+        });
+        console.log(error);
+      }
+    }
+  };
+
+  @action clearPlayer = () => {
+    this.player = null;
+  };
+
+  getPlayer = (id: number) => {
+    return this.playersRegistry.get(id);
   };
 
   @action createPlayer = async (player: IPlayer) => {
@@ -52,9 +74,9 @@ class PlayerStore {
       player.id = await agent.Players.create(player);
       runInAction("creating player", () => {
         this.playersRegistry.set(player.id, player);
-        this.editMode = false;
         this.submitting = false;
       });
+      return player.id;
     } catch (error) {
       runInAction("create player error", () => {
         this.submitting = false;
@@ -69,8 +91,7 @@ class PlayerStore {
       await agent.Players.update(player);
       runInAction("editing player", () => {
         this.playersRegistry.set(player.id, player);
-        this.selectedPlayer = player;
-        this.editMode = false;
+        this.player = player;
         this.submitting = false;
       });
     } catch (error) {
@@ -101,24 +122,6 @@ class PlayerStore {
       });
       console.log(error);
     }
-  };
-
-  @action openCreateForm = () => {
-    this.editMode = true;
-    this.selectedPlayer = undefined;
-  };
-
-  @action cancelSelectedPlayer = () => {
-    this.selectedPlayer = undefined;
-  };
-
-  @action cancelOpenForm = () => {
-    this.editMode = false;
-  };
-
-  @action openEditForm = (id: number) => {
-    this.editMode = true;
-    this.selectedPlayer = this.playersRegistry.get(id);
   };
 }
 

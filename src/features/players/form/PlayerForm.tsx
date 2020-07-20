@@ -1,33 +1,49 @@
-import React, { useState, FormEvent, useContext } from "react";
+import React, { useState, FormEvent, useContext, useEffect } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
 import PlayerStore from "../../../app/stores/playerStore";
+import { RouteComponentProps } from "react-router-dom";
 
-interface IProps {
-  player: IPlayer;
+interface DetailParams {
+  id: string;
 }
 
-const PlayerForm: React.FC<IProps> = ({ player: initialFormState }) => {
+const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
+  match,
+  history,
+}) => {
   const playerStore = useContext(PlayerStore);
-  const { createPlayer, editPlayer, submitting, cancelOpenForm } = playerStore;
 
-  const initializeForm = () => {
-    if (initialFormState) {
-      return initialFormState;
-    } else {
-      return {
-        id: 0,
-        name: "",
-        surname: "",
-        position: "",
-        birthdate: "",
-        height: "",
-      };
+  const {
+    createPlayer,
+    editPlayer,
+    submitting,
+    player: initialFormState,
+    loadPlayer,
+    clearPlayer,
+  } = playerStore;
+
+  const [player, setPlayer] = useState<IPlayer>({
+    id: 0,
+    name: "",
+    surname: "",
+    position: "",
+    birthdate: "",
+    height: "",
+  });
+
+  useEffect(() => {
+    if (match.params.id && player.id === 0) {
+      let playerId = Number.parseInt(match.params.id);
+      loadPlayer(playerId).then(
+        () => initialFormState && setPlayer(initialFormState)
+      );
     }
-  };
-
-  const [player, setPlayer] = useState<IPlayer>(initializeForm);
+    return () => {
+      clearPlayer();
+    };
+  }, [loadPlayer, clearPlayer, initialFormState, match.params.id, player.id]);
 
   const handleInputChange = (
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,9 +59,11 @@ const PlayerForm: React.FC<IProps> = ({ player: initialFormState }) => {
       let newPlayer = {
         ...player,
       };
-      createPlayer(newPlayer);
+      createPlayer(newPlayer).then((id) => history.push(`/players/${id}`));
     } else {
-      editPlayer(player);
+      editPlayer(player).then(() => {
+        history.push(`/players/${player.id}`);
+      });
     }
   };
 
@@ -58,7 +76,7 @@ const PlayerForm: React.FC<IProps> = ({ player: initialFormState }) => {
           placeholder="Name"
           value={player.name}
         />
-        <Form.TextArea
+        <Form.Input
           onChange={handleInputChange}
           name="surname"
           rows={2}
@@ -93,7 +111,7 @@ const PlayerForm: React.FC<IProps> = ({ player: initialFormState }) => {
           loading={submitting}
         />
         <Button
-          onClick={cancelOpenForm}
+          onClick={() => history.push("/players")}
           floated="right"
           type="submit"
           content="Cancel"

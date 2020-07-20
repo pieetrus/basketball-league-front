@@ -1,29 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import PlayerList from "../dashboard/PlayerList";
-import PlayerDetails from "../details/PlayerDetails";
-import PlayerForm from "../form/PlayerForm";
 import { observer } from "mobx-react-lite";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import PlayerStore from "../../../app/stores/playerStore";
 
 const PlayerDashboard: React.FC = () => {
   const playerStore = useContext(PlayerStore);
-  const { editMode, selectedPlayer } = playerStore;
+
+  useEffect(() => {
+    playerStore.loadPlayers();
+  }, [playerStore]);
+
+  if (playerStore.loadingInitial)
+    return <LoadingComponent content="Loading players..." />;
   return (
-    <Grid>
-      <Grid.Column width={10}>
-        <PlayerList />
-      </Grid.Column>
-      <Grid.Column width={6}>
-        {selectedPlayer && !editMode && <PlayerDetails />}
-        {editMode && (
-          <PlayerForm
-            key={(selectedPlayer && selectedPlayer.id) || 0}
-            player={selectedPlayer!}
-          />
-        )}
-      </Grid.Column>
-    </Grid>
+    <>
+      <Grid>
+        <Grid.Column width={10}>
+          <PlayerList />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <h2>Coś tu bydzie</h2>
+        </Grid.Column>
+      </Grid>
+    </>
   );
 };
 

@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { Item, Button, Segment, Label } from "semantic-ui-react";
 import PlayerStore from "../../../app/stores/playerStore";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
 
 const ActivityList: React.FC = () => {
   const playerStore = useContext(PlayerStore);
   const {
     playersBySurname: players,
-    selectPlayer,
     deletePlayer,
     submitting,
     target,
@@ -30,7 +30,8 @@ const ActivityList: React.FC = () => {
               </Item.Extra>
               <Item.Extra>
                 <Button
-                  onClick={() => selectPlayer(player.id)}
+                  as={Link}
+                  to={`/players/${player.id}`}
                   floated="right"
                   color="blue"
                   content="View"

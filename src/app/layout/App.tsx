@@ -1,42 +1,37 @@
-import React, { useEffect, useContext } from "react";
-import { Container, Button, Grid, GridColumn } from "semantic-ui-react";
+import React from "react";
+import { Container } from "semantic-ui-react";
 import NavBar from "../../features/nav/NavBar";
 import PlayerDashboard from "../../features/players/dashboard/PlayerDashboard";
-import LoadingComponent from "./LoadingComponent";
-import PlayerStore from "../stores/playerStore";
 import { observer } from "mobx-react-lite";
+import { Route, withRouter, RouteComponentProps } from "react-router-dom";
+import HomePage from "../../features/home/HomePage";
+import PlayerForm from "../../features/players/form/PlayerForm";
+import PlayerDetails from "../../features/players/details/PlayerDetails";
+import "mobx-react-lite/batchingForReactDom";
 
-const App = () => {
-  const playerStore = useContext(PlayerStore);
-  const { openCreateForm } = playerStore;
-
-  useEffect(() => {
-    playerStore.loadPlayers();
-  }, [playerStore]);
-
-  if (playerStore.loadingInitial)
-    return <LoadingComponent content="Loading players..." />;
-
+const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
     <>
-      <NavBar />
-      <Container style={{ marginTop: "7em" }}>
-        <Grid>
-          <GridColumn>
-            <Button
-              onClick={openCreateForm}
-              color="green"
-              content="Add Player"
-              size="large"
-            />
-          </GridColumn>
-        </Grid>
-      </Container>
-      <Container style={{ marginTop: "2em" }}>
-        <PlayerDashboard />
-      </Container>
+      <Route exact path="/" component={HomePage} />
+      <Route
+        path={"/(.+)"}
+        render={() => (
+          <>
+            <NavBar />
+            <Container style={{ marginTop: "7em" }}>
+              <Route exact path="/players" component={PlayerDashboard} />
+              <Route path="/players/:id" component={PlayerDetails} />
+              <Route
+                key={location.key}
+                path={["/createPlayer", "/manage/:id"]}
+                component={PlayerForm}
+              />
+            </Container>
+          </>
+        )}
+      />
     </>
   );
 };
 
-export default observer(App);
+export default withRouter(observer(App));

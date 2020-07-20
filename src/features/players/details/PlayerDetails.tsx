@@ -1,15 +1,28 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Card, Image, Button } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import PlayerStore from "../../../app/stores/playerStore";
+import { RouteComponentProps, Link } from "react-router-dom";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
-const PlayerDetails: React.FC = () => {
+interface DetailParams {
+  id: string;
+}
+
+const PlayerDetails: React.FC<RouteComponentProps<DetailParams>> = ({
+  match,
+  history,
+}) => {
   const playerStore = useContext(PlayerStore);
-  const {
-    selectedPlayer: player,
-    openEditForm,
-    cancelSelectedPlayer,
-  } = playerStore;
+  const { player, loadPlayer, loadingInitial } = playerStore;
+
+  useEffect(() => {
+    loadPlayer(Number.parseInt(match.params.id));
+  }, [loadPlayer, match.params.id]);
+
+  if (loadingInitial || !player)
+    return <LoadingComponent content="Loading player..." />;
+
   return (
     <Card fluid>
       <Image src="/assets/player-icon.png" wrapped ui={false} />
@@ -25,13 +38,14 @@ const PlayerDetails: React.FC = () => {
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => openEditForm(player!.id)}
+            as={Link}
+            to={`/manage/${player.id}`}
             basic
             color="blue"
             content="Edit"
           />
           <Button
-            onClick={cancelSelectedPlayer}
+            onClick={() => history.push("/players")}
             basic
             color="grey"
             content="Cancel"
