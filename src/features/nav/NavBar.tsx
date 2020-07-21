@@ -24,7 +24,7 @@ function NavBar() {
       <Menu.Menu position="right">
         <Menu.Item name="MANAGE" />
         <Menu.Item>
-          <img src="assets/player-icon.png" alt="logo" />
+          <img src="../assets/player-icon.png" alt="logo" />
         </Menu.Item>
       </Menu.Menu>
     </Menu>

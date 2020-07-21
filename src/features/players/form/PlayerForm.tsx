@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useContext, useEffect } from "react";
-import { Segment, Form, Button } from "semantic-ui-react";
+import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
 import PlayerStore from "../../../app/stores/playerStore";
@@ -68,56 +68,60 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
   };
 
   return (
-    <Segment clearing>
-      <Form>
-        <Form.Input
-          onChange={handleInputChange}
-          name="name"
-          placeholder="Name"
-          value={player.name}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="surname"
-          rows={2}
-          placeholder="Surname"
-          value={player.surname}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="birthdate"
-          type="date"
-          placeholder="Birthdate"
-          value={player.birthdate}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="position"
-          placeholder="Position"
-          value={player.position}
-        />
-        <Form.Input
-          onChange={handleInputChange}
-          name="height"
-          placeholder="Height"
-          value={player.height}
-        />
-        <Button
-          onClick={handleSubmit}
-          floated="right"
-          positive
-          type="submit"
-          content="Submit"
-          loading={submitting}
-        />
-        <Button
-          onClick={() => history.push("/players")}
-          floated="right"
-          type="submit"
-          content="Cancel"
-        />
-      </Form>
-    </Segment>
+    <Grid>
+      <Grid.Column width={10}>
+        <Segment clearing>
+          <Form>
+            <Form.Input
+              onChange={handleInputChange}
+              name="name"
+              placeholder="Name"
+              value={player.name}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="surname"
+              rows={2}
+              placeholder="Surname"
+              value={player.surname}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="birthdate"
+              type="date"
+              placeholder="Birthdate"
+              value={player.birthdate}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="position"
+              placeholder="Position"
+              value={player.position}
+            />
+            <Form.Input
+              onChange={handleInputChange}
+              name="height"
+              placeholder="Height"
+              value={player.height}
+            />
+            <Button
+              onClick={handleSubmit}
+              floated="right"
+              positive
+              type="submit"
+              content="Submit"
+              loading={submitting}
+            />
+            <Button
+              onClick={() => history.push("/players")}
+              floated="right"
+              type="submit"
+              content="Cancel"
+            />
+          </Form>
+        </Segment>
+      </Grid.Column>
+    </Grid>
   );
 };
 

@@ -13,11 +13,26 @@ class PlayerStore {
   @observable target = 0;
 
   @computed get playersBySurname() {
-    return Array.from(this.playersRegistry.values()).sort((a, b) => {
-      if (a.surname < b.surname) return -1;
-      if (a.surname > b.surname) return 1;
+    return this.groupPlayersBySurname(
+      Array.from(this.playersRegistry.values())
+    );
+  }
+
+  groupPlayersBySurname(players: IPlayer[]) {
+    const sortedPlayers = players.sort((a, b) => {
+      if (a.surname.toUpperCase() < b.surname.toUpperCase()) return -1;
+      if (a.surname.toUpperCase() > b.surname.toUpperCase()) return 1;
       return 0;
     });
+    return Object.entries(
+      sortedPlayers.reduce((players, player) => {
+        const firstLetter = player.surname.charAt(0).toUpperCase();
+        players[firstLetter] = players[firstLetter]
+          ? [...players[firstLetter], player]
+          : [player];
+        return players;
+      }, {} as { [key: string]: IPlayer[] })
+    );
   }
 
   @action loadPlayers = async () => {
@@ -31,6 +46,7 @@ class PlayerStore {
         });
         this.loadingInitial = false;
       });
+      console.log(this.groupPlayersBySurname(players));
     } catch (error) {
       runInAction("loading players error", () => {
         this.loadingInitial = false;
