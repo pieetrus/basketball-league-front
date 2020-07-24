@@ -46,7 +46,6 @@ class PlayerStore {
         });
         this.loadingInitial = false;
       });
-      console.log(this.groupPlayersBySurname(players));
     } catch (error) {
       runInAction("loading players error", () => {
         this.loadingInitial = false;

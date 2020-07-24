@@ -20,11 +20,16 @@ const PlayerDetails: React.FC<RouteComponentProps<DetailParams>> = ({
   const { player, loadPlayer, loadingInitial } = playerStore;
 
   useEffect(() => {
-    loadPlayer(Number.parseInt(match.params.id));
+    let id = Number(match.params.id);
+    if (isNaN(id)) {
+      id = -1;
+    }
+    loadPlayer(id);
   }, [loadPlayer, match.params.id]);
 
-  if (loadingInitial || !player)
-    return <LoadingComponent content="Loading player..." />;
+  if (loadingInitial) return <LoadingComponent content="Loading player..." />;
+
+  if (!player) return <h2>No player</h2>;
 
   return (
     <Grid>
