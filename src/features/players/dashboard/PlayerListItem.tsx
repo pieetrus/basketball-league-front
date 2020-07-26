@@ -3,6 +3,7 @@ import { Item, Button, Segment, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { IPlayer } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
+import { format } from "date-fns";
 
 const PlayerListItem: React.FC<{ player: IPlayer }> = ({ player }) => {
   return (
@@ -21,7 +22,7 @@ const PlayerListItem: React.FC<{ player: IPlayer }> = ({ player }) => {
         </Item.Group>
       </Segment>
       <Segment>
-        <Icon name="clock" /> {player.birthdate}
+        <Icon name="clock" /> {format(player.birthdate!, "d.MM.yyyy")}
         <Icon name="marker" /> {player.position}
       </Segment>
       <Segment secondary>Attentees will go here</Segment>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Segment, Grid, Icon } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
-
+import { format } from "date-fns";
 const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
   return (
     <Segment.Group>
@@ -21,7 +21,7 @@ const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
             <Icon name="calendar" size="large" color="teal" />
           </Grid.Column>
           <Grid.Column width={15}>
-            <span>{player.birthdate}</span>
+            <span>{format(player.birthdate!, "d.MM.yyyy")}</span>
           </Grid.Column>
         </Grid>
       </Segment>

@@ -1,6 +1,8 @@
 import React from "react";
 import { Segment, Image, Item, Header, Button } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const activityImageStyle = {
   filter: "brightness(30%)",
@@ -29,7 +31,7 @@ const PlayerDetailedHeader: React.FC<{ player: IPlayer }> = ({ player }) => {
                   content={player.name + " " + player.surname}
                   style={{ color: "white" }}
                 />
-                <p>{player.birthdate.split("T")[0]}</p>
+                <p>{format(player.birthdate!, "d.MM.yyyy")}</p>
                 <p>{player.position}</p>
               </Item.Content>
             </Item>
@@ -39,8 +41,13 @@ const PlayerDetailedHeader: React.FC<{ player: IPlayer }> = ({ player }) => {
       <Segment clearing attached="bottom">
         <Button color="teal">Join Activity</Button>
         <Button>Cancel attendance</Button>
-        <Button color="orange" floated="right">
-          Manage Event
+        <Button
+          as={Link}
+          to={`/manage/${player.id}`}
+          color="orange"
+          floated="right"
+        >
+          Manage Player
         </Button>
       </Segment>
     </Segment.Group>

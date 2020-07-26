@@ -22,10 +22,10 @@ axios.interceptors.response.use(undefined, (error) => {
   ) {
     history.push("notfound");
   }
-
   if (status === 500) {
     toast.error("Server error - check the terimnal for more info!");
   }
+  throw error;
 });
 
 const responseBody = (response: AxiosResponse) => response.data;

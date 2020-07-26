@@ -2,6 +2,7 @@ import { observable, action, computed, configure, runInAction } from "mobx";
 import { createContext, SyntheticEvent } from "react";
 import { IPlayer } from "../models/player";
 import agent from "../api/agent";
+import { toast } from "react-toastify";
 
 configure({ enforceActions: "always" });
 
@@ -41,7 +42,7 @@ class PlayerStore {
       const players = await agent.Players.list();
       runInAction("loading players", () => {
         players.forEach((player) => {
-          player.birthdate = player.birthdate.split("T")[0];
+          player.birthdate = new Date(player.birthdate!);
           this.playersRegistry.set(player.id, player);
         });
         this.loadingInitial = false;
@@ -58,14 +59,17 @@ class PlayerStore {
     let player = this.getPlayer(id);
     if (player) {
       this.player = player;
+      return player;
     } else {
       this.loadingInitial = true;
       try {
         player = await agent.Players.details(id);
         runInAction("loading player", () => {
+          player.birthdate = new Date(player.birthdate!);
           this.player = player;
           this.loadingInitial = false;
         });
+        return player;
       } catch (error) {
         runInAction("load player error", () => {
           this.loadingInitial = false;
@@ -96,7 +100,8 @@ class PlayerStore {
       runInAction("create player error", () => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error("Problem submitting data");
+      console.log(error.response);
     }
   };
 
@@ -113,7 +118,8 @@ class PlayerStore {
       runInAction("editing player error", () => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error("Problem submitting data");
+      console.log(error.response);
     }
   };
 

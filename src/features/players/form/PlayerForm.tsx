@@ -1,9 +1,23 @@
-import React, { useState, FormEvent, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
-import { IPlayer } from "../../../app/models/player";
+import { IPlayer, PlayerFormValues } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
 import PlayerStore from "../../../app/stores/playerStore";
 import { RouteComponentProps } from "react-router-dom";
+import { Form as FinalForm, Field } from "react-final-form";
+import TextInput from "../../../app/common/form/TextInput";
+import TextArea from "../../../app/common/form/TextArea";
+import SelectInput from "../../../app/common/form/SelectInput";
+import { position } from "../../../app/common/options/positionOptions";
+import DateInput from "../../../app/common/form/DateInput";
+import { combineValidators, isRequired } from "revalidate";
+
+const validate = combineValidators({
+  name: isRequired({ message: "Name is required" }),
+  surname: isRequired({ message: "Surname is required" }),
+  position: isRequired({ message: "Position is required" }),
+  height: isRequired({ message: "Height is required" }),
+});
 
 interface DetailParams {
   id: string;
@@ -15,48 +29,26 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
 }) => {
   const playerStore = useContext(PlayerStore);
 
-  const {
-    createPlayer,
-    editPlayer,
-    submitting,
-    player: initialFormState,
-    loadPlayer,
-    clearPlayer,
-  } = playerStore;
+  const { createPlayer, editPlayer, submitting, loadPlayer } = playerStore;
 
-  const [player, setPlayer] = useState<IPlayer>({
-    id: 0,
-    name: "",
-    surname: "",
-    position: "",
-    birthdate: "",
-    height: "",
-  });
+  const [player, setPlayer] = useState(new PlayerFormValues());
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (match.params.id && player.id === 0) {
+    if (match.params.id) {
+      setLoading(true);
       let playerId = Number.parseInt(match.params.id);
-      loadPlayer(playerId).then(
-        () => initialFormState && setPlayer(initialFormState)
-      );
+      loadPlayer(playerId)
+        .then((player) => setPlayer(new PlayerFormValues(player)))
+        .finally(() => setLoading(false));
     }
-    return () => {
-      clearPlayer();
-    };
-  }, [loadPlayer, clearPlayer, initialFormState, match.params.id, player.id]);
+  }, [loadPlayer, match.params.id]);
 
-  const handleInputChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPlayer({
-      ...player,
-      [event.currentTarget.name]: event.currentTarget.value,
-    });
-  };
-
-  const handleSubmit = () => {
-    if (player.id === 0) {
-      let newPlayer = {
+  const handleFinalFormSubmit = (values: any) => {
+    const { ...player } = values;
+    console.log(player);
+    if (!player.id) {
+      let newPlayer: IPlayer = {
         ...player,
       };
       createPlayer(newPlayer).then((id) => history.push(`/players/${id}`));
@@ -71,54 +63,68 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
     <Grid>
       <Grid.Column width={10}>
         <Segment clearing>
-          <Form>
-            <Form.Input
-              onChange={handleInputChange}
-              name="name"
-              placeholder="Name"
-              value={player.name}
-            />
-            <Form.Input
-              onChange={handleInputChange}
-              name="surname"
-              rows={2}
-              placeholder="Surname"
-              value={player.surname}
-            />
-            <Form.Input
-              onChange={handleInputChange}
-              name="birthdate"
-              type="date"
-              placeholder="Birthdate"
-              value={player.birthdate}
-            />
-            <Form.Input
-              onChange={handleInputChange}
-              name="position"
-              placeholder="Position"
-              value={player.position}
-            />
-            <Form.Input
-              onChange={handleInputChange}
-              name="height"
-              placeholder="Height"
-              value={player.height}
-            />
-            <Button
-              onClick={handleSubmit}
-              floated="right"
-              positive
-              type="submit"
-              content="Submit"
-              loading={submitting}
-            />
-            <Button
-              onClick={() => history.push("/players")}
-              floated="right"
-              type="submit"
-              content="Cancel"
-            />
-          </Form>
+          <FinalForm
+            validate={validate}
+            initialValues={player}
+            onSubmit={handleFinalFormSubmit}
+            render={({ handleSubmit, invalid, pristine }) => (
+              <Form loading={loading}>
+                <Field
+                  name="name"
+                  placeholder="Name"
+                  value={player.name}
+                  component={TextInput}
+                />
+                <Field
+                  name="surname"
+                  placeholder="Surname"
+                  value={player.surname}
+                  component={TextArea}
+                  rows={2}
+                />
+                <Field
+                  name="birthdate"
+                  placeholder="Birthdate"
+                  value={player.birthdate!}
+                  date={true}
+                  component={DateInput}
+                />
+                <Field
+                  name="position"
+                  placeholder="Position"
+                  value={player.position}
+                  component={SelectInput}
+                  options={position}
+                />
+                <Field
+                  name="height"
+                  placeholder="Height"
+                  value={player.height}
+                  component={TextInput}
+                />
+                <Button
+                  onClick={() => handleSubmit()}
+                  disabled={loading || invalid || pristine}
+                  floated="right"
+                  positive
+                  type="submit"
+                  content="Submit"
+                  loading={submitting}
+                />
+                <Button
+                  onClick={
+                    player.id
+                      ? () => history.push(`/players/${player.id}`)
+                      : () => history.push("/players")
+                  }
+                  disabled={loading}
+                  floated="right"
+                  type="submit"
+                  content="Cancel"
+                />
+              </Form>
+            )}
+          />
         </Segment>
       </Grid.Column>
     </Grid>
