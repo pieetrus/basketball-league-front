@@ -1,8 +1,11 @@
-import React from "react";
-import { Menu } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { Menu, Dropdown, Image } from "semantic-ui-react";
+import { NavLink, Link } from "react-router-dom";
+import { RootStoreContext } from "../../app/stores/rootStore";
 
 function NavBar() {
+  const rootStore = useContext(RootStoreContext);
+  const { user, logout } = rootStore.userStore;
   return (
     <Menu fixed="top" inverted>
       <Menu.Item header as={NavLink} exact to="/">
@@ -21,12 +24,34 @@ function NavBar() {
       <Menu.Item name="TABLES" />
       <Menu.Item name="STATS" />
       <Menu.Item name="CONTACT" />
-      <Menu.Menu position="right">
+      {/* <Menu.Menu position="right">
         <Menu.Item name="MANAGE" />
         <Menu.Item>
           <img src="../assets/player-icon.png" alt="logo" />
         </Menu.Item>
-      </Menu.Menu>
+      </Menu.Menu> */}
+      {user && (
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Image
+              avatar
+              spaced="right"
+              src={user.image || "../assets/player-icon.png"}
+            />
+            <Dropdown pointing="top" text={user.displayName}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  as={Link}
+                  to={`/profile/username`}
+                  text="My profile"
+                  icon="user"
+                />
+                <Dropdown.Item onClick={logout} text="Logout" icon="power" />
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Item>
+        </Menu.Menu>
+      )}
     </Menu>
   );
 }

@@ -15,6 +15,7 @@ import PlayerDetails from "../../features/players/details/PlayerDetails";
 import "mobx-react-lite/batchingForReactDom";
 import NotFound from "./NotFound";
 import { ToastContainer } from "react-toastify";
+import LoginForm from "../../features/user/LoginForm";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
@@ -35,6 +36,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                   path={["/createPlayer", "/manage/:id"]}
                   component={PlayerForm}
                 />
+                <Route path="/login" component={LoginForm} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
