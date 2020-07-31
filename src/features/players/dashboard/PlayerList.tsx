@@ -1,12 +1,12 @@
 import React, { useContext, Fragment } from "react";
 import { Item, Segment, Label } from "semantic-ui-react";
-import PlayerStore from "../../../app/stores/playerStore";
 import { observer } from "mobx-react-lite";
 import PlayerListItem from "./PlayerListItem";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const ActivityList: React.FC = () => {
-  const playerStore = useContext(PlayerStore);
-  const { playersBySurname } = playerStore;
+  const rootStore = useContext(RootStoreContext);
+  const { playersBySurname } = rootStore.playerStore;
   return (
     <Fragment>
       {playersBySurname.map(([group, players]) => (

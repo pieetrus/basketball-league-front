@@ -3,17 +3,17 @@ import { Grid } from "semantic-ui-react";
 import PlayerList from "../dashboard/PlayerList";
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import PlayerStore from "../../../app/stores/playerStore";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const PlayerDashboard: React.FC = () => {
-  const playerStore = useContext(PlayerStore);
+  const rootStore = useContext(RootStoreContext);
+  const { loadPlayers, loadingInitial } = rootStore.playerStore;
 
   useEffect(() => {
-    playerStore.loadPlayers();
-  }, [playerStore]);
+    loadPlayers();
+  }, [loadPlayers]);
 
-  if (playerStore.loadingInitial)
-    return <LoadingComponent content="Loading players..." />;
+  if (loadingInitial) return <LoadingComponent content="Loading players..." />;
   return (
     <>
       <Grid>

@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { Grid, GridColumn } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
-import PlayerStore from "../../../app/stores/playerStore";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import PlayerDetailedHeader from "./PlayerDetailedHeader";
 import PlayerDetailedInfo from "./PlayerDetailedInfo";
 import PlayerDetailedChat from "./PlayerDetailedChat";
 import PlayerDetailedSideBar from "./PlayerDetailedSideBar";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 interface DetailParams {
   id: string;
@@ -16,8 +16,8 @@ interface DetailParams {
 const PlayerDetails: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
 }) => {
-  const playerStore = useContext(PlayerStore);
-  const { player, loadPlayer, loadingInitial } = playerStore;
+  const rootStore = useContext(RootStoreContext);
+  const { player, loadPlayer, loadingInitial } = rootStore.playerStore;
 
   useEffect(() => {
     let id = Number(match.params.id);

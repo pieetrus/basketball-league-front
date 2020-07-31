@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IPlayer, PlayerFormValues } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
-import PlayerStore from "../../../app/stores/playerStore";
 import { RouteComponentProps } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
 import TextInput from "../../../app/common/form/TextInput";
@@ -11,6 +10,7 @@ import SelectInput from "../../../app/common/form/SelectInput";
 import { position } from "../../../app/common/options/positionOptions";
 import DateInput from "../../../app/common/form/DateInput";
 import { combineValidators, isRequired } from "revalidate";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const validate = combineValidators({
   name: isRequired({ message: "Name is required" }),
@@ -27,9 +27,14 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
   history,
 }) => {
-  const playerStore = useContext(PlayerStore);
+  const rootStore = useContext(RootStoreContext);
 
-  const { createPlayer, editPlayer, submitting, loadPlayer } = playerStore;
+  const {
+    createPlayer,
+    editPlayer,
+    submitting,
+    loadPlayer,
+  } = rootStore.playerStore;
 
   const [player, setPlayer] = useState(new PlayerFormValues());
   const [loading, setLoading] = useState(false);

@@ -1,12 +1,19 @@
 import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 import { IPlayer } from "../models/player";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
+import { RootStore } from "./rootStore";
 
 configure({ enforceActions: "always" });
 
-class PlayerStore {
+export default class PlayerStore {
+  rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable playersRegistry = new Map();
   @observable player: IPlayer | null = null;
   @observable loadingInitial = false;
@@ -145,5 +152,3 @@ class PlayerStore {
     }
   };
 }
-
-export default createContext(new PlayerStore());
