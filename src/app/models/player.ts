@@ -1,3 +1,5 @@
+import { ITeam } from "./team";
+
 export interface IPlayer {
   id?: number;
   name: string;
@@ -5,6 +7,7 @@ export interface IPlayer {
   position: string;
   birthdate: Date | null;
   height: string;
+  teams?: ITeam[];
 }
 
 export class PlayerFormValues implements IPlayer {

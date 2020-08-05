@@ -51,7 +51,6 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
 
   const handleFinalFormSubmit = (values: any) => {
     const { ...player } = values;
-    console.log(player);
     if (!player.id) {
       let newPlayer: IPlayer = {
         ...player,
