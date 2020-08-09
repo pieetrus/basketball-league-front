@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction } from "mobx";
+import { observable, action, computed, runInAction, reaction } from "mobx";
 import { SyntheticEvent } from "react";
 import { IPlayer } from "../models/player";
 import agent from "../api/agent";
@@ -10,6 +10,14 @@ export default class PlayerStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+
+    reaction(
+      () => this.predicate.keys(),
+      () => {
+        this.playersRegistry.clear();
+        this.loadPlayers();
+      }
+    );
   }
 
   @observable playersRegistry = new Map();
@@ -17,6 +25,20 @@ export default class PlayerStore {
   @observable loadingInitial = false;
   @observable submitting = false;
   @observable target = 0;
+  @observable predicate = new Map();
+
+  @action setPredicate = (predicate: string, value: string) => {
+    this.predicate.clear();
+    this.predicate.set(predicate, value);
+  };
+
+  @computed get axiosParams() {
+    const params = new URLSearchParams();
+    this.predicate.forEach((value, key) => {
+      params.append(key, value);
+    });
+    return params;
+  }
 
   @computed get playersBySurname() {
     return this.groupPlayersBySurname(
@@ -44,7 +66,7 @@ export default class PlayerStore {
   @action loadPlayers = async () => {
     this.loadingInitial = true;
     try {
-      const players = await agent.Players.list();
+      const players = await agent.Players.list(this.axiosParams);
       runInAction("loading players", () => {
         players.forEach((player) => {
           player.birthdate = new Date(player.birthdate!);

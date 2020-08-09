@@ -1,42 +1,35 @@
-import React from "react";
-import { Item, Button, Segment, Icon } from "semantic-ui-react";
+import React, { Fragment } from "react";
+import { Item, Button, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { IPlayer } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
-import { format } from "date-fns";
 
 const PlayerListItem: React.FC<{ player: IPlayer }> = ({ player }) => {
   return (
-    <Segment.Group>
-      <Segment>
-        <Item.Group>
-          <Item>
-            <Item.Image size="tiny" circular src="../assets/user-icon2.png" />
-            <Item.Content>
-              <Item.Header as="a">
-                {player.name} {player.surname}
-              </Item.Header>
-              <Item.Description>Hosted by Bob</Item.Description>
+    <>
+      <Item.Group>
+        <Item>
+          <Item.Content>
+            <Item.Image
+              style={{ marginRight: "30px" }}
+              size="tiny"
+              circular
+              src="../assets/user-icon2.png"
+            />
+            <Item.Content
+              style={{
+                fontSize: "20px",
+                color: "black",
+              }}
+              as={Link}
+              to={`/players/${player.id}`}
+            >
+              {player.name} {player.surname}
             </Item.Content>
-          </Item>
-        </Item.Group>
-      </Segment>
-      <Segment>
-        <Icon name="clock" /> {format(player.birthdate!, "d.MM.yyyy")}
-        <Icon name="marker" /> {player.position}
-      </Segment>
-      <Segment secondary>Attentees will go here</Segment>
-      <Segment clearing>
-        <span>{player.height} cm</span>
-        <Button
-          as={Link}
-          to={`/players/${player.id}`}
-          floated="right"
-          color="blue"
-          content="View"
-        />
-      </Segment>
-    </Segment.Group>
+          </Item.Content>
+        </Item>
+      </Item.Group>
+    </>
   );
 };
 

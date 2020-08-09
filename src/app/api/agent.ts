@@ -67,7 +67,11 @@ const request = {
 };
 
 const Players = {
-  list: (): Promise<IPlayer[]> => request.get("/player"),
+  list: (params: URLSearchParams): Promise<IPlayer[]> =>
+    axios
+      .get("/player", { params: params })
+      .then(sleep(1000))
+      .then(responseBody),
   details: (id: number): Promise<IPlayer> => request.get(`/player/${id}`),
   create: (player: IPlayer) => request.post("/player", player),
   update: (player: IPlayer) => request.put(`/player/${player.id}`, player),
