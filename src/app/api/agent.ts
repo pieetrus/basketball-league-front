@@ -4,6 +4,10 @@ import { history } from "../..";
 import { toast } from "react-toastify";
 import { IUser, IUserFormValues } from "../models/user";
 import { IProfile, IPhoto } from "../models/profile";
+import { ITeam } from "../models/team";
+import { IDivision } from "../models/division";
+import { IMatch } from "../models/match";
+import { IMatchDetailed } from "../models/matchDetailed";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -78,6 +82,32 @@ const Players = {
   delete: (id: number) => request.del(`/player/${id}`),
 };
 
+const Teams = {
+  list: (): Promise<ITeam[]> => request.get(`/team`),
+  details: (id: number): Promise<ITeam> => request.get(`/team/${id}`),
+  create: (team: ITeam) => request.post("/team", team),
+  update: (team: ITeam) => request.put(`/team/${team.id}`, team),
+  delete: (id: number) => request.del(`/team/${id}`),
+};
+
+const Divisions = {
+  list: (): Promise<IDivision[]> => request.get(`/division`),
+  details: (id: number): Promise<IDivision> => request.get(`/division/${id}`),
+  create: (division: IDivision) => request.post("/division", division),
+  update: (division: IDivision) =>
+    request.put(`/division/${division.id}`, division),
+  delete: (id: number) => request.del(`/division/${id}`),
+};
+
+const Matches = {
+  list: (): Promise<IMatch[]> => request.get(`/match`),
+  listDetailed: (): Promise<IMatchDetailed[]> => request.get(`/match/detailed`),
+  details: (id: number): Promise<IMatch> => request.get(`/match/${id}`),
+  create: (match: IMatch) => request.post("/match", match),
+  update: (match: IMatch) => request.put(`/match/${match.id}`, match),
+  delete: (id: number) => request.del(`/match/${id}`),
+};
+
 const User = {
   current: (): Promise<IUser> => request.get("/user"),
   login: (user: IUserFormValues): Promise<IUser> =>
@@ -97,6 +127,9 @@ const Profiles = {
 
 export default {
   Players,
+  Teams,
   User,
   Profiles,
+  Divisions,
+  Matches,
 };

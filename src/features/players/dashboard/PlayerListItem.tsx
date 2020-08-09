@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { Item, Button, Segment } from "semantic-ui-react";
+import React from "react";
+import { Item } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { IPlayer } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";

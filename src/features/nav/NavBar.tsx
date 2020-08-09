@@ -17,6 +17,7 @@ function NavBar() {
         />
         DALK
       </Menu.Item>
+      <Menu.Item name="STATS_PROGRAM" as={NavLink} to="/statsProgram" />
       <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
       <Menu.Item name="CREATE PLAYER" as={NavLink} to="/createPlayer" />
       <Menu.Item name="NEWS" />

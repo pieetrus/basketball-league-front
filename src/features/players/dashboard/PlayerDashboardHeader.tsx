@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 
 const PlayerDashboardHeader = () => {
   const rootStore = useContext(RootStoreContext);
-  const { setPredicate, predicate } = rootStore.playerStore;
+  const { setPredicate } = rootStore.playerStore;
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""); // 30 bytes
   return (
     <>
