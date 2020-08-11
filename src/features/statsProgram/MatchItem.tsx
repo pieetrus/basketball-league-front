@@ -1,20 +1,19 @@
-import React from "react";
-import {
-  Segment,
-  Item,
-  Button,
-  ItemDescription,
-  ItemExtra,
-  ItemMeta,
-} from "semantic-ui-react";
-import { IMatch } from "../../app/models/match";
+import React, { useContext } from "react";
+import { Segment, Item, Button } from "semantic-ui-react";
 import { IMatchDetailed } from "../../app/models/matchDetailed";
+import { RootStoreContext } from "../../app/stores/rootStore";
+import ChooseJerseysAndSquad from "./ChooseJerseysAndSquad";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   match: IMatchDetailed;
 }
 
 const MatchItem: React.FC<IProps> = ({ match }) => {
+  const rootStore = useContext(RootStoreContext);
+  const { openModal } = rootStore.modalStore;
+  const { setSelectedMatch, loading } = rootStore.matchStore;
+
   return (
     <Segment.Group horizontal>
       <Segment>
@@ -32,10 +31,17 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
         {match.startDate?.toString().split("T")[1]}
       </Segment>
       <Segment secondary>
-        <Button content="Go to match" />
+        <Button
+          content="Go to match"
+          onClick={() => {
+            setSelectedMatch(match.id!).then(() =>
+              openModal(<ChooseJerseysAndSquad />)
+            );
+          }}
+        />
       </Segment>
     </Segment.Group>
   );
 };
 
-export default MatchItem;
+export default observer(MatchItem);

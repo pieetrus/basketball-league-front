@@ -15,10 +15,12 @@ export default class MatchStore {
   @observable matches: IMatch[] | null = null;
   @observable matchesDetailed: IMatchDetailed[] | null = null;
   @observable loadingInitial = false;
+  @observable loading = false;
   @observable startDate = "";
   @observable division = null;
   @observable submitting = false;
   @observable target = 0;
+  @observable selectedMatch: IMatchDetailed | null = null;
 
   @action loadMatches = async () => {
     this.loadingInitial = true;
@@ -65,8 +67,22 @@ export default class MatchStore {
       runInAction("create player error", () => {
         this.submitting = false;
       });
-      toast.error("Problem submitting data");
+      toast.error("problem submitting data");
       console.log(error.response);
+    }
+  };
+
+  @action setSelectedMatch = async (id: number) => {
+    this.loading = true;
+    try {
+      let match = await agent.Matches.details(id);
+      runInAction("loading match detailed", () => {
+        this.selectedMatch = match;
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      this.loading = false;
     }
   };
 }
