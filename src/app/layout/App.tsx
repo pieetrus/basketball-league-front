@@ -21,6 +21,10 @@ import LoadingComponent from "./LoadingComponent";
 import ModalContainer from "../common/modals/ModalContainer";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import StatsProgramDashboard from "../../features/statsProgram/StatsProgramDashboard";
+import ManagerDashboard from "../../features/manager/ManagerDashboard";
+import TeamDashboard from "../../features/teams/dashboard/TeamDashboard";
+import TeamForm from "../../features/teams/form/TeamForm";
+import TeamDetails from "../../features/teams/details/TeamDetails";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   const rootStore = useContext(RootStoreContext);
@@ -50,15 +54,23 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
             <Container style={{ marginTop: "7em" }}>
               <Switch>
                 <Route exact path="/players" component={PlayerDashboard} />
+                <Route exact path="/teams" component={TeamDashboard} />
                 <Route path="/players/:id" component={PlayerDetails} />
+                <Route path="/teams/:id" component={TeamDetails} />
                 <Route
                   key={location.key}
-                  path={["/createPlayer", "/manage/:id"]}
+                  path={["/manager/createPlayer", "/manager/player/:id"]}
                   component={PlayerForm}
+                />
+                <Route
+                  key={location.key}
+                  path={["/manager/createTeam", "/manager/team/:id"]}
+                  component={TeamForm}
                 />
                 <Route path="/profile/:username" component={ProfilePage} />
                 <Route path="/login" component={LoginForm} />
                 <Route path="/statsProgram" component={StatsProgramDashboard} />
+                <Route path="/manager" component={ManagerDashboard} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

@@ -7,7 +7,7 @@ import { IProfile, IPhoto } from "../models/profile";
 import { ITeam } from "../models/team";
 import { IDivision } from "../models/division";
 import { IMatch } from "../models/match";
-import { IMatchDetailed } from "../models/matchDetailed";
+import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -88,6 +88,8 @@ const Teams = {
   create: (team: ITeam) => request.post("/team", team),
   update: (team: ITeam) => request.put(`/team/${team.id}`, team),
   delete: (id: number) => request.del(`/team/${id}`),
+  uploadLogo: (photo: Blob, teamId: number): Promise<IPhoto> =>
+    request.postForm(`photo/team/${teamId}`, photo),
 };
 
 const Divisions = {
@@ -103,6 +105,8 @@ const Matches = {
   list: (): Promise<IMatch[]> => request.get(`/match`),
   listDetailed: (): Promise<IMatchDetailed[]> => request.get(`/match/detailed`),
   details: (id: number): Promise<IMatchDetailed> => request.get(`/match/${id}`),
+  detailsDetailed: (id: number): Promise<IMatchDetailedSquads> =>
+    request.get(`/match/detailed/${id}`),
   create: (match: IMatch) => request.post("/match", match),
   update: (match: IMatch) => request.put(`/match/${match.id}`, match),
   delete: (id: number) => request.del(`/match/${id}`),

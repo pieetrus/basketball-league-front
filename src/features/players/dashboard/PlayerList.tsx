@@ -5,7 +5,7 @@ import PlayerListItem from "./PlayerListItem";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import PlayerDashboardHeader from "./PlayerDashboardHeader";
 
-const ActivityList: React.FC = () => {
+const PlayerList: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { playersBySurname } = rootStore.playerStore;
 
@@ -23,4 +23,4 @@ const ActivityList: React.FC = () => {
   );
 };
 
-export default observer(ActivityList);
+export default observer(PlayerList);

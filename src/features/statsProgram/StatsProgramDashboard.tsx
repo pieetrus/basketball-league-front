@@ -7,7 +7,7 @@ import ScheduledGames from "./ScheduledGames";
 
 const StatsProgramDashboard = () => {
   const rootStore = useContext(RootStoreContext);
-  const { openModal } = rootStore.modalStore;
+  const { openModal, setDefaultModalSize } = rootStore.modalStore;
   const { loadTeams } = rootStore.teamStore;
   const { loadDivisions } = rootStore.divisionStore;
   const { loadMatches, loadMatchesDetailed } = rootStore.matchStore;
@@ -25,7 +25,10 @@ const StatsProgramDashboard = () => {
         content="New game"
         color="blue"
         positive
-        onClick={() => openModal(<GameInformation />)}
+        onClick={() => {
+          openModal(<GameInformation />);
+          setDefaultModalSize();
+        }}
       />
       <ScheduledGames />
     </div>

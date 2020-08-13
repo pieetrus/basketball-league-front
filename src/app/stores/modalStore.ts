@@ -7,6 +7,9 @@ export default class ModalStore {
     this.rootStore = rootStore;
   }
 
+  @observable
+  size: "small" | "mini" | "tiny" | "large" | "fullscreen" | undefined = "tiny";
+
   @observable.shallow modal = {
     open: false,
     body: null,
@@ -20,5 +23,15 @@ export default class ModalStore {
   @action closeModal = () => {
     this.modal.open = false;
     this.modal.body = null;
+  };
+
+  @action setModalSize = (
+    size: "small" | "mini" | "tiny" | "large" | "fullscreen" | undefined
+  ) => {
+    this.size = size;
+  };
+
+  @action setDefaultModalSize = () => {
+    this.size = "tiny";
   };
 }

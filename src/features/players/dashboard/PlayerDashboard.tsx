@@ -14,18 +14,7 @@ const PlayerDashboard: React.FC = () => {
   }, [loadPlayers]);
 
   if (loadingInitial) return <LoadingComponent content="Loading players..." />;
-  return (
-    <>
-      <Grid>
-        <Grid.Column width={10}>
-          <PlayerList />
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <h2>Coś tu bydzie</h2>
-        </Grid.Column>
-      </Grid>
-    </>
-  );
+  return <PlayerList />;
 };
 
 export default observer(PlayerDashboard);

@@ -19,10 +19,10 @@ function NavBar() {
       </Menu.Item>
       <Menu.Item name="STATS_PROGRAM" as={NavLink} to="/statsProgram" />
       <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
-      <Menu.Item name="CREATE PLAYER" as={NavLink} to="/createPlayer" />
+      <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
+      <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
       <Menu.Item name="NEWS" />
       <Menu.Item name="SCHEDULE" />
-      <Menu.Item name="TEAMS" />
       <Menu.Item name="TABLES" />
       <Menu.Item name="STATS" />
       <Menu.Item name="CONTACT" />

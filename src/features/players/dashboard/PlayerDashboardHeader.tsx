@@ -20,6 +20,13 @@ const PlayerDashboardHeader = () => {
           {letter}
         </Label>
       ))}
+      <Label
+        content="Show all"
+        size="tiny"
+        color="blue"
+        onClick={() => setPredicate("all")}
+        style={{ cursor: "pointer" }}
+      />
     </>
   );
 };

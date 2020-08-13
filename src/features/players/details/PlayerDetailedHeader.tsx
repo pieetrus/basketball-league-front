@@ -43,7 +43,7 @@ const PlayerDetailedHeader: React.FC<{ player: IPlayer }> = ({ player }) => {
         <Button>Cancel attendance</Button>
         <Button
           as={Link}
-          to={`/manage/${player.id}`}
+          to={`/manager/player/${player.id}`}
           color="orange"
           floated="right"
         >

@@ -3,7 +3,7 @@ import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { IMatch } from "../models/match";
 import { toast } from "react-toastify";
-import { IMatchDetailed } from "../models/matchDetailed";
+import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 
 export default class MatchStore {
   rootStore: RootStore;
@@ -20,7 +20,7 @@ export default class MatchStore {
   @observable division = null;
   @observable submitting = false;
   @observable target = 0;
-  @observable selectedMatch: IMatchDetailed | null = null;
+  @observable selectedMatch: IMatchDetailedSquads | null = null;
 
   @action loadMatches = async () => {
     this.loadingInitial = true;
@@ -75,7 +75,7 @@ export default class MatchStore {
   @action setSelectedMatch = async (id: number) => {
     this.loading = true;
     try {
-      let match = await agent.Matches.details(id);
+      let match = await agent.Matches.detailsDetailed(id);
       runInAction("loading match detailed", () => {
         this.selectedMatch = match;
         this.loading = false;

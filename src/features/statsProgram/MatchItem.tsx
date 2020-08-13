@@ -11,7 +11,7 @@ interface IProps {
 
 const MatchItem: React.FC<IProps> = ({ match }) => {
   const rootStore = useContext(RootStoreContext);
-  const { openModal } = rootStore.modalStore;
+  const { openModal, setModalSize } = rootStore.modalStore;
   const { setSelectedMatch, loading } = rootStore.matchStore;
 
   return (
@@ -34,9 +34,11 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
         <Button
           content="Go to match"
           onClick={() => {
-            setSelectedMatch(match.id!).then(() =>
-              openModal(<ChooseJerseysAndSquad />)
-            );
+            console.log(match.id);
+            setSelectedMatch(match.id!).then(() => {
+              openModal(<ChooseJerseysAndSquad />);
+              setModalSize("large");
+            });
           }}
         />
       </Segment>

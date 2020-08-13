@@ -25,11 +25,11 @@ export default class PlayerStore {
   @observable loadingInitial = false;
   @observable submitting = false;
   @observable target = 0;
-  @observable predicate = new Map();
+  @observable predicate = new Map(); // route params
 
-  @action setPredicate = (predicate: string, value: string) => {
+  @action setPredicate = (predicate: string, value: string = "") => {
     this.predicate.clear();
-    this.predicate.set(predicate, value);
+    if (predicate !== "all") this.predicate.set(predicate, value);
   };
 
   @computed get axiosParams() {

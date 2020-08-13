@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, Fragment } from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IPlayer, PlayerFormValues } from "../../../app/models/player";
 import { observer } from "mobx-react-lite";
@@ -11,6 +11,7 @@ import { position } from "../../../app/common/options/positionOptions";
 import DateInput from "../../../app/common/form/DateInput";
 import { combineValidators, isRequired } from "revalidate";
 import { RootStoreContext } from "../../../app/stores/rootStore";
+import ManagerNavBar from "../../nav/ManagerNavBar";
 
 const validate = combineValidators({
   name: isRequired({ message: "Name is required" }),
@@ -64,74 +65,77 @@ const PlayerForm: React.FC<RouteComponentProps<DetailParams>> = ({
   };
 
   return (
-    <Grid>
-      <Grid.Column width={10}>
-        <Segment clearing>
-          <FinalForm
-            validate={validate}
-            initialValues={player}
-            onSubmit={handleFinalFormSubmit}
-            render={({ handleSubmit, invalid, pristine }) => (
-              <Form loading={loading}>
-                <Field
-                  name="name"
-                  placeholder="Name"
-                  value={player.name}
-                  component={TextInput}
-                />
-                <Field
-                  name="surname"
-                  placeholder="Surname"
-                  value={player.surname}
-                  component={TextArea}
-                  rows={2}
-                />
-                <Field
-                  name="birthdate"
-                  placeholder="Birthdate"
-                  value={player.birthdate!}
-                  date={true}
-                  component={DateInput}
-                />
-                <Field
-                  name="position"
-                  placeholder="Position"
-                  value={player.position}
-                  component={SelectInput}
-                  options={position}
-                />
-                <Field
-                  name="height"
-                  placeholder="Height"
-                  value={player.height}
-                  component={TextInput}
-                />
-                <Button
-                  onClick={() => handleSubmit()}
-                  disabled={loading || invalid || pristine}
-                  floated="right"
-                  positive
-                  type="submit"
-                  content="Submit"
-                  loading={submitting}
-                />
-                <Button
-                  onClick={
-                    player.id
-                      ? () => history.push(`/players/${player.id}`)
-                      : () => history.push("/players")
-                  }
-                  disabled={loading}
-                  floated="right"
-                  type="submit"
-                  content="Cancel"
-                />
-              </Form>
-            )}
-          />
-        </Segment>
-      </Grid.Column>
-    </Grid>
+    <Fragment>
+      <ManagerNavBar />
+      <Grid>
+        <Grid.Column width={10}>
+          <Segment clearing>
+            <FinalForm
+              validate={validate}
+              initialValues={player}
+              onSubmit={handleFinalFormSubmit}
+              render={({ handleSubmit, invalid, pristine }) => (
+                <Form loading={loading}>
+                  <Field
+                    name="name"
+                    placeholder="Name"
+                    value={player.name}
+                    component={TextInput}
+                  />
+                  <Field
+                    name="surname"
+                    placeholder="Surname"
+                    value={player.surname}
+                    component={TextArea}
+                    rows={2}
+                  />
+                  <Field
+                    name="birthdate"
+                    placeholder="Birthdate"
+                    value={player.birthdate!}
+                    date={true}
+                    component={DateInput}
+                  />
+                  <Field
+                    name="position"
+                    placeholder="Position"
+                    value={player.position}
+                    component={SelectInput}
+                    options={position}
+                  />
+                  <Field
+                    name="height"
+                    placeholder="Height"
+                    value={player.height}
+                    component={TextInput}
+                  />
+                  <Button
+                    onClick={() => handleSubmit()}
+                    disabled={loading || invalid || pristine}
+                    floated="right"
+                    positive
+                    type="submit"
+                    content="Submit"
+                    loading={submitting}
+                  />
+                  <Button
+                    onClick={
+                      player.id
+                        ? () => history.push(`/players/${player.id}`)
+                        : () => history.push("/players")
+                    }
+                    disabled={loading}
+                    floated="right"
+                    type="submit"
+                    content="Cancel"
+                  />
+                </Form>
+              )}
+            />
+          </Segment>
+        </Grid.Column>
+      </Grid>
+    </Fragment>
   );
 };
 
