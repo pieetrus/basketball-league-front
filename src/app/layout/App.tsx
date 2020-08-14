@@ -25,6 +25,8 @@ import ManagerDashboard from "../../features/manager/ManagerDashboard";
 import TeamDashboard from "../../features/teams/dashboard/TeamDashboard";
 import TeamForm from "../../features/teams/form/TeamForm";
 import TeamDetails from "../../features/teams/details/TeamDetails";
+import SeasonDashboard from "../../features/season/SeasonDashboard";
+import DivisionDashboard from "../../features/division/DivisionDashboard";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   const rootStore = useContext(RootStoreContext);
@@ -70,7 +72,9 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route path="/profile/:username" component={ProfilePage} />
                 <Route path="/login" component={LoginForm} />
                 <Route path="/statsProgram" component={StatsProgramDashboard} />
-                <Route path="/manager" component={ManagerDashboard} />
+                <Route exact path="/manager" component={ManagerDashboard} />
+                <Route path="/manager/season" component={SeasonDashboard} />
+                <Route path="/manager/division" component={DivisionDashboard} />
                 <Route component={NotFound} />
               </Switch>
             </Container>
