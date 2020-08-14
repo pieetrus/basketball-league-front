@@ -4,10 +4,10 @@ export interface IDivision {
   shortName: string;
 }
 
-export class IDivisionFormValues implements IDivision {
+export class DivisionFormValues implements IDivision {
   id?: number = undefined;
-  name: string = "";
-  shortName: string = "";
+  name: string = " ";
+  shortName: string = " ";
 
   constructor(init?: IDivision) {
     Object.assign(this, init);
