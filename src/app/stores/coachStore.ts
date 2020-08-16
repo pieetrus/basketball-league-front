@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { SyntheticEvent } from "react";
 import { ITeamSeason } from "../models/teamSeason";
 
-export default class TeamStore {
+export default class CoachStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -30,7 +30,7 @@ export default class TeamStore {
   @observable predicate = new Map(); // route params
 
   @computed get options() {
-    let options = this.teamsByName?.map((team) => ({
+    let options = this.teamsByName.map((team) => ({
       key: team.shortName,
       text: team.name,
       value: team.id,
@@ -122,6 +122,7 @@ export default class TeamStore {
     try {
       teamSeason.id = await agent.Teams.createTeamSeason(teamSeason);
       runInAction("creating teamSeason", () => {
+        this.teamsRegistry.set(teamSeason.id, teamSeason);
         this.submitting = false;
       });
       return teamSeason.id;

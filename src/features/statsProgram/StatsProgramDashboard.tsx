@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Button, Grid, GridColumn } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import GameInformation from "./GameInformation";
 import { observer } from "mobx-react-lite";

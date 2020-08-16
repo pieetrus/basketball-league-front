@@ -12,7 +12,7 @@ interface IProps {
 const MatchItem: React.FC<IProps> = ({ match }) => {
   const rootStore = useContext(RootStoreContext);
   const { openModal, setModalSize } = rootStore.modalStore;
-  const { setSelectedMatch, loading } = rootStore.matchStore;
+  const { setSelectedMatch } = rootStore.matchStore;
 
   return (
     <Segment.Group horizontal>

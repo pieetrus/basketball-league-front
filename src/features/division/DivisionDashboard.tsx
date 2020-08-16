@@ -5,7 +5,6 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
 import DivisionForm from "./DivisionForm";
-import { DivisionFormValues } from "../../app/models/division";
 
 const DivisionDashboard = () => {
   const rootStore = useContext(RootStoreContext);

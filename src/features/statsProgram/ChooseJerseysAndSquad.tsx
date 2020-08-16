@@ -6,22 +6,15 @@ import {
   Image,
   Header,
   Select,
-  Checkbox,
-  List,
-  Table,
-  Button,
-  Icon,
 } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
-import SelectInput from "../../app/common/form/SelectInput";
 import { jerseyColorOptions } from "../../app/common/options/jerseyColorOptions";
 import SquadTable from "./SquadTable";
 
 const ChooseJerseysAndSquad: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { selectedMatch: match } = rootStore.matchStore;
-  let text: string[] = [];
 
   return (
     <Fragment>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { Header, Form, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -6,7 +6,7 @@ import SelectInput from "../../app/common/form/SelectInput";
 import ErrorMessage from "../../app/common/form/ErrorMessage";
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { IMatch, MatchFormValues } from "../../app/models/match";
+import { IMatch } from "../../app/models/match";
 import { history } from "../..";
 
 interface IProps {
