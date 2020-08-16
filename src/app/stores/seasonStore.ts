@@ -21,7 +21,8 @@ export default class SeasonStore {
   }
 
   @observable loadingInitial = false;
-  @observable submitting = false;
+  @observable saving = false;
+  @observable deleting = false;
   @observable target = 0;
   @observable seasonsRegistry = new Map();
   @observable season: ISeason | null = null;
@@ -54,6 +55,7 @@ export default class SeasonStore {
     try {
       const seasons = await agent.Seasons.list();
       runInAction("loading seasons", () => {
+        this.seasonsRegistry.clear();
         seasons.forEach((season) => {
           this.seasonsRegistry.set(season.id, season);
           this.loadingInitial = false;
@@ -98,17 +100,17 @@ export default class SeasonStore {
   };
 
   @action createSeason = async (season: ISeason) => {
-    this.submitting = true;
+    this.saving = true;
     try {
       season.id = await agent.Seasons.create(season);
       runInAction("creating season", () => {
         this.seasonsRegistry.set(season.id, season);
-        this.submitting = false;
+        this.saving = false;
       });
       return season.id;
     } catch (error) {
       runInAction("create season error", () => {
-        this.submitting = false;
+        this.saving = false;
       });
       toast.error("Problem submitting data");
       console.log(error.response);
@@ -116,17 +118,17 @@ export default class SeasonStore {
   };
 
   @action editSeason = async (season: ISeason) => {
-    this.submitting = true;
+    this.saving = true;
     try {
       await agent.Seasons.update(season);
       runInAction("editing season", () => {
         this.seasonsRegistry.set(season.id, season);
         this.season = season;
-        this.submitting = false;
+        this.saving = false;
       });
     } catch (error) {
       runInAction("editing season error", () => {
-        this.submitting = false;
+        this.saving = false;
       });
       toast.error("Problem submitting data");
       console.log(error.response);
@@ -137,18 +139,19 @@ export default class SeasonStore {
     event: SyntheticEvent<HTMLButtonElement>,
     id: number
   ) => {
-    this.submitting = true;
+    this.deleting = true;
     this.target = Number.parseInt(event.currentTarget.name);
     try {
       await agent.Seasons.delete(id);
       runInAction("deleting season", () => {
         this.seasonsRegistry.delete(id);
-        this.submitting = false;
+        this.deleting = false;
         this.target = 0;
       });
+      toast.info("Successfully deleted");
     } catch (error) {
       runInAction("delete season error", () => {
-        this.submitting = false;
+        this.deleting = false;
         this.target = 0;
       });
       console.log(error);

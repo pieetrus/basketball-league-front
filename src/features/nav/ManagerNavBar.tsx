@@ -9,7 +9,6 @@ const ManagerNavBar = () => {
       <Menu.Item name="CREATE TEAM" as={NavLink} to="/manager/createTeam" />
       <Menu.Item name="SEASON" as={NavLink} to="/manager/season" />
       <Menu.Item name="DIVISION" as={NavLink} to="/manager/division" />
-      <Menu.Item name="TEAM SEASON" as={NavLink} to="/manager/teamSeason" />
     </Menu>
   );
 };

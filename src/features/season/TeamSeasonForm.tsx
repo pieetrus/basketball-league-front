@@ -43,7 +43,6 @@ const TeamSeasonForm: React.FC<IProps> = ({ season }) => {
       ...teamSeason,
       seasonId: season.id,
     };
-    console.log(newTeamSeason);
     createTeamSeason(newTeamSeason).then(() => {
       toast.success(`Team succesfully assigned for ${season.name} season`);
       closeModal();

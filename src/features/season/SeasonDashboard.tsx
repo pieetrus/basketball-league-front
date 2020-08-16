@@ -5,6 +5,8 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
 import TeamSeasonForm from "./TeamSeasonForm";
+import SeasonForm from "./SeasonForm";
+import { toast } from "react-toastify";
 
 const SeasonDashboard = () => {
   const rootStore = useContext(RootStoreContext);
@@ -13,7 +15,9 @@ const SeasonDashboard = () => {
     loadSeasons,
     loadingInitial: seasonLoadingInitial,
     deleteSeason,
-    submitting: seasonSubmitting,
+    target,
+    saving,
+    deleting,
   } = rootStore.seasonStore;
 
   const { loadingInitial: teamLoadingInitial, loadTeams } = rootStore.teamStore;
@@ -37,8 +41,12 @@ const SeasonDashboard = () => {
             <Button
               content="Delete season"
               color="red"
-              onClick={(e) => deleteSeason(e, season.id!)}
-              loading={seasonSubmitting}
+              onClick={(e) => {
+                if (season.id) deleteSeason(e, season.id!);
+                else toast.warn("Error. Try again after page refresh");
+              }}
+              name={season.id}
+              loading={target === season.id && deleting}
             />
           </Segment>
           <Segment textAlign="center">
@@ -46,7 +54,8 @@ const SeasonDashboard = () => {
               content="Assign team for season"
               color="vk"
               onClick={() => openModal(<TeamSeasonForm season={season} />)}
-              loading={seasonSubmitting}
+              loading={target === season.id && saving}
+              name={season.id}
             />
           </Segment>
         </Tab.Pane>
@@ -69,7 +78,7 @@ const SeasonDashboard = () => {
           content="Create Season"
           color="green"
           size="large"
-          onClick={() => console.log("form")}
+          onClick={() => openModal(<SeasonForm />)}
         />
       </Segment>
     </Fragment>
