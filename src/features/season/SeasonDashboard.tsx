@@ -1,5 +1,12 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Segment, Tab, Button } from "semantic-ui-react";
+import {
+  Segment,
+  Tab,
+  Button,
+  List,
+  ListItem,
+  Header,
+} from "semantic-ui-react";
 import ManagerNavBar from "../nav/ManagerNavBar";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import LoadingComponent from "../../app/layout/LoadingComponent";
@@ -37,6 +44,14 @@ const SeasonDashboard = () => {
       menuItem: season.name,
       render: () => (
         <Tab.Pane>
+          <Segment textAlign="center">
+            <Header content="Divisions" />
+            <List>
+              {season.divisions.map((division) => (
+                <ListItem key={division.id} content={division.name} />
+              ))}
+            </List>
+          </Segment>
           <Segment textAlign="center">
             <Button
               content="Delete season"

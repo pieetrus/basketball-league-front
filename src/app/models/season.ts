@@ -6,6 +6,7 @@ export interface ISeason {
   startDate: Date | null;
   endDate: Date | null;
   divisions: IDivision[];
+  divisionsId?: number[];
 }
 
 export class SeasonValues implements ISeason {
@@ -14,6 +15,7 @@ export class SeasonValues implements ISeason {
   startDate: Date | null = null;
   endDate: Date | null = null;
   divisions: IDivision[] = [];
+  divisionIds?: number[] = [];
 
   constructor(init?: ISeason) {
     Object.assign(this, init);
