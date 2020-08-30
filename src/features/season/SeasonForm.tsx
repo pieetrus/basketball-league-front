@@ -1,13 +1,5 @@
 import React, { useContext, Fragment } from "react";
-import {
-  Form,
-  Button,
-  Header,
-  Segment,
-  Checkbox,
-  Grid,
-  GridColumn,
-} from "semantic-ui-react";
+import { Form, Button, Header, Segment, Checkbox } from "semantic-ui-react";
 import { Field, Form as FinalForm } from "react-final-form";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
@@ -15,11 +7,17 @@ import TextInput from "../../app/common/form/TextInput";
 import DateInput from "../../app/common/form/DateInput";
 import { ISeason } from "../../app/models/season";
 import { toast } from "react-toastify";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 const SeasonForm: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
 
-  const { saving, createSeason } = rootStore.seasonStore;
+  const {
+    saving,
+    createSeason,
+    loadSeasons,
+    loadingInitial,
+  } = rootStore.seasonStore;
   const { divisionsByName } = rootStore.divisionStore;
   const { closeModal } = rootStore.modalStore;
 
@@ -32,7 +30,7 @@ const SeasonForm: React.FC = () => {
     };
     createSeason(newSeason).then(() => {
       toast.success(`Season succesfully created`);
-      closeModal();
+      loadSeasons().then(() => closeModal());
     });
     console.log(values);
   };
@@ -51,6 +49,8 @@ const SeasonForm: React.FC = () => {
     }
     return selectedDivisions;
   };
+
+  if (loadingInitial) return <LoadingComponent content="Loading ..." />;
 
   return (
     <FinalForm

@@ -47,8 +47,8 @@ const SeasonDashboard = () => {
           <Segment textAlign="center">
             <Header content="Divisions" />
             <List>
-              {season.divisions.map((division) => (
-                <ListItem key={division.id} content={division.name} />
+              {season.divisions.map((division, index) => (
+                <ListItem key={index} content={division.name} />
               ))}
             </List>
           </Segment>
