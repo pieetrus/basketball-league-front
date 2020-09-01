@@ -86,11 +86,21 @@ const Players = {
 
 const Teams = {
   list: (): Promise<ITeam[]> => request.get(`/team`),
+  listSeason: (params: URLSearchParams): Promise<ITeam[]> =>
+    axios
+      .get("/teamSeason", { params: params })
+      .then(sleep(1000))
+      .then(responseBody),
   details: (id: number): Promise<ITeam> => request.get(`/team/${id}`),
+  detailsSeason: (id: number): Promise<ITeam> =>
+    request.get(`/teamseason/${id}`),
   create: (team: ITeam) => request.post("/team", team),
   createTeamSeason: (team: ITeamSeason) => request.post("/teamseason", team),
   update: (team: ITeam) => request.put(`/team/${team.id}`, team),
+  updateTeamSeason: (team: ITeamSeason) =>
+    request.put(`/teamseason/${team.id}`, team),
   delete: (id: number) => request.del(`/team/${id}`),
+  deleteTeamSeason: (id: number) => request.del(`/teamseason/${id}`),
   uploadLogo: (photo: Blob, teamId: number): Promise<IPhoto> =>
     request.postForm(`photo/team/${teamId}`, photo),
 };

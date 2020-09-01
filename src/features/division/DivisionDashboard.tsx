@@ -9,7 +9,7 @@ import DivisionForm from "./DivisionForm";
 const DivisionDashboard = () => {
   const rootStore = useContext(RootStoreContext);
   const {
-    divisionsByName,
+    divisionsByLevel: divisionsByName,
     loadDivisions,
     loadingInitial,
     deleteDivision,

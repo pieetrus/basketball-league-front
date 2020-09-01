@@ -5,6 +5,7 @@ import { ITeam } from "../models/team";
 import { toast } from "react-toastify";
 import { SyntheticEvent } from "react";
 import { ITeamSeason } from "../models/teamSeason";
+import { runInThisContext } from "vm";
 
 export default class TeamStore {
   rootStore: RootStore;
@@ -22,12 +23,30 @@ export default class TeamStore {
   }
 
   @observable loadingInitial = false;
+  @observable loadingInitialSeason = false;
   @observable submitting = false;
   @observable target = 0;
   @observable teamsRegistry = new Map();
+  @observable teamsSeasonRegistry = new Map();
   @observable team: ITeam | null = null;
   @observable uploadingLogo = false;
   @observable predicate = new Map(); // route params
+
+  @action setPredicate = (predicate: string, value: string = "") => {
+    if (predicate !== "all") this.predicate.set(predicate, value);
+  };
+
+  @action clearPredicate = () => {
+    this.predicate.clear();
+  };
+
+  @computed get axiosParams() {
+    const params = new URLSearchParams();
+    this.predicate.forEach((value, key) => {
+      params.append(key, value);
+    });
+    return params;
+  }
 
   @computed get options() {
     let options = this.teamsByName?.map((team) => ({
@@ -40,6 +59,10 @@ export default class TeamStore {
 
   @computed get teamsByName() {
     return this.sortTeamsByName(Array.from(this.teamsRegistry.values()));
+  }
+
+  @computed get teamsSeasonByName() {
+    return this.sortTeamsByName(Array.from(this.teamsSeasonRegistry.values()));
   }
 
   sortTeamsByName(teams: ITeam[]) {
@@ -58,8 +81,8 @@ export default class TeamStore {
       runInAction("loading teams", () => {
         teams.forEach((team) => {
           this.teamsRegistry.set(team.id, team);
-          this.loadingInitial = false;
         });
+        this.loadingInitial = false;
       });
     } catch (error) {
       runInAction("loading teams error", () => {
@@ -68,6 +91,26 @@ export default class TeamStore {
       console.log(error);
     }
   };
+
+  @action loadTeamsSeason = async () => {
+    this.teamsSeasonRegistry.clear();
+    this.loadingInitialSeason = true;
+    try {
+      const teams = await agent.Teams.listSeason(this.axiosParams);
+      runInAction("loading teamsSeason", () => {
+        teams.forEach((team) => {
+          this.teamsSeasonRegistry.set(team.id, team);
+        });
+        this.loadingInitialSeason = false;
+      });
+    } catch (error) {
+      runInAction("loading teamsSeason error", () => {
+        this.loadingInitialSeason = false;
+      });
+      console.log(error);
+    }
+  };
+
   @action loadTeam = async (id: number) => {
     let team = this.getTeam(id);
     if (team) {

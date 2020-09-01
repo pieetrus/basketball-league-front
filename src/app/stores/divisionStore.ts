@@ -28,7 +28,7 @@ export default class DivisionStore {
   @observable predicate = new Map(); // route params
 
   @computed get options() {
-    let options = this.divisionsByName?.map((division) => ({
+    let options = this.divisionsByLevel?.map((division) => ({
       key: division.shortName,
       text: division.name,
       value: division.id,
@@ -36,17 +36,16 @@ export default class DivisionStore {
     return options;
   }
 
-  @computed get divisionsByName() {
-    return this.sortDivisionsByName(
+  @computed get divisionsByLevel() {
+    return this.sortDivisionsByLevel(
       Array.from(this.divisionsRegistry.values())
     );
   }
 
-  sortDivisionsByName(seasons: IDivision[]) {
-    // by name so far, column level needs to be added, then sort by levl
+  sortDivisionsByLevel(seasons: IDivision[]) {
     const sortedTeams = seasons.sort((a, b) => {
-      if (a.name.toUpperCase() < b.name.toUpperCase()) return -1;
-      if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
+      if (a.level < b.level) return -1;
+      if (a.level > b.level) return 1;
       return 0;
     });
     return sortedTeams;

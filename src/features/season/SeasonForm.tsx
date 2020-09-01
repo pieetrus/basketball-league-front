@@ -18,7 +18,7 @@ const SeasonForm: React.FC = () => {
     loadSeasons,
     loadingInitial,
   } = rootStore.seasonStore;
-  const { divisionsByName } = rootStore.divisionStore;
+  const { divisionsByLevel: divisionsByName } = rootStore.divisionStore;
   const { closeModal } = rootStore.modalStore;
 
   const handleFinalFormSubmit = (values: any) => {

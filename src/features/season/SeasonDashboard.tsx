@@ -6,14 +6,16 @@ import {
   List,
   ListItem,
   Header,
+  Grid,
+  GridColumn,
 } from "semantic-ui-react";
 import ManagerNavBar from "../nav/ManagerNavBar";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
-import TeamSeasonForm from "./TeamSeasonForm";
 import SeasonForm from "./SeasonForm";
 import { toast } from "react-toastify";
+import TeamSeasonManager from "./TeamSeasonManager";
 
 const SeasonDashboard = () => {
   const rootStore = useContext(RootStoreContext);
@@ -23,11 +25,15 @@ const SeasonDashboard = () => {
     loadingInitial: seasonLoadingInitial,
     deleteSeason,
     target,
-    saving,
     deleting,
   } = rootStore.seasonStore;
 
-  const { loadingInitial: teamLoadingInitial, loadTeams } = rootStore.teamStore;
+  const {
+    loadingInitial: teamLoadingInitial,
+    loadTeams,
+    setPredicate,
+    clearPredicate,
+  } = rootStore.teamStore;
   const { loadDivisions } = rootStore.divisionStore;
   const { openModal } = rootStore.modalStore;
 
@@ -39,16 +45,40 @@ const SeasonDashboard = () => {
 
   const panes: any[] = [];
 
-  seasonsByDate.map((season) =>
+  seasonsByDate.map((season) => {
     panes.push({
       menuItem: season.name,
       render: () => (
         <Tab.Pane>
           <Segment textAlign="center">
+            <Header content={season.name} />
             <Header content="Divisions" />
+
             <List>
               {season.divisions.map((division, index) => (
-                <ListItem key={index} content={division.name} />
+                <Fragment key={index}>
+                  <ListItem>
+                    <Grid centered>
+                      <GridColumn width={3}>{division.name}</GridColumn>
+                      <GridColumn width={4}>
+                        <Button
+                          content={"Manage teams"}
+                          onClick={() => {
+                            openModal(
+                              <TeamSeasonManager
+                                season={season}
+                                division={division}
+                              />
+                            );
+                            clearPredicate();
+                            setPredicate("seasonId", season.id?.toString());
+                            setPredicate("divisionId", division.id?.toString());
+                          }}
+                        />
+                      </GridColumn>
+                    </Grid>
+                  </ListItem>
+                </Fragment>
               ))}
             </List>
           </Segment>
@@ -64,19 +94,10 @@ const SeasonDashboard = () => {
               loading={target === season.id && deleting}
             />
           </Segment>
-          <Segment textAlign="center">
-            <Button
-              content="Assign team for season"
-              color="vk"
-              onClick={() => openModal(<TeamSeasonForm season={season} />)}
-              loading={target === season.id && saving}
-              name={season.id}
-            />
-          </Segment>
         </Tab.Pane>
       ),
-    })
-  );
+    });
+  });
 
   if (seasonLoadingInitial && teamLoadingInitial)
     return <LoadingComponent content="Loading ..." />;
