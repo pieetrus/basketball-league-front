@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Segment, Header, Form, Button, List } from "semantic-ui-react";
+import { Segment, Header, Form, Button, List, Icon } from "semantic-ui-react";
 import { ISeason } from "../../app/models/season";
 import { IDivision } from "../../app/models/division";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -10,6 +10,7 @@ import { Field, Form as FinalForm } from "react-final-form";
 import SelectInput from "../../app/common/form/SelectInput";
 import { combineValidators, isRequired } from "revalidate";
 import { observer } from "mobx-react-lite";
+import PlayerSeasonManager from "./PlayerSeasonManager";
 
 interface IProps {
   season: ISeason;
@@ -25,16 +26,19 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
 
   const {
     createTeamSeason,
-    options,
+    optionsExludingSelected: options,
     submitting,
     loadTeams,
     loadingInitial: loadingTeams,
     loadTeamsSeason,
     loadingInitialSeason,
     teamsSeasonByName,
+    deleteTeamSeason,
   } = rootStore.teamStore;
 
-  const { closeModal } = rootStore.modalStore;
+  const { closeModal, openModal } = rootStore.modalStore;
+
+  const { setPredicate } = rootStore.playerStore;
 
   const handleFinalFormSubmit = (values: any) => {
     const { ...teamSeason } = values;
@@ -50,8 +54,8 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
   };
 
   useEffect(() => {
-    loadTeams();
     loadTeamsSeason();
+    loadTeams();
   }, [loadTeams, loadTeamsSeason]);
 
   if (loadingTeams || loadingInitialSeason)
@@ -69,7 +73,35 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
         {teamsSeasonByName.length !== 0 && (
           <List>
             {teamsSeasonByName.map((team) => (
-              <List.Item key={team.id}>{team.name}</List.Item>
+              <List.Item key={team.id}>
+                {team.name}
+                <Button
+                  content="Manage players"
+                  size="tiny"
+                  style={{ marginLeft: 20 }}
+                  onClick={() => {
+                    openModal(
+                      <PlayerSeasonManager
+                        team={team}
+                        season={season}
+                        division={division}
+                      />
+                    );
+                    setPredicate("seasonId", season.id?.toString(), true);
+                    setPredicate("divisionId", division.id?.toString());
+                    setPredicate("teamId", team.id?.toString());
+                  }}
+                />
+                <Icon
+                  name="delete"
+                  color="red"
+                  size="big"
+                  style={{ float: "right" }}
+                  onClick={(
+                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => deleteTeamSeason(e, team.id!)}
+                />
+              </List.Item>
             ))}
           </List>
         )}

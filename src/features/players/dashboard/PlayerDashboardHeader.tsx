@@ -14,7 +14,9 @@ const PlayerDashboardHeader = () => {
           key={letter}
           size="tiny"
           color="blue"
-          onClick={() => setPredicate("surnameLetter", letter)}
+          onClick={() => {
+            setPredicate("surnameLetter", letter, true);
+          }}
           style={{ cursor: "pointer" }}
         >
           {letter}
@@ -24,7 +26,9 @@ const PlayerDashboardHeader = () => {
         content="Show all"
         size="tiny"
         color="blue"
-        onClick={() => setPredicate("all")}
+        onClick={() => {
+          setPredicate("all", "", true);
+        }}
         style={{ cursor: "pointer" }}
       />
     </>

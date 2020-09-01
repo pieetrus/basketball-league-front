@@ -5,7 +5,6 @@ import { ITeam } from "../models/team";
 import { toast } from "react-toastify";
 import { SyntheticEvent } from "react";
 import { ITeamSeason } from "../models/teamSeason";
-import { runInThisContext } from "vm";
 
 export default class TeamStore {
   rootStore: RootStore;
@@ -28,6 +27,7 @@ export default class TeamStore {
   @observable target = 0;
   @observable teamsRegistry = new Map();
   @observable teamsSeasonRegistry = new Map();
+  @observable chosenTeamOptions: ITeam[] = [];
   @observable team: ITeam | null = null;
   @observable uploadingLogo = false;
   @observable predicate = new Map(); // route params
@@ -55,6 +55,31 @@ export default class TeamStore {
       value: team.id,
     }));
     return options;
+  }
+
+  @computed get optionsExludingSelected() {
+    let filteredTeams = this.filterTeams(
+      this.teamsByName,
+      this.chosenTeamOptions
+    );
+
+    let options = filteredTeams.map((team) => ({
+      key: team.shortName,
+      text: team.name,
+      value: team.id,
+    }));
+    return options;
+  }
+
+  filterTeams(filteredArray: ITeam[], toRemove: ITeam[]) {
+    for (var i = filteredArray.length - 1; i >= 0; i--) {
+      for (var j = 0; j < toRemove.length; j++) {
+        if (filteredArray[i] && filteredArray[i].name === toRemove[j].name) {
+          filteredArray.splice(i, 1);
+        }
+      }
+    }
+    return filteredArray;
   }
 
   @computed get teamsByName() {
@@ -98,6 +123,7 @@ export default class TeamStore {
     try {
       const teams = await agent.Teams.listSeason(this.axiosParams);
       runInAction("loading teamsSeason", () => {
+        this.chosenTeamOptions = teams;
         teams.forEach((team) => {
           this.teamsSeasonRegistry.set(team.id, team);
         });
@@ -132,6 +158,10 @@ export default class TeamStore {
         console.log(error);
       }
     }
+  };
+
+  @action setChosenTeams = (chosenTeams: ITeam[]) => {
+    this.chosenTeamOptions = chosenTeams;
   };
 
   @action clearTeam = () => {
@@ -202,7 +232,7 @@ export default class TeamStore {
     this.submitting = true;
     this.target = Number.parseInt(event.currentTarget.name);
     try {
-      await agent.Players.delete(id);
+      await agent.Teams.delete(id);
       runInAction("deleting team", () => {
         this.teamsRegistry.delete(id);
         this.submitting = false;
@@ -210,6 +240,28 @@ export default class TeamStore {
       });
     } catch (error) {
       runInAction("delete team error", () => {
+        this.submitting = false;
+        this.target = 0;
+      });
+      console.log(error);
+    }
+  };
+
+  @action deleteTeamSeason = async (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    this.submitting = true;
+    this.target = Number.parseInt(event.currentTarget.name);
+    try {
+      await agent.Teams.deleteTeamSeason(id);
+      runInAction("deleting teamSeason", () => {
+        this.teamsSeasonRegistry.delete(id);
+        this.submitting = false;
+        this.target = 0;
+      });
+    } catch (error) {
+      runInAction("delete teamSeason error", () => {
         this.submitting = false;
         this.target = 0;
       });

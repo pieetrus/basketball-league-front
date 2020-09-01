@@ -10,6 +10,7 @@ import { IMatch } from "../models/match";
 import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 import { ISeason } from "../models/season";
 import { ITeamSeason } from "../models/teamSeason";
+import { IPlayerSeason } from "../models/playerSeason";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -78,10 +79,18 @@ const Players = {
       .get("/player", { params: params })
       .then(sleep(1000))
       .then(responseBody),
+  listSeason: (params: URLSearchParams): Promise<IPlayerSeason[]> =>
+    axios
+      .get("/playerseason", { params: params })
+      .then(sleep(1000))
+      .then(responseBody),
   details: (id: number): Promise<IPlayer> => request.get(`/player/${id}`),
   create: (player: IPlayer) => request.post("/player", player),
+  createPlayerSeason: (player: IPlayer) =>
+    request.post("/playerseason", player),
   update: (player: IPlayer) => request.put(`/player/${player.id}`, player),
   delete: (id: number) => request.del(`/player/${id}`),
+  deletePlayerSeason: (id: number) => request.del(`/playerseason/${id}`),
 };
 
 const Teams = {
