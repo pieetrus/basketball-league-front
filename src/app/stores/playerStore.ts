@@ -187,6 +187,24 @@ export default class PlayerStore {
     }
   };
 
+  @action createPlayerSeason = async (player: IPlayerSeason) => {
+    this.submitting = true;
+    try {
+      player.id = await agent.Players.createPlayerSeason(player);
+      runInAction("creating playerseason", () => {
+        this.playersSeasonRegistry.set(player.id, player);
+        this.submitting = false;
+      });
+      return player.id;
+    } catch (error) {
+      runInAction("create playerseason error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
   @action editPlayer = async (player: IPlayer) => {
     this.submitting = true;
     try {
@@ -220,6 +238,28 @@ export default class PlayerStore {
       });
     } catch (error) {
       runInAction("delete player error", () => {
+        this.submitting = false;
+        this.target = 0;
+      });
+      console.log(error);
+    }
+  };
+
+  @action deletePlayerSeason = async (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    this.submitting = true;
+    this.target = Number.parseInt(event.currentTarget.name);
+    try {
+      await agent.Players.deletePlayerSeason(id);
+      runInAction("deleting playerSeason", () => {
+        this.playersSeasonRegistry.delete(id);
+        this.submitting = false;
+        this.target = 0;
+      });
+    } catch (error) {
+      runInAction("delete playerSeason error", () => {
         this.submitting = false;
         this.target = 0;
       });

@@ -9,6 +9,9 @@ import { Field, Form as FinalForm } from "react-final-form";
 import SelectInput from "../../app/common/form/SelectInput";
 import { ITeam } from "../../app/models/team";
 import { observer } from "mobx-react-lite";
+import { IPlayerSeason } from "../../app/models/playerSeason";
+import { toast } from "react-toastify";
+import { IPlayer } from "../../app/models/player";
 
 interface IProps {
   season: ISeason;
@@ -17,14 +20,13 @@ interface IProps {
 }
 
 const validate = combineValidators({
-  teamId: isRequired({ message: "Team is required" }),
+  playerId: isRequired({ message: "Player is required" }),
 });
 
 const PlayerSeasonManager: React.FC<IProps> = ({ season, division, team }) => {
   const rootStore = useContext(RootStoreContext);
 
   const {
-    submitting,
     loadTeams,
     loadingInitial: loadingTeams,
     loadTeamsSeason,
@@ -32,25 +34,34 @@ const PlayerSeasonManager: React.FC<IProps> = ({ season, division, team }) => {
   } = rootStore.teamStore;
 
   const {
+    submitting,
     loadPlayers,
     loadPlayersSeason,
     loadingInitial: loadingPlayers,
     optionsExludingSelected: options,
     playersSeason,
+    createPlayerSeason,
+    deletePlayerSeason,
+    target,
   } = rootStore.playerStore;
 
+  const { closeModal } = rootStore.modalStore;
+
   const handleFinalFormSubmit = (values: any) => {
-    // const { ...teamSeason } = values;
-    // let newTeamSeason: ITeamSeason = {
-    //   ...teamSeason,
-    //   seasonId: season.id,
-    //   divisionId: division.id,
-    // };
-    // createTeamSeason(newTeamSeason).then(() => {
-    //   toast.success(`Team succesfully assigned for ${season.name} season`);
-    //   closeModal();
-    // });
-    console.log(values);
+    const { ...playerSeason } = values;
+    let newPlayerSeason: IPlayerSeason = {
+      ...playerSeason,
+      seasonId: season.id,
+      divisionId: division.id,
+      teamId: team.id,
+    };
+    console.log(newPlayerSeason);
+    createPlayerSeason(newPlayerSeason).then(() => {
+      toast.success(
+        `Player succesfully assigned for ${team.name}, for ${season.name} season`
+      );
+      // closeModal();
+    });
   };
 
   useEffect(() => {
@@ -73,17 +84,19 @@ const PlayerSeasonManager: React.FC<IProps> = ({ season, division, team }) => {
           textAlign="center"
         />
         <List>
-          {playersSeason.map((player) => (
+          {playersSeason.map((player: IPlayerSeason) => (
             <List.Item key={player.id}>
               {player.name + " " + player.surname}
-              <Icon
-                name="delete"
+              <Button
+                name={player.id}
+                content="Delete"
                 color="red"
-                size="big"
+                size="tiny"
                 style={{ float: "right" }}
-                // onClick={(
-                //   e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                // ) => deleteTeamSeason(e, team.id!)}
+                onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+                  deletePlayerSeason(e, player.id!)
+                }
+                loading={submitting && target === player.id}
               />
             </List.Item>
           ))}

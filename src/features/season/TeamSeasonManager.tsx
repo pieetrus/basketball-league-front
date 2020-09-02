@@ -34,6 +34,7 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
     loadingInitialSeason,
     teamsSeasonByName,
     deleteTeamSeason,
+    target,
   } = rootStore.teamStore;
 
   const { closeModal, openModal } = rootStore.modalStore;
@@ -92,14 +93,16 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
                     setPredicate("teamId", team.id?.toString());
                   }}
                 />
-                <Icon
-                  name="delete"
+                <Button
+                  name={team.id}
+                  content="Delete"
                   color="red"
-                  size="big"
+                  size="tiny"
                   style={{ float: "right" }}
                   onClick={(
                     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
                   ) => deleteTeamSeason(e, team.id!)}
+                  loading={submitting && target === team.id}
                 />
               </List.Item>
             ))}

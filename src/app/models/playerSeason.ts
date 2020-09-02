@@ -2,7 +2,10 @@ import { ITeam } from "./team";
 
 export interface IPlayerSeason {
   id?: number;
+  seasonId?: number;
+  divisionId?: number;
   playerId?: number;
+  teamId?: number;
   name: string;
   surname: string;
   position: string;
@@ -13,7 +16,10 @@ export interface IPlayerSeason {
 
 export class PlayerSeasonFormValues implements IPlayerSeason {
   id?: number = undefined;
+  seasonId?: number = undefined;
+  divisionId?: number = undefined;
   playerId?: number = undefined;
+  teamId?: number = undefined;
   name: string = "";
   surname: string = "";
   position: string = "";
