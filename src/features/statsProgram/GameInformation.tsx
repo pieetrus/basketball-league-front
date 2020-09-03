@@ -8,11 +8,18 @@ import SelectInput from "../../app/common/form/SelectInput";
 import ChoseTeamInformation from "./ChoseTeamInformation";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
+import { combineValidators, isRequired } from "revalidate";
+
+const validate = combineValidators({
+  divisionId: isRequired({ message: "Division is required" }),
+  startDate: isRequired({ message: "Start Date is required" }),
+});
 
 const GameInformation = () => {
   const rootStore = useContext(RootStoreContext);
   const { openModal } = rootStore.modalStore;
   const { loadingInitial, options } = rootStore.divisionStore;
+  const { clearPredicate, setPredicate } = rootStore.teamStore;
 
   const handleFinalFormSubmit = (values: any) => {
     openModal(
@@ -21,6 +28,9 @@ const GameInformation = () => {
         divisionId={values.divisionId}
       />
     );
+    clearPredicate();
+    setPredicate("matchStartDate", values.startDate.toISOString());
+    setPredicate("divisionId", values.divisionId);
   };
 
   if (loadingInitial) return <LoadingComponent content="Loading..." />;
@@ -28,6 +38,7 @@ const GameInformation = () => {
   return (
     <FinalForm
       onSubmit={(values) => handleFinalFormSubmit(values)}
+      validate={validate}
       render={({
         handleSubmit,
         submitting,

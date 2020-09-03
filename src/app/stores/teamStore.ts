@@ -50,7 +50,16 @@ export default class TeamStore {
 
   @computed get options() {
     let options = this.teamsByName?.map((team) => ({
-      key: team.shortName,
+      key: team.name,
+      text: team.name,
+      value: team.id,
+    }));
+    return options;
+  }
+
+  @computed get teamSeasonOptions() {
+    let options = this.teamsSeasonByName?.map((team) => ({
+      key: team.name,
       text: team.name,
       value: team.id,
     }));
@@ -58,13 +67,12 @@ export default class TeamStore {
   }
 
   @computed get optionsExludingSelected() {
-    let filteredTeams = this.filterTeams(
-      this.teamsByName,
-      this.chosenTeamOptions
-    );
+    let toRemove = this.chosenTeamOptions;
+
+    let filteredTeams = this.filterTeams(this.teamsByName, toRemove);
 
     let options = filteredTeams.map((team) => ({
-      key: team.shortName,
+      key: team.name,
       text: team.name,
       value: team.id,
     }));

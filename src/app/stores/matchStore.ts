@@ -27,6 +27,9 @@ export default class MatchStore {
     try {
       const matches = await agent.Matches.list();
       runInAction("loading matches", () => {
+        matches.forEach((match) => {
+          match.startDate = new Date(match.startDate!);
+        });
         this.matches = matches;
         this.loadingInitial = false;
       });
