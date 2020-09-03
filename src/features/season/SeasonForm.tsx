@@ -1,5 +1,5 @@
 import React, { useContext, Fragment } from "react";
-import { Form, Button, Header, Segment, Checkbox } from "semantic-ui-react";
+import { Form, Button, Header, Checkbox, Grid } from "semantic-ui-react";
 import { Field, Form as FinalForm } from "react-final-form";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
@@ -9,16 +9,21 @@ import { ISeason } from "../../app/models/season";
 import { toast } from "react-toastify";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 
-const SeasonForm: React.FC = () => {
+interface IProps {
+  season?: ISeason;
+}
+
+const SeasonForm: React.FC<IProps> = ({ season }) => {
   const rootStore = useContext(RootStoreContext);
 
   const {
     saving,
     createSeason,
+    editSeason,
     loadSeasons,
     loadingInitial,
   } = rootStore.seasonStore;
-  const { divisionsByLevel: divisionsByName } = rootStore.divisionStore;
+  const { divisionsByLevel } = rootStore.divisionStore;
   const { closeModal } = rootStore.modalStore;
 
   const handleFinalFormSubmit = (values: any) => {
@@ -28,11 +33,17 @@ const SeasonForm: React.FC = () => {
       ...season,
       divisionsId,
     };
-    createSeason(newSeason).then(() => {
-      toast.success(`Season succesfully created`);
-      loadSeasons().then(() => closeModal());
-    });
-    console.log(values);
+    if (season.id) {
+      editSeason(newSeason).then(() => {
+        toast.info(`Season succesfully edited`);
+        closeModal();
+      });
+    } else {
+      createSeason(newSeason).then(() => {
+        toast.success(`Season succesfully created`);
+        loadSeasons().then(() => closeModal());
+      });
+    }
   };
 
   const getSelectedDivisions = () => {
@@ -55,50 +66,85 @@ const SeasonForm: React.FC = () => {
   return (
     <FinalForm
       onSubmit={handleFinalFormSubmit}
+      initialValues={season}
       render={({ handleSubmit, invalid, pristine }) => (
         <Form style={{ position: "relative" }}>
-          <Header textAlign="center" color="teal">
-            Create season
-          </Header>
-          <Field name="name" placeholder="Name" component={TextInput} />
+          {season && (
+            <Header textAlign="center" color="teal">
+              Edit season {season.name}
+            </Header>
+          )}
+          {!season && (
+            <Header textAlign="center" color="teal">
+              Create season
+            </Header>
+          )}
+          <Field
+            name="name"
+            placeholder="Name"
+            component={TextInput}
+            value={season?.name}
+          />
           <Field
             name="startDate"
             placeholder="Start Date"
             component={DateInput}
+            value={new Date(season?.startDate!)}
             date={true}
           />
           <Field
             name="endDate"
             placeholder="End Date"
+            value={new Date(season?.endDate!)}
             component={DateInput}
             date={true}
           />
-          <Form.Group style={{ textAlign: "left" }}>
-            <Segment>
-              <Header content="Select divisions for this season" />
-              {divisionsByName.map((division) => (
+          <Form.Group style={{ textAlign: "center" }}>
+            <Grid className="segment centered">
+              <Header content="Select divisions" style={{ marginTop: 10 }} />
+              {divisionsByLevel.map((division) => (
                 <Fragment key={division.id}>
                   <Checkbox
                     label={division.name}
                     name={division.id?.toString()}
                     id={division.id}
+                    defaultChecked={
+                      season?.divisions.filter((el) => {
+                        return el.id === division.id;
+                      }).length! > 0
+                    }
+                    style={{ marginTop: 10 }}
                   />
                   <br />
                 </Fragment>
               ))}
-            </Segment>
+            </Grid>
           </Form.Group>
 
-          <Button
-            onClick={() => handleSubmit()}
-            disabled={invalid || pristine}
-            floated="right"
-            positive
-            type="submit"
-            content="Submit"
-            style={{ marginBottom: 10 }}
-            loading={saving}
-          />
+          {season && (
+            <Button
+              onClick={() => handleSubmit()}
+              disabled={invalid || pristine}
+              floated="right"
+              positive
+              type="submit"
+              content="Save changes"
+              style={{ marginBottom: 10 }}
+              loading={saving}
+            />
+          )}
+          {!season && (
+            <Button
+              onClick={() => handleSubmit()}
+              disabled={invalid || pristine}
+              floated="right"
+              positive
+              type="submit"
+              content="Submit"
+              style={{ marginBottom: 10 }}
+              loading={saving}
+            />
+          )}
         </Form>
       )}
     />

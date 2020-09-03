@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Segment, Header, Form, Button, List, Icon } from "semantic-ui-react";
+import { Segment, Header, Form, Button, List } from "semantic-ui-react";
 import { ISeason } from "../../app/models/season";
 import { IDivision } from "../../app/models/division";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -37,7 +37,7 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
     target,
   } = rootStore.teamStore;
 
-  const { closeModal, openModal } = rootStore.modalStore;
+  const { openModal } = rootStore.modalStore;
 
   const { setPredicate } = rootStore.playerStore;
 
@@ -50,7 +50,6 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
     };
     createTeamSeason(newTeamSeason).then(() => {
       toast.success(`Team succesfully assigned for ${season.name} season`);
-      closeModal();
     });
   };
 
@@ -95,7 +94,7 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
                 />
                 <Button
                   name={team.id}
-                  content="Delete"
+                  content="Remove"
                   color="red"
                   size="tiny"
                   style={{ float: "right" }}

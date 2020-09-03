@@ -195,7 +195,9 @@ export default class TeamStore {
     try {
       teamSeason.id = await agent.Teams.createTeamSeason(teamSeason);
       runInAction("creating teamSeason", () => {
+        this.teamsSeasonRegistry.set(teamSeason.id, teamSeason);
         this.submitting = false;
+        this.loadTeamsSeason();
       });
       return teamSeason.id;
     } catch (error) {

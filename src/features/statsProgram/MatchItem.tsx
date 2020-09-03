@@ -34,7 +34,6 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
         <Button
           content="Go to match"
           onClick={() => {
-            console.log(match.id);
             setSelectedMatch(match.id!).then(() => {
               openModal(<ChooseJerseysAndSquad />);
               setModalSize("large");

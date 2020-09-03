@@ -16,6 +16,7 @@ import { observer } from "mobx-react-lite";
 import SeasonForm from "./SeasonForm";
 import { toast } from "react-toastify";
 import TeamSeasonManager from "./TeamSeasonManager";
+import { format } from "date-fns";
 
 const SeasonDashboard = () => {
   const rootStore = useContext(RootStoreContext);
@@ -45,13 +46,19 @@ const SeasonDashboard = () => {
 
   const panes: any[] = [];
 
-  seasonsByDate.map((season) => {
+  seasonsByDate.forEach((season) => {
     panes.push({
       menuItem: season.name,
       render: () => (
         <Tab.Pane>
           <Segment textAlign="center">
             <Header content={season.name} />
+            <Header
+              content={"Start: " + format(season.startDate!, "MM/dd/yyyy")}
+            />
+            <Header
+              content={"   End: " + format(season.endDate!, "MM/dd/yyyy")}
+            />
             <Header content="Divisions" />
 
             <List>
@@ -63,6 +70,7 @@ const SeasonDashboard = () => {
                       <GridColumn width={4}>
                         <Button
                           content={"Manage teams"}
+                          size="tiny"
                           onClick={() => {
                             openModal(
                               <TeamSeasonManager
@@ -76,6 +84,18 @@ const SeasonDashboard = () => {
                           }}
                         />
                       </GridColumn>
+                      <GridColumn width={6}>
+                        <Button
+                          content="Remove"
+                          onClick={() =>
+                            toast.info(
+                              "Not implemented yet. You can do it also from edit season modal level."
+                            )
+                          }
+                          color="red"
+                          size="tiny"
+                        />
+                      </GridColumn>
                     </Grid>
                   </ListItem>
                 </Fragment>
@@ -83,6 +103,16 @@ const SeasonDashboard = () => {
             </List>
           </Segment>
           <Segment textAlign="center">
+            <Button
+              content="Edit season"
+              color="instagram"
+              onClick={(e) => {
+                openModal(<SeasonForm season={season} />);
+              }}
+              name={season.id}
+              loading={target === season.id}
+              style={{ marginRight: 20 }}
+            />
             <Button
               content="Delete season"
               color="red"
@@ -92,8 +122,19 @@ const SeasonDashboard = () => {
               }}
               name={season.id}
               loading={target === season.id && deleting}
+              style={{ marginLeft: 20 }}
             />
           </Segment>
+          <Grid>
+            <Grid.Column textAlign="center">
+              <Button
+                content="Create Season"
+                color="green"
+                size="large"
+                onClick={() => openModal(<SeasonForm />)}
+              />
+            </Grid.Column>
+          </Grid>
         </Tab.Pane>
       ),
     });
@@ -109,14 +150,6 @@ const SeasonDashboard = () => {
         menuPosition="right"
         panes={panes}
       />
-      <Segment textAlign="center">
-        <Button
-          content="Create Season"
-          color="green"
-          size="large"
-          onClick={() => openModal(<SeasonForm />)}
-        />
-      </Segment>
     </Fragment>
   );
 };

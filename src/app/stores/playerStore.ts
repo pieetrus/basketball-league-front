@@ -194,6 +194,7 @@ export default class PlayerStore {
       runInAction("creating playerseason", () => {
         this.playersSeasonRegistry.set(player.id, player);
         this.submitting = false;
+        this.loadPlayersSeason();
       });
       return player.id;
     } catch (error) {

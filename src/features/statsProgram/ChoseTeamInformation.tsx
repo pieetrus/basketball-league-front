@@ -26,7 +26,6 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
       startDate,
       divisionId,
     };
-    console.log(newMatch);
     createMatch(newMatch).then((id) => history.push(`/statsProgram/`));
   };
 

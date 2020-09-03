@@ -57,6 +57,8 @@ export default class SeasonStore {
       runInAction("loading seasons", () => {
         this.seasonsRegistry.clear();
         seasons.forEach((season) => {
+          season.startDate = new Date(season.startDate!);
+          season.endDate = new Date(season.endDate!);
           this.seasonsRegistry.set(season.id, season);
           this.loadingInitial = false;
         });
@@ -71,6 +73,8 @@ export default class SeasonStore {
   @action loadSeason = async (id: number) => {
     let season = this.getSeason(id);
     if (season) {
+      season.startDate = new Date(season.startDate!);
+      season.endDate = new Date(season.endDate!);
       this.season = season;
       return season;
     } else {
@@ -104,7 +108,7 @@ export default class SeasonStore {
     try {
       season.id = await agent.Seasons.create(season);
       runInAction("creating season", () => {
-        this.seasonsRegistry.set(season.id, season);
+        // this.seasonsRegistry.set(season.id, season);
         this.saving = false;
       });
       return season.id;
