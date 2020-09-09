@@ -1,9 +1,10 @@
-import { observable, action, runInAction } from "mobx";
+import { observable, action, runInAction, computed } from "mobx";
 import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { IMatch } from "../models/match";
 import { toast } from "react-toastify";
 import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
+import { SyntheticEvent } from "react";
 
 export default class MatchStore {
   rootStore: RootStore;
@@ -12,8 +13,9 @@ export default class MatchStore {
     this.rootStore = rootStore;
   }
 
-  @observable matches: IMatch[] | null = null;
-  @observable matchesDetailed: IMatchDetailed[] | null = null;
+  // @observable matches: IMatch[] | null = null;
+  @observable matchesRegistry = new Map();
+  @observable matchesDetailedRegistry = new Map();
   @observable loadingInitial = false;
   @observable loading = false;
   @observable startDate = "";
@@ -22,6 +24,10 @@ export default class MatchStore {
   @observable target = 0;
   @observable selectedMatch: IMatchDetailedSquads | null = null;
 
+  @computed get matchesDetailedByDate() {
+    return Array.from(this.matchesDetailedRegistry.values());
+  }
+
   @action loadMatches = async () => {
     this.loadingInitial = true;
     try {
@@ -29,8 +35,8 @@ export default class MatchStore {
       runInAction("loading matches", () => {
         matches.forEach((match) => {
           match.startDate = new Date(match.startDate!);
+          this.matchesRegistry.set(match.id, match);
         });
-        this.matches = matches;
         this.loadingInitial = false;
       });
     } catch (error) {
@@ -46,7 +52,9 @@ export default class MatchStore {
     try {
       const matches = await agent.Matches.listDetailed();
       runInAction("loading matches detailed", () => {
-        this.matchesDetailed = matches;
+        matches.forEach((match) => {
+          this.matchesDetailedRegistry.set(match.id, match);
+        });
         this.loadingInitial = false;
       });
     } catch (error) {
@@ -62,7 +70,7 @@ export default class MatchStore {
     try {
       match.id = await agent.Matches.create(match);
       runInAction("creating player", () => {
-        this.matches?.push(match);
+        this.matchesRegistry.set(match.id, match);
         this.submitting = false;
       });
       return match.id;
@@ -86,6 +94,29 @@ export default class MatchStore {
     } catch (error) {
       console.log(error);
       this.loading = false;
+    }
+  };
+
+  @action deleteMatch = async (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    this.submitting = true;
+    this.target = Number.parseInt(event.currentTarget.name);
+    try {
+      await agent.Matches.delete(id);
+      runInAction("deleting match", () => {
+        this.matchesRegistry.delete(id);
+        this.matchesDetailedRegistry.delete(id);
+        this.submitting = false;
+        this.target = 0;
+      });
+    } catch (error) {
+      runInAction("delete match error", () => {
+        this.submitting = false;
+        this.target = 0;
+      });
+      console.log(error);
     }
   };
 }

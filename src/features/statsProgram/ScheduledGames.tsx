@@ -7,13 +7,13 @@ import MatchItem from "./MatchItem";
 
 const ScheduledGames = () => {
   const rootStore = useContext(RootStoreContext);
-  const { matchesDetailed, loadingInitial } = rootStore.matchStore;
+  const { matchesDetailedByDate, loadingInitial } = rootStore.matchStore;
 
   if (loadingInitial) return <LoadingComponent content="Loading..." />;
 
   return (
     <Segment>
-      {matchesDetailed?.map((match) => (
+      {matchesDetailedByDate?.map((match) => (
         <MatchItem key={match.id} match={match} />
       ))}
     </Segment>

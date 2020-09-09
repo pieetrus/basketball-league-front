@@ -18,8 +18,15 @@ const validate = combineValidators({
 const GameInformation = () => {
   const rootStore = useContext(RootStoreContext);
   const { openModal } = rootStore.modalStore;
-  const { loadingInitial, options } = rootStore.divisionStore;
-  const { clearPredicate, setPredicate } = rootStore.teamStore;
+  const {
+    loadingInitial: loadingDivisionsInitial,
+    options,
+  } = rootStore.divisionStore;
+  const {
+    clearPredicate,
+    setPredicate,
+    loadingInitial: loadingTeamsInitial,
+  } = rootStore.teamStore;
 
   const handleFinalFormSubmit = (values: any) => {
     openModal(
@@ -33,7 +40,8 @@ const GameInformation = () => {
     setPredicate("divisionId", values.divisionId);
   };
 
-  if (loadingInitial) return <LoadingComponent content="Loading..." />;
+  if (loadingDivisionsInitial || loadingTeamsInitial)
+    return <LoadingComponent content="Loading..." />;
 
   return (
     <FinalForm

@@ -10,6 +10,7 @@ import { IDivision } from "../../app/models/division";
 const validate = combineValidators({
   name: isRequired({ message: "Name is required" }),
   shortName: isRequired({ message: "ShortName is required" }),
+  level: isRequired({ message: "Level is required" }),
 });
 
 const DivisionForm: React.FC = () => {
@@ -40,6 +41,7 @@ const DivisionForm: React.FC = () => {
             placeholder="Short Name"
             component={TextInput}
           />
+          <Field name="level" placeholder="Level" component={TextInput} />
           <Button
             onClick={() => handleSubmit()}
             disabled={invalid || pristine}

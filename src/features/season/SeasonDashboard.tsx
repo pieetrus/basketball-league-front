@@ -145,11 +145,27 @@ const SeasonDashboard = () => {
   return (
     <Fragment>
       <ManagerNavBar />
-      <Tab
-        menu={{ fluid: true, vertical: true }}
-        menuPosition="right"
-        panes={panes}
-      />
+      {panes.length > 0 && (
+        <Tab
+          menu={{ fluid: true, vertical: true }}
+          menuPosition="right"
+          panes={panes}
+        />
+      )}
+      {panes.length <= 0 && (
+        <Segment>
+          <Grid>
+            <Grid.Column textAlign="center">
+              <Button
+                content="Create Season"
+                color="green"
+                size="large"
+                onClick={() => openModal(<SeasonForm />)}
+              />
+            </Grid.Column>
+          </Grid>
+        </Segment>
+      )}
     </Fragment>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { Header, Form, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -10,6 +10,7 @@ import { IMatch } from "../../app/models/match";
 import { history } from "../..";
 import { combineValidators, isRequired } from "revalidate";
 import { OnChange } from "react-final-form-listeners";
+import { values } from "mobx";
 
 interface IProps {
   startDate: number;
@@ -28,7 +29,9 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
     loadingInitial,
     loadTeamsSeason,
   } = rootStore.teamStore;
-  const { createMatch } = rootStore.matchStore;
+
+  const { createMatch, loadMatchesDetailed, submitting } = rootStore.matchStore;
+  const { closeModal } = rootStore.modalStore;
 
   const handleFinalFormSubmit = (values: any) => {
     const { ...match } = values;
@@ -37,12 +40,25 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
       startDate,
       divisionId,
     };
-    createMatch(newMatch).then((id) => history.push(`/statsProgram/`));
+    createMatch(newMatch).then(() => {
+      closeModal();
+      loadMatchesDetailed();
+      history.push(`/statsProgram/`);
+    });
   };
 
   useEffect(() => {
     loadTeamsSeason();
   }, [loadTeamsSeason]);
+
+  const getElementFromArrayById = (array: any[], value: any) => {
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      if (element.value === value) {
+        return array.indexOf(element);
+      }
+    }
+  };
 
   if (loadingInitial) return <LoadingComponent content="Loading..." />;
 
@@ -52,7 +68,6 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
       validate={validate}
       render={({
         handleSubmit,
-        submitting,
         submitError,
         invalid,
         pristine,
@@ -77,16 +92,26 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
             placeholder="Team 2"
             options={options}
           />
-          <OnChange name="teamHomeId">
+          {/* <OnChange name="teamHomeId">
             {(value, previous) => {
-              console.log(value);
+              setTeamGuestOptions(
+                options.splice(
+                  getElementFromArrayById(teamHomeOptions, value)!,
+                  1
+                )
+              );
             }}
-          </OnChange>
-          <OnChange name="teamGuestId">
+          </OnChange> */}
+          {/* <OnChange name="teamGuestId">
             {(value, previous) => {
-              console.log(value);
+              setTeamHomeOptions(
+                options.splice(
+                  getElementFromArrayById(teamGuestOptions, value)!,
+                  1
+                )
+              );
             }}
-          </OnChange>
+          </OnChange> */}
 
           {submitError && !dirtySinceLastSubmit && (
             <ErrorMessage

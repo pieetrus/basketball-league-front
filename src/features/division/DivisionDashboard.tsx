@@ -9,7 +9,7 @@ import DivisionForm from "./DivisionForm";
 const DivisionDashboard = () => {
   const rootStore = useContext(RootStoreContext);
   const {
-    divisionsByLevel: divisionsByName,
+    divisionsByLevel,
     loadDivisions,
     loadingInitial,
     deleteDivision,
@@ -24,7 +24,7 @@ const DivisionDashboard = () => {
 
   const panes: any[] = [];
 
-  divisionsByName.map((division) =>
+  divisionsByLevel.map((division) =>
     panes.push({
       menuItem: division.name,
       render: () => (
@@ -42,7 +42,7 @@ const DivisionDashboard = () => {
     })
   );
 
-  if (loadingInitial)
+  if (divisionsByLevel.length > 0 && loadingInitial)
     return <LoadingComponent content="Loading divisions..." />;
 
   return (

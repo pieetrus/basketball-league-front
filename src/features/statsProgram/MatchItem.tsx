@@ -12,7 +12,12 @@ interface IProps {
 const MatchItem: React.FC<IProps> = ({ match }) => {
   const rootStore = useContext(RootStoreContext);
   const { openModal, setModalSize } = rootStore.modalStore;
-  const { setSelectedMatch } = rootStore.matchStore;
+  const {
+    setSelectedMatch,
+    deleteMatch,
+    submitting,
+    target,
+  } = rootStore.matchStore;
 
   return (
     <Segment.Group horizontal>
@@ -39,6 +44,16 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
               setModalSize("large");
             });
           }}
+        />
+        <Button
+          content="Delete match"
+          onClick={(e) => {
+            deleteMatch(e, match.id!);
+          }}
+          color="red"
+          name={match.id}
+          floated="right"
+          loading={target === match.id && submitting}
         />
       </Segment>
     </Segment.Group>

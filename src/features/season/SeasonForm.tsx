@@ -8,10 +8,17 @@ import DateInput from "../../app/common/form/DateInput";
 import { ISeason } from "../../app/models/season";
 import { toast } from "react-toastify";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import { combineValidators, isRequired } from "revalidate";
 
 interface IProps {
   season?: ISeason;
 }
+
+const validate = combineValidators({
+  name: isRequired({ message: "Name is required" }),
+  startDate: isRequired({ message: "StartDate is required" }),
+  endDate: isRequired({ message: "EndDate is required" }),
+});
 
 const SeasonForm: React.FC<IProps> = ({ season }) => {
   const rootStore = useContext(RootStoreContext);
@@ -22,6 +29,7 @@ const SeasonForm: React.FC<IProps> = ({ season }) => {
     editSeason,
     loadSeasons,
     loadingInitial,
+    seasonsByDate,
   } = rootStore.seasonStore;
   const { divisionsByLevel } = rootStore.divisionStore;
   const { closeModal } = rootStore.modalStore;
@@ -36,7 +44,7 @@ const SeasonForm: React.FC<IProps> = ({ season }) => {
     if (season.id) {
       editSeason(newSeason).then(() => {
         toast.info(`Season succesfully edited`);
-        closeModal();
+        loadSeasons().then(() => closeModal());
       });
     } else {
       createSeason(newSeason).then(() => {
@@ -61,12 +69,14 @@ const SeasonForm: React.FC<IProps> = ({ season }) => {
     return selectedDivisions;
   };
 
-  if (loadingInitial) return <LoadingComponent content="Loading ..." />;
+  if (seasonsByDate.length > 0 && loadingInitial)
+    return <LoadingComponent content="Loading ..." />;
 
   return (
     <FinalForm
       onSubmit={handleFinalFormSubmit}
       initialValues={season}
+      validate={validate}
       render={({ handleSubmit, invalid, pristine }) => (
         <Form style={{ position: "relative" }}>
           {season && (
@@ -99,32 +109,34 @@ const SeasonForm: React.FC<IProps> = ({ season }) => {
             component={DateInput}
             date={true}
           />
-          <Form.Group style={{ textAlign: "center" }}>
-            <Grid className="segment centered">
-              <Header content="Select divisions" style={{ marginTop: 10 }} />
-              {divisionsByLevel.map((division) => (
-                <Fragment key={division.id}>
-                  <Checkbox
-                    label={division.name}
-                    name={division.id?.toString()}
-                    id={division.id}
-                    defaultChecked={
-                      season?.divisions.filter((el) => {
-                        return el.id === division.id;
-                      }).length! > 0
-                    }
-                    style={{ marginTop: 10 }}
-                  />
-                  <br />
-                </Fragment>
-              ))}
-            </Grid>
-          </Form.Group>
+          {divisionsByLevel.length > 0 && (
+            <Form.Group style={{ textAlign: "center" }}>
+              <Grid className="segment centered">
+                <Header content="Select divisions" style={{ marginTop: 10 }} />
+                {divisionsByLevel.map((division) => (
+                  <Fragment key={division.id}>
+                    <Checkbox
+                      label={division.name}
+                      name={division.id?.toString()}
+                      id={division.id}
+                      defaultChecked={
+                        season?.divisions.filter((el) => {
+                          return el.id === division.id;
+                        }).length! > 0
+                      }
+                      style={{ marginTop: 10 }}
+                    />
+                    <br />
+                  </Fragment>
+                ))}
+              </Grid>
+            </Form.Group>
+          )}
 
           {season && (
             <Button
               onClick={() => handleSubmit()}
-              disabled={invalid || pristine}
+              disabled={invalid}
               floated="right"
               positive
               type="submit"
@@ -136,7 +148,7 @@ const SeasonForm: React.FC<IProps> = ({ season }) => {
           {!season && (
             <Button
               onClick={() => handleSubmit()}
-              disabled={invalid || pristine}
+              disabled={invalid}
               floated="right"
               positive
               type="submit"
