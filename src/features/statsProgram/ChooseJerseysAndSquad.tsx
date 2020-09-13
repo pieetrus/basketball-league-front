@@ -6,14 +6,17 @@ import {
   Image,
   Header,
   Select,
+  Button,
 } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
 import { jerseyColorOptions } from "../../app/common/options/jerseyColorOptions";
 import SquadTable from "./SquadTable";
+import { history } from "../..";
 
 const ChooseJerseysAndSquad: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
+  const { closeModal } = rootStore.modalStore;
   const { selectedMatch: match } = rootStore.matchStore;
 
   return (
@@ -68,6 +71,17 @@ const ChooseJerseysAndSquad: React.FC = () => {
           </Grid.Column>
         </Grid>
         <Divider vertical />
+      </Segment>
+      <Segment textAlign="right">
+        <Button
+          content="Next"
+          positive
+          size="big"
+          onClick={() => {
+            closeModal();
+            history.push("/program");
+          }}
+        />
       </Segment>
     </Fragment>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Checkbox, Button, Icon } from "semantic-ui-react";
 import { IPlayerShortInfo } from "../../app/models/matchDetailed";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   players: IPlayerShortInfo[];
@@ -57,4 +58,4 @@ const SquadTable: React.FC<IProps> = ({ players }) => {
   );
 };
 
-export default SquadTable;
+export default observer(SquadTable);

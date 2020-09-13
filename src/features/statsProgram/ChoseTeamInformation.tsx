@@ -9,8 +9,6 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import { IMatch } from "../../app/models/match";
 import { history } from "../..";
 import { combineValidators, isRequired } from "revalidate";
-import { OnChange } from "react-final-form-listeners";
-import { values } from "mobx";
 
 interface IProps {
   startDate: number;
