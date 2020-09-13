@@ -5,7 +5,7 @@ import GameInformation from "./GameInformation";
 import { observer } from "mobx-react-lite";
 import ScheduledGames from "./ScheduledGames";
 
-const StatsProgramDashboard = () => {
+const MatchManagerDashboard = () => {
   const rootStore = useContext(RootStoreContext);
   const { openModal, setDefaultModalSize } = rootStore.modalStore;
   const { loadTeams } = rootStore.teamStore;
@@ -35,4 +35,4 @@ const StatsProgramDashboard = () => {
   );
 };
 
-export default observer(StatsProgramDashboard);
+export default observer(MatchManagerDashboard);

@@ -41,7 +41,7 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
     createMatch(newMatch).then(() => {
       closeModal();
       loadMatchesDetailed();
-      history.push(`/statsProgram/`);
+      history.push(`/matchManager/`);
     });
   };
 

@@ -18,6 +18,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { closeModal } = rootStore.modalStore;
   const { selectedMatch: match } = rootStore.matchStore;
+  const { setTeamPlayers, setTeams } = rootStore.statsStore;
 
   return (
     <Fragment>
@@ -79,7 +80,9 @@ const ChooseJerseysAndSquad: React.FC = () => {
           size="big"
           onClick={() => {
             closeModal();
-            history.push("/program");
+            setTeamPlayers(match?.teamHomePlayers!, match?.teamGuestPlayers!);
+            setTeams(match?.teamHome!, match?.teamGuest!);
+            history.push("/statsProgram");
           }}
         />
       </Segment>

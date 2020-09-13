@@ -9,6 +9,7 @@ import TeamStore from "./teamStore";
 import DivisionStore from "./divisionStore";
 import MatchStore from "./matchStore";
 import SeasonStore from "./seasonStore";
+import StatsStore from "./statsStore";
 
 configure({ enforceActions: "always" });
 
@@ -22,6 +23,7 @@ export class RootStore {
   divisionStore: DivisionStore;
   matchStore: MatchStore;
   seasonStore: SeasonStore;
+  statsStore: StatsStore;
 
   constructor() {
     this.playerStore = new PlayerStore(this);
@@ -33,6 +35,7 @@ export class RootStore {
     this.divisionStore = new DivisionStore(this);
     this.matchStore = new MatchStore(this);
     this.seasonStore = new SeasonStore(this);
+    this.statsStore = new StatsStore(this);
   }
 }
 
