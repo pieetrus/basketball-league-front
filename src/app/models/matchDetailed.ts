@@ -23,10 +23,11 @@ export interface IMatchDetailedSquads {
 }
 
 export interface IPlayerShortInfo {
-  id?: number; // playerMatchId
+  id?: number; // playerSeasonId
   name: string;
   surname: string;
   jerseyNr: string;
   position: string;
   height: number;
+  isGuest: boolean;
 }

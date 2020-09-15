@@ -18,7 +18,27 @@ const ChooseJerseysAndSquad: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { closeModal } = rootStore.modalStore;
   const { selectedMatch: match } = rootStore.matchStore;
-  const { setTeamPlayers, setTeams } = rootStore.statsStore;
+  const {
+    setTeamPlayers,
+    setTeams,
+    setTeamsJerseysColors,
+    setTeamsChosenPlayers,
+  } = rootStore.statsStore;
+
+  const getSelectedPlayers = (guest: boolean) => {
+    let selector;
+    if (guest) selector = "td.guest div.checked input";
+    else selector = "td.home div.checked input";
+
+    let selectedCheckboxes: any = document.querySelectorAll(selector);
+    let selectedPlayersIds: Number[] = [];
+
+    for (let index = 0; index < selectedCheckboxes.length; index++) {
+      let playerSeasonId = selectedCheckboxes[index].name!;
+      selectedPlayersIds.push(playerSeasonId);
+    }
+    return selectedPlayersIds;
+  };
 
   return (
     <Fragment>
@@ -26,7 +46,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
         <Grid>
           <Grid.Column width={8}>
             <Header textAlign="center">
-              {match?.teamHome.name}{" "}
+              {match?.teamHome.name}
               <Image
                 src={match?.teamHome.logoUrl}
                 avatar={true}
@@ -40,16 +60,17 @@ const ChooseJerseysAndSquad: React.FC = () => {
                   options={jerseyColorOptions}
                   style={{ marginLeft: 10 }}
                   placeholder="Choose jersey color"
+                  id="team-color-home"
                 />
               </Segment>
             </Segment.Group>
             <Segment>
-              <SquadTable players={match!.teamHomePlayers} />
+              <SquadTable players={match!.teamHomePlayers} isGuest={false} />
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
             <Header textAlign="center">
-              {match?.teamGuest.name}{" "}
+              {match?.teamGuest.name}
               <Image
                 src={match?.teamGuest.logoUrl}
                 avatar={true}
@@ -63,11 +84,12 @@ const ChooseJerseysAndSquad: React.FC = () => {
                   options={jerseyColorOptions}
                   style={{ marginLeft: 10 }}
                   placeholder="Choose jersey color"
+                  id="team-color-guest"
                 />
               </Segment>
             </Segment.Group>
             <Segment>
-              <SquadTable players={match!.teamGuestPlayers} />
+              <SquadTable players={match!.teamGuestPlayers} isGuest={true} />
             </Segment>
           </Grid.Column>
         </Grid>
@@ -79,10 +101,26 @@ const ChooseJerseysAndSquad: React.FC = () => {
           positive
           size="big"
           onClick={() => {
-            closeModal();
+            // closeModal();
             setTeamPlayers(match?.teamHomePlayers!, match?.teamGuestPlayers!);
             setTeams(match?.teamHome!, match?.teamGuest!);
-            history.push("/statsProgram");
+            setTeamsJerseysColors(
+              document
+                .getElementById("team-color-home")!
+                .getElementsByClassName("selected item")[0]
+                .getElementsByTagName("span")[0]
+                .innerHTML.toLowerCase(),
+              document
+                .getElementById("team-color-guest")!
+                .getElementsByClassName("selected item")[0]
+                .getElementsByTagName("span")[0]
+                .innerHTML.toLowerCase()
+            );
+            console.log(getSelectedPlayers(true));
+            setTeamsChosenPlayers(
+              getSelectedPlayers(false),
+              getSelectedPlayers(true)
+            );
           }}
         />
       </Segment>

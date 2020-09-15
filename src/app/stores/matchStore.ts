@@ -3,7 +3,7 @@ import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { IMatch } from "../models/match";
 import { toast } from "react-toastify";
-import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
+import { IMatchDetailedSquads } from "../models/matchDetailed";
 import { SyntheticEvent } from "react";
 
 export default class MatchStore {

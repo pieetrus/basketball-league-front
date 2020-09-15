@@ -5,9 +5,10 @@ import { observer } from "mobx-react-lite";
 
 interface IProps {
   players: IPlayerShortInfo[];
+  isGuest: boolean;
 }
 
-const SquadTable: React.FC<IProps> = ({ players }) => {
+const SquadTable: React.FC<IProps> = ({ players, isGuest }) => {
   return (
     <Table celled compact definition textAlign="center">
       <Table.Header>
@@ -23,9 +24,17 @@ const SquadTable: React.FC<IProps> = ({ players }) => {
       <Table.Body>
         {players.map((player) => (
           <Table.Row key={player.id}>
-            <Table.Cell collapsing>
-              <Checkbox toggle />
-            </Table.Cell>
+            {!isGuest && (
+              <Table.Cell collapsing className="home">
+                <Checkbox toggle name={player.id?.toString()} />
+              </Table.Cell>
+            )}
+            {isGuest && (
+              <Table.Cell collapsing className="guest">
+                <Checkbox toggle name={player.id?.toString()} />
+              </Table.Cell>
+            )}
+
             <Table.Cell>{player.name + " " + player.surname}</Table.Cell>
             <Table.Cell> {player.position}</Table.Cell>
             <Table.Cell>{player.height}</Table.Cell>
@@ -47,10 +56,6 @@ const SquadTable: React.FC<IProps> = ({ players }) => {
             >
               <Icon name="user" /> Add new player
             </Button>
-            {/* <Button size="small">Approve</Button>
-                      <Button disabled size="small">
-                        Approve All
-                      </Button> */}
           </Table.HeaderCell>
         </Table.Row>
       </Table.Footer>

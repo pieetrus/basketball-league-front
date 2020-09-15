@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { IPlayerShortInfo } from "../models/matchDetailed";
 import { ITeam } from "../models/team";
 import { RootStore } from "./rootStore";
@@ -22,6 +22,16 @@ export default class StatsStore {
   @observable teamGuestPlayers: IPlayerShortInfo[] = [];
   @observable teamHome: ITeam | null = null;
   @observable teamGuest: ITeam | null = null;
+  @observable teamHomeJerseyColor: any;
+  @observable teamGuestJerseyColor: any;
+  @observable playerChosen: IPlayerShortInfo | undefined;
+  @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
+  @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
+
+  @computed get getChosenPlayerJerseyColor() {
+    if (this.playerChosen?.isGuest) return this.teamGuestJerseyColor;
+    else return this.teamHomeJerseyColor;
+  }
 
   @action setTeamPlayers = (
     teamHomePlayers: IPlayerShortInfo[],
@@ -34,6 +44,30 @@ export default class StatsStore {
   @action setTeams = (teamHome: ITeam, teamGuest: ITeam) => {
     this.teamHome = teamHome;
     this.teamGuest = teamGuest;
+  };
+
+  @action setplayerChosen = (
+    playerChosen: IPlayerShortInfo | undefined,
+    isGuest: boolean
+  ) => {
+    if (playerChosen) playerChosen.isGuest = isGuest;
+    this.playerChosen = playerChosen;
+  };
+
+  @action setTeamsJerseysColors = (
+    teamHomeJerseyColor: String,
+    teamGuestJerseyColor: String
+  ) => {
+    this.teamHomeJerseyColor = teamHomeJerseyColor;
+    this.teamGuestJerseyColor = teamGuestJerseyColor;
+  };
+
+  @action setTeamsChosenPlayers = (
+    teamHomeChosenPlayers: Number[],
+    teamGuestChosenPlayers: Number[]
+  ) => {
+    this.teamHomeChosenPlayers = teamHomeChosenPlayers;
+    this.teamGuestChosenPlayers = teamGuestChosenPlayers;
   };
 
   //   @observable loadingInitial = false;

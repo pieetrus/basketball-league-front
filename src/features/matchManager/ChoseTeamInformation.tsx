@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { Header, Form, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -49,14 +49,14 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
     loadTeamsSeason();
   }, [loadTeamsSeason]);
 
-  const getElementFromArrayById = (array: any[], value: any) => {
-    for (let i = 0; i < array.length; i++) {
-      const element = array[i];
-      if (element.value === value) {
-        return array.indexOf(element);
-      }
-    }
-  };
+  // const getElementFromArrayById = (array: any[], value: any) => {
+  //   for (let i = 0; i < array.length; i++) {
+  //     const element = array[i];
+  //     if (element.value === value) {
+  //       return array.indexOf(element);
+  //     }
+  //   }
+  // };
 
   if (loadingInitial) return <LoadingComponent content="Loading..." />;
 

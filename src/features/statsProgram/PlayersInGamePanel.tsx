@@ -1,12 +1,22 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
-import { Button, Grid } from "semantic-ui-react";
+import React, { useContext } from "react";
+import { Button, Grid, Segment } from "semantic-ui-react";
 import { IPlayerShortInfo } from "../../app/models/matchDetailed";
+import { RootStoreContext } from "../../app/stores/rootStore";
 
 const PlayersInGamePanel: React.FC<{
   teamHomePlayers: IPlayerShortInfo[];
   teamGuestPlayers: IPlayerShortInfo[];
 }> = ({ teamHomePlayers, teamGuestPlayers }) => {
+  const rootStore = useContext(RootStoreContext);
+  const {
+    playerChosen,
+    setplayerChosen,
+    getChosenPlayerJerseyColor,
+    teamGuestJerseyColor,
+    teamHomeJerseyColor,
+  } = rootStore.statsStore;
+
   return (
     <Grid.Row>
       <Grid.Column width={2}>
@@ -16,23 +26,44 @@ const PlayersInGamePanel: React.FC<{
       {teamHomePlayers!.slice(0, 5).map((player) => (
         <Grid.Column key={player.id} width={1} textAlign="center">
           <Button
-            style={{ width: 50, height: 50, fontSize: 17 }}
-            color="green"
+            toggle
+            style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
+            color={teamHomeJerseyColor}
             inverted
             content={player.jerseyNr}
             clearing="true"
+            onClick={() => {
+              setplayerChosen(player, false);
+            }}
+            compact
           />
         </Grid.Column>
       ))}
-      <Grid.Column width={2} />
+      <Grid.Column width={1} textAlign="center">
+        {playerChosen && (
+          <Segment
+            compact
+            inverted
+            style={{ height: 35, width: 35, marginTop: 60, cursor: "pointer" }}
+            content={playerChosen.jerseyNr}
+            color={getChosenPlayerJerseyColor}
+            onClick={() => setplayerChosen(undefined, false)}
+          ></Segment>
+        )}
+      </Grid.Column>
       {teamGuestPlayers!.slice(0, 5).map((player) => (
         <Grid.Column key={player.id} width={1} textAlign="center">
           <Button
-            style={{ width: 50, height: 50, fontSize: 17 }}
-            color="pink"
+            toggle
+            style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
+            color={teamGuestJerseyColor}
             inverted
             content={player.jerseyNr}
             clearing="true"
+            onClick={() => {
+              setplayerChosen(player, true);
+            }}
+            compact
           />
         </Grid.Column>
       ))}
