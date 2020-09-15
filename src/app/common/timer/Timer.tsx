@@ -39,6 +39,45 @@ const Timer: React.FC<{
 
   return (
     <Grid centered>
+      <GridColumn width={1} style={{ right: 15 }}>
+        <GridRow verticalAlign="top">
+          <i
+            className="angle double up icon"
+            style={{ fontSize: 15, cursor: "pointer" }}
+            onClick={() => {
+              if (timeLeft < seconds) {
+                if (timeLeft > seconds - 61) {
+                  setTimeLeft(seconds);
+                  setMinutesLeft(10);
+                  setSecondsLeft(0);
+                } else {
+                  setTimeLeft(timeLeft + 60);
+                  setMinutesLeft(minutesLeft + 1);
+                }
+                sendData(timeLeft);
+              }
+            }}
+            // onMouseEnter={() => console.log("reminder to do on hover effect")}
+          ></i>
+        </GridRow>
+        <GridRow>
+          <i
+            className="angle double down icon"
+            style={{ fontSize: 15, cursor: "pointer" }}
+            onClick={() => {
+              if (timeLeft < 59) {
+                setTimeLeft(0);
+                setMinutesLeft(0);
+                setSecondsLeft(0);
+              } else {
+                setTimeLeft(timeLeft - 60);
+                setMinutesLeft(minutesLeft - 1);
+              }
+              sendData(timeLeft);
+            }}
+          ></i>
+        </GridRow>
+      </GridColumn>
       <GridColumn width={6} verticalAlign="middle">
         <Header size="large">
           <span>
@@ -58,7 +97,7 @@ const Timer: React.FC<{
             className="angle double up icon"
             style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
-              if (timeLeft < 600) {
+              if (timeLeft < seconds) {
                 setTimeLeft(timeLeft + 1);
                 sendData(timeLeft);
                 if (secondsLeft < 59) setSecondsLeft(secondsLeft + 1);
