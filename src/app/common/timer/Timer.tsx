@@ -56,7 +56,7 @@ const Timer: React.FC<{
         <GridRow verticalAlign="top">
           <i
             className="angle double up icon"
-            style={{ fontSize: 15 }}
+            style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
               if (timeLeft < 600) {
                 setTimeLeft(timeLeft + 1);
@@ -74,7 +74,7 @@ const Timer: React.FC<{
         <GridRow>
           <i
             className="angle double down icon"
-            style={{ fontSize: 15 }}
+            style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
               if (timeLeft > 0) {
                 setTimeLeft(timeLeft - 1);

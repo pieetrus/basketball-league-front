@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Segment, Image } from "semantic-ui-react";
 import { ITeam } from "../../app/models/team";
@@ -17,7 +18,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
             style={{ marginLeft: 10 }}
           />
         </Segment>
-        <Segment size="huge" textAlign="justified">
+        <Segment size="huge" textAlign="center">
           team name
           {/* {team.name} */}
         </Segment>
@@ -32,7 +33,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
         <Segment textAlign="center" vertical>
           <h3>90</h3>
         </Segment>
-        <Segment size="huge" textAlign="justified">
+        <Segment size="huge" textAlign="center">
           team name
           {/* {team.name} */}
         </Segment>
@@ -44,4 +45,4 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
   }
 };
 
-export default TeamScore;
+export default observer(TeamScore);

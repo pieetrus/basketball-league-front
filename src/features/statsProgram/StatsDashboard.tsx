@@ -1,7 +1,10 @@
 import { observer } from "mobx-react-lite";
-import React, { Fragment, useContext } from "react";
-import { Segment, Grid, GridColumn, GridRow } from "semantic-ui-react";
+import React, { useContext } from "react";
+import { Grid, GridColumn } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import ActionLog from "./ActionLog";
+import EventPanel from "./EventPanel";
+import PlayersInGamePanel from "./PlayersInGamePanel";
 import StatsHeader from "./StatsHeader";
 
 const StatsDashboard = () => {
@@ -13,29 +16,23 @@ const StatsDashboard = () => {
   }
 
   return (
-    <Fragment>
-      <Grid centered>
-        <GridColumn width={16}>
-          <StatsHeader getData={getActualTime} />
-        </GridColumn>
-        <GridRow>
-          {teamHomePlayers!.map((player) => (
-            <GridColumn key={player.id} floated="left">
-              <Segment style={{ width: 50, height: 50 }} textAlign="center">
-                {player.jerseyNr}
-              </Segment>
-            </GridColumn>
-          ))}
-          {teamGuestPlayers!.map((player) => (
-            <GridColumn key={player.id} floated="right">
-              <Segment style={{ width: 50, height: 50 }} textAlign="center">
-                {player.jerseyNr}
-              </Segment>
-            </GridColumn>
-          ))}
-        </GridRow>
-      </Grid>
-    </Fragment>
+    <Grid centered>
+      <StatsHeader getData={getActualTime} />
+      <PlayersInGamePanel
+        teamGuestPlayers={teamGuestPlayers}
+        teamHomePlayers={teamHomePlayers}
+      />
+      <GridColumn width={4} floated="left">
+        <EventPanel />
+      </GridColumn>
+      <GridColumn width={8}>
+        <ActionLog />
+      </GridColumn>
+
+      <GridColumn width={4} floated="right">
+        <EventPanel />
+      </GridColumn>
+    </Grid>
   );
 };
 
