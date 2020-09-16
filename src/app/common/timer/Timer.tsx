@@ -4,8 +4,7 @@ import { Grid, GridColumn, GridRow, Header } from "semantic-ui-react";
 const Timer: React.FC<{
   seconds: any;
   paused: boolean;
-  sendData: (val: any) => void;
-}> = ({ seconds, paused, sendData }) => {
+}> = ({ seconds, paused }) => {
   // initialize timeLeft with the seconds prop
   const [timeLeft, setTimeLeft] = useState(seconds);
   const [minutesLeft, setMinutesLeft] = useState(Math.floor(seconds / 60));
@@ -26,7 +25,6 @@ const Timer: React.FC<{
         setTimeLeft(timeLeft - 1);
         setSecondsLeft(secondsLeft - 1);
       }
-      sendData(timeLeft);
     }, 1000);
 
     if (paused) clearInterval(intervalId);
@@ -35,7 +33,7 @@ const Timer: React.FC<{
     return () => clearInterval(intervalId);
     // add timeLeft as a dependency to re-rerun the effect
     // when we update it
-  }, [timeLeft, paused, secondsLeft, minutesLeft, sendData]);
+  }, [timeLeft, paused, secondsLeft, minutesLeft]);
 
   return (
     <Grid centered>
@@ -54,7 +52,6 @@ const Timer: React.FC<{
                   setTimeLeft(timeLeft + 60);
                   setMinutesLeft(minutesLeft + 1);
                 }
-                sendData(timeLeft);
               }
             }}
             // onMouseEnter={() => console.log("reminder to do on hover effect")}
@@ -73,19 +70,18 @@ const Timer: React.FC<{
                 setTimeLeft(timeLeft - 60);
                 setMinutesLeft(minutesLeft - 1);
               }
-              sendData(timeLeft);
             }}
           ></i>
         </GridRow>
       </GridColumn>
       <GridColumn width={6} verticalAlign="middle">
         <Header size="large">
-          <span>
+          <span id="minutes-left">
             {minutesLeft < 10 && "0" + minutesLeft}
             {minutesLeft >= 10 && minutesLeft}
           </span>
           :
-          <span>
+          <span id="seconds-left">
             {secondsLeft < 10 && "0" + secondsLeft}
             {secondsLeft >= 10 && secondsLeft}
           </span>
@@ -99,7 +95,6 @@ const Timer: React.FC<{
             onClick={() => {
               if (timeLeft < seconds) {
                 setTimeLeft(timeLeft + 1);
-                sendData(timeLeft);
                 if (secondsLeft < 59) setSecondsLeft(secondsLeft + 1);
                 if (secondsLeft > 58) {
                   setSecondsLeft(0);
@@ -117,7 +112,6 @@ const Timer: React.FC<{
             onClick={() => {
               if (timeLeft > 0) {
                 setTimeLeft(timeLeft - 1);
-                sendData(timeLeft);
                 if (secondsLeft > 0) setSecondsLeft(secondsLeft - 1);
                 if (secondsLeft === 0) {
                   setSecondsLeft(59);

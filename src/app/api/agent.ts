@@ -11,6 +11,7 @@ import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 import { ISeason } from "../models/season";
 import { ITeamSeason } from "../models/teamSeason";
 import { IPlayerSeason } from "../models/playerSeason";
+import { IShot } from "../models/shot";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -159,6 +160,17 @@ const Profiles = {
   deletePhoto: (id: string) => request.del(`/photo/${id}`),
 };
 
+const Incidents = {
+  createShot: (shot: IShot) => request.post("/shot", shot),
+  // listDetailed: (): Promise<IMatchDetailed[]> => request.get(`/match/detailed`),
+  // details: (id: number): Promise<IMatchDetailed> => request.get(`/match/${id}`),
+  // detailsDetailed: (id: number): Promise<IMatchDetailedSquads> =>
+  //   request.get(`/match/detailed/${id}`),
+  // create: (match: IMatch) => request.post("/match", match),
+  // update: (match: IMatch) => request.put(`/match/${match.id}`, match),
+  // delete: (id: number) => request.del(`/match/${id}`),
+};
+
 export default {
   Players,
   Teams,
@@ -167,4 +179,5 @@ export default {
   Divisions,
   Matches,
   Seasons,
+  Incidents,
 };

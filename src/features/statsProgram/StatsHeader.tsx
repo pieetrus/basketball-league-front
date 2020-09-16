@@ -6,7 +6,7 @@ import Timer from "../../app/common/timer/Timer";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import TeamScore from "./TeamScore";
 
-const StatsHeader: React.FC<any> = ({ getData }) => {
+const StatsHeader = () => {
   const rootStore = useContext(RootStoreContext);
   const { teamGuest, teamHome } = rootStore.statsStore;
 
@@ -23,11 +23,7 @@ const StatsHeader: React.FC<any> = ({ getData }) => {
             </GridColumn>
             <GridColumn width={4}>
               <Segment textAlign="center">
-                <Timer
-                  seconds={secondsLeft}
-                  paused={!timerActive}
-                  sendData={getData}
-                />
+                <Timer seconds={secondsLeft} paused={!timerActive} />
                 {!timerActive && (
                   <Button
                     content={"Start clock"}

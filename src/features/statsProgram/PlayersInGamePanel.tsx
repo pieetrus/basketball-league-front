@@ -4,10 +4,7 @@ import { Button, Grid, Segment } from "semantic-ui-react";
 import { IPlayerShortInfo } from "../../app/models/matchDetailed";
 import { RootStoreContext } from "../../app/stores/rootStore";
 
-const PlayersInGamePanel: React.FC<{
-  teamHomePlayers: IPlayerShortInfo[];
-  teamGuestPlayers: IPlayerShortInfo[];
-}> = ({ teamHomePlayers, teamGuestPlayers }) => {
+const PlayersInGamePanel = () => {
   const rootStore = useContext(RootStoreContext);
   const {
     playerChosen,
@@ -15,6 +12,8 @@ const PlayersInGamePanel: React.FC<{
     getChosenPlayerJerseyColor,
     teamGuestJerseyColor,
     teamHomeJerseyColor,
+    getChosenTeamHomePlayers: teamHomePlayers,
+    getChosenTeamGuestPlayers: teamGuestPlayers,
   } = rootStore.statsStore;
 
   return (

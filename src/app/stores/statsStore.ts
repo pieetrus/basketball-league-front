@@ -1,5 +1,8 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
+import { toast } from "react-toastify";
+import agent from "../api/agent";
 import { IPlayerShortInfo } from "../models/matchDetailed";
+import { IShot } from "../models/shot";
 import { ITeam } from "../models/team";
 import { RootStore } from "./rootStore";
 
@@ -17,7 +20,8 @@ export default class StatsStore {
     //   }
     // );
   }
-
+  @observable submitting = false;
+  @observable timeInSeconds: number = 0;
   @observable teamHomePlayers: IPlayerShortInfo[] = [];
   @observable teamGuestPlayers: IPlayerShortInfo[] = [];
   @observable teamHome: ITeam | null = null;
@@ -25,6 +29,7 @@ export default class StatsStore {
   @observable teamHomeJerseyColor: any;
   @observable teamGuestJerseyColor: any;
   @observable playerChosen: IPlayerShortInfo | undefined;
+  @observable playerChosen2: IPlayerShortInfo | undefined;
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
 
@@ -67,6 +72,14 @@ export default class StatsStore {
     this.playerChosen = playerChosen;
   };
 
+  @action setplayerChosen2 = (
+    playerChosen2: IPlayerShortInfo | undefined,
+    isGuest: boolean
+  ) => {
+    if (playerChosen2) playerChosen2.isGuest = isGuest;
+    this.playerChosen2 = playerChosen2;
+  };
+
   @action setTeamsJerseysColors = (
     teamHomeJerseyColor: String,
     teamGuestJerseyColor: String
@@ -81,6 +94,24 @@ export default class StatsStore {
   ) => {
     this.teamHomeChosenPlayers = teamHomeChosenPlayers;
     this.teamGuestChosenPlayers = teamGuestChosenPlayers;
+  };
+
+  @action createShot = async (shot: IShot) => {
+    this.submitting = true;
+    try {
+      shot.id = await agent.Incidents.createShot(shot);
+      runInAction("creating shot", () => {
+        // this.teamsRegistry.set(team.id, team);
+        this.submitting = false;
+      });
+      return shot.id;
+    } catch (error) {
+      runInAction("create shot error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
   };
 
   //   @observable loadingInitial = false;
