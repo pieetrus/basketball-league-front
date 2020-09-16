@@ -22,23 +22,27 @@ const PlayersInGamePanel: React.FC<{
       <Grid.Column width={2}>
         <Button content="Sub" color="instagram" size={"large"} />
         <Button content="Bench" color="instagram" style={{ marginTop: 10 }} />
+        <Button content="Coach" color="instagram" style={{ marginTop: 10 }} />
       </Grid.Column>
-      {teamHomePlayers!.slice(0, 5).map((player) => (
-        <Grid.Column key={player.id} width={1} textAlign="center">
-          <Button
-            toggle
-            style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
-            color={teamHomeJerseyColor}
-            inverted
-            content={player.jerseyNr}
-            clearing="true"
-            onClick={() => {
-              setplayerChosen(player, false);
-            }}
-            compact
-          />
-        </Grid.Column>
-      ))}
+      {teamHomePlayers &&
+        teamHomePlayers!
+          .slice(0, 5) // todo remove it and add strating 5 functionality
+          .map((player) => (
+            <Grid.Column key={player.id} width={1} textAlign="center">
+              <Button
+                toggle
+                style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
+                color={teamHomeJerseyColor}
+                inverted
+                content={player.jerseyNr}
+                clearing="true"
+                onClick={() => {
+                  setplayerChosen(player, false);
+                }}
+                compact
+              />
+            </Grid.Column>
+          ))}
       <Grid.Column width={1} textAlign="center">
         {playerChosen && (
           <Segment
@@ -51,22 +55,25 @@ const PlayersInGamePanel: React.FC<{
           ></Segment>
         )}
       </Grid.Column>
-      {teamGuestPlayers!.slice(0, 5).map((player) => (
-        <Grid.Column key={player.id} width={1} textAlign="center">
-          <Button
-            toggle
-            style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
-            color={teamGuestJerseyColor}
-            inverted
-            content={player.jerseyNr}
-            clearing="true"
-            onClick={() => {
-              setplayerChosen(player, true);
-            }}
-            compact
-          />
-        </Grid.Column>
-      ))}
+      {teamGuestPlayers &&
+        teamGuestPlayers!
+          .slice(0, 5) // todo remove it and add strating 5 functionality
+          .map((player) => (
+            <Grid.Column key={player.id} width={1} textAlign="center">
+              <Button
+                toggle
+                style={{ width: 50, height: 50, fontSize: 17, color: "black" }}
+                color={teamGuestJerseyColor}
+                inverted
+                content={player.jerseyNr}
+                clearing="true"
+                onClick={() => {
+                  setplayerChosen(player, true);
+                }}
+                compact
+              />
+            </Grid.Column>
+          ))}
       <Grid.Column width={2}>
         <Button
           content="Sub"
@@ -76,6 +83,12 @@ const PlayersInGamePanel: React.FC<{
         />
         <Button
           content="Bench"
+          color="instagram"
+          floated="right"
+          style={{ marginTop: 10 }}
+        />
+        <Button
+          content="Coach"
           color="instagram"
           floated="right"
           style={{ marginTop: 10 }}

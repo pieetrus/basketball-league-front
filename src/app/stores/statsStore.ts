@@ -33,6 +33,19 @@ export default class StatsStore {
     else return this.teamHomeJerseyColor;
   }
 
+  @computed get getChosenTeamHomePlayers() {
+    let odp = this.rootStore.matchStore.selectedMatch?.teamHomePlayers.filter(
+      (player) => this.teamHomeChosenPlayers.includes(player.id!)
+    );
+    return odp;
+  }
+
+  @computed get getChosenTeamGuestPlayers() {
+    return this.rootStore.matchStore.selectedMatch?.teamGuestPlayers.filter(
+      (player) => this.teamGuestChosenPlayers.includes(player.id!)
+    );
+  }
+
   @action setTeamPlayers = (
     teamHomePlayers: IPlayerShortInfo[],
     teamGuestPlayers: IPlayerShortInfo[]

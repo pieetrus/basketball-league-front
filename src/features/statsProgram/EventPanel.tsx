@@ -21,6 +21,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
+              disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -32,6 +33,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
+              disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -43,6 +45,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
+              disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -54,6 +57,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
+              disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">

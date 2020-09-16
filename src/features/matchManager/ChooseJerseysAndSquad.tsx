@@ -13,31 +13,75 @@ import { observer } from "mobx-react-lite";
 import { jerseyColorOptions } from "../../app/common/options/jerseyColorOptions";
 import SquadTable from "./SquadTable";
 import { history } from "../..";
+import { toast } from "react-toastify";
 
 const ChooseJerseysAndSquad: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { closeModal } = rootStore.modalStore;
   const { selectedMatch: match } = rootStore.matchStore;
   const {
-    setTeamPlayers,
     setTeams,
     setTeamsJerseysColors,
     setTeamsChosenPlayers,
   } = rootStore.statsStore;
 
+  const selectedTeamHomePlayersSelector = "td.home div.checked input";
+  const selectedTeamGuestPlayersSelector = "td.guest div.checked input";
+
   const getSelectedPlayers = (guest: boolean) => {
     let selector;
-    if (guest) selector = "td.guest div.checked input";
-    else selector = "td.home div.checked input";
+    if (guest) selector = selectedTeamGuestPlayersSelector;
+    else selector = selectedTeamHomePlayersSelector;
 
     let selectedCheckboxes: any = document.querySelectorAll(selector);
     let selectedPlayersIds: Number[] = [];
 
     for (let index = 0; index < selectedCheckboxes.length; index++) {
-      let playerSeasonId = selectedCheckboxes[index].name!;
+      let playerSeasonId = Number.parseInt(selectedCheckboxes[index].name!);
       selectedPlayersIds.push(playerSeasonId);
     }
     return selectedPlayersIds;
+  };
+
+  const getSelectedJerseyColor = (guest: boolean) => {
+    let idSelector;
+    if (guest) idSelector = "team-color-guest";
+    else idSelector = "team-color-home";
+    let selectedItem = document
+      .getElementById(idSelector)!
+      .getElementsByClassName("active selected item")[0];
+
+    if (selectedItem)
+      return selectedItem
+        .getElementsByTagName("span")[0]
+        .innerHTML.toLowerCase();
+    else return selectedItem;
+  };
+
+  const validate = () => {
+    if (
+      document.querySelectorAll(selectedTeamHomePlayersSelector).length < 4 ||
+      document.querySelectorAll(selectedTeamHomePlayersSelector).length > 12
+    ) {
+      toast.error("Bad amount of team home players (5-12)");
+      return false;
+    }
+    if (
+      document.querySelectorAll(selectedTeamGuestPlayersSelector).length < 4 ||
+      document.querySelectorAll(selectedTeamHomePlayersSelector).length > 12
+    ) {
+      toast.error("Bad amount of team guest players (5-12)");
+      return false;
+    }
+    if (!getSelectedJerseyColor(false)) {
+      toast.error("Select team home jersey color");
+      return false;
+    }
+    if (!getSelectedJerseyColor(true)) {
+      toast.error("Select team guest jersey color");
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -101,26 +145,19 @@ const ChooseJerseysAndSquad: React.FC = () => {
           positive
           size="big"
           onClick={() => {
-            // closeModal();
-            setTeamPlayers(match?.teamHomePlayers!, match?.teamGuestPlayers!);
-            setTeams(match?.teamHome!, match?.teamGuest!);
-            setTeamsJerseysColors(
-              document
-                .getElementById("team-color-home")!
-                .getElementsByClassName("selected item")[0]
-                .getElementsByTagName("span")[0]
-                .innerHTML.toLowerCase(),
-              document
-                .getElementById("team-color-guest")!
-                .getElementsByClassName("selected item")[0]
-                .getElementsByTagName("span")[0]
-                .innerHTML.toLowerCase()
-            );
-            console.log(getSelectedPlayers(true));
-            setTeamsChosenPlayers(
-              getSelectedPlayers(false),
-              getSelectedPlayers(true)
-            );
+            if (validate()) {
+              setTeams(match?.teamHome!, match?.teamGuest!);
+              setTeamsJerseysColors(
+                getSelectedJerseyColor(false),
+                getSelectedJerseyColor(true)
+              );
+              setTeamsChosenPlayers(
+                getSelectedPlayers(false),
+                getSelectedPlayers(true)
+              );
+              closeModal();
+              history.push("/statsProgram");
+            }
           }}
         />
       </Segment>

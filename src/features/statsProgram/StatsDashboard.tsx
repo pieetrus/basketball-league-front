@@ -9,7 +9,10 @@ import StatsHeader from "./StatsHeader";
 
 const StatsDashboard = () => {
   const rootStore = useContext(RootStoreContext);
-  const { teamGuestPlayers, teamHomePlayers } = rootStore.statsStore;
+  const {
+    getChosenTeamHomePlayers: teamHomePlayers,
+    getChosenTeamGuestPlayers: teamGuestPlayers,
+  } = rootStore.statsStore;
 
   function getActualTime(val: any) {
     console.log(val); // prototype only to get data from timer
@@ -19,8 +22,8 @@ const StatsDashboard = () => {
     <Grid centered>
       <StatsHeader getData={getActualTime} />
       <PlayersInGamePanel
-        teamGuestPlayers={teamGuestPlayers}
-        teamHomePlayers={teamHomePlayers}
+        teamGuestPlayers={teamGuestPlayers!}
+        teamHomePlayers={teamHomePlayers!}
       />
       <GridColumn width={4} floated="left">
         <EventPanel />

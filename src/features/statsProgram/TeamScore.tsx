@@ -19,8 +19,8 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
           />
         </Segment>
         <Segment size="huge" textAlign="center">
-          team name
-          {/* {team.name} */}
+          {team && team.name}
+          {!team && "Team name"}
         </Segment>
         <Segment textAlign="center" vertical>
           <h3>90</h3>
@@ -34,8 +34,8 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
           <h3>90</h3>
         </Segment>
         <Segment size="huge" textAlign="center">
-          team name
-          {/* {team.name} */}
+          {team && team.name}
+          {!team && "Team name"}
         </Segment>
         <Segment size="mini">
           <Image avatar src={"../assets/logo-dalk.png"} />
