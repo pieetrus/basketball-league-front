@@ -12,6 +12,7 @@ import { ISeason } from "../models/season";
 import { ITeamSeason } from "../models/teamSeason";
 import { IPlayerSeason } from "../models/playerSeason";
 import { IShot } from "../models/shot";
+import { IIncident } from "../models/incident";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -162,6 +163,8 @@ const Profiles = {
 
 const Incidents = {
   createShot: (shot: IShot) => request.post("/shot", shot),
+  list: (matchId: number): Promise<IIncident[]> =>
+    request.get("/incident?matchId=" + matchId),
   // listDetailed: (): Promise<IMatchDetailed[]> => request.get(`/match/detailed`),
   // details: (id: number): Promise<IMatchDetailed> => request.get(`/match/${id}`),
   // detailsDetailed: (id: number): Promise<IMatchDetailedSquads> =>

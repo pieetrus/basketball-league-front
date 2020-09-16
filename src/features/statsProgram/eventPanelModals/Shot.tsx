@@ -56,7 +56,7 @@ const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       isAccurate: shotMade,
       isFastAttack: false,
       value: shotValue,
-      PlayerAssistId: playerChosen2?.id!,
+      playerAssistId: playerChosen2?.id!,
     };
     console.log(model);
     createShot(model)

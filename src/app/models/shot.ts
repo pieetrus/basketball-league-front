@@ -10,7 +10,7 @@ export interface IShot {
   isAccurate: boolean;
   isFastAttack: boolean; // not in use yet
   value: number;
-  PlayerAssistId: number;
+  playerAssistId: number;
 }
 
 // export class ShotFormValues implements IShot {

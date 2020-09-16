@@ -23,6 +23,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
     setTeams,
     setTeamsJerseysColors,
     setTeamsChosenPlayers,
+    setMatch,
   } = rootStore.statsStore;
 
   const selectedTeamHomePlayersSelector = "td.home div.checked input";
@@ -146,6 +147,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
           size="big"
           onClick={() => {
             // if (validate()) {
+            setMatch(match!);
             setTeams(match?.teamHome!, match?.teamGuest!);
             setTeamsJerseysColors(
               getSelectedJerseyColor(false),

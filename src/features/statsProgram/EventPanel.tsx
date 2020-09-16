@@ -4,7 +4,7 @@ import { GridColumn, Segment, Grid, GridRow, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import Shot from "./eventPanelModals/Shot";
 
-const EventPanel = () => {
+const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const buttonStyle = { width: 150, height: 60, marginTop: 10 };
   const rootStore = useContext(RootStoreContext);
   const { playerChosen } = rootStore.statsStore;
@@ -22,7 +22,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) {
                   setModalSize("large");
-                  openModal(<Shot shotMade={true} />);
+                  openModal(<Shot shotMade={true} isGuest={isGuest} />);
                 }
               }}
               // disabled={playerChosen === undefined}
@@ -37,7 +37,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) {
                   setModalSize("large");
-                  openModal(<Shot shotMade={false} />);
+                  openModal(<Shot shotMade={false} isGuest={isGuest} />);
                 }
               }}
               // disabled={playerChosen === undefined}

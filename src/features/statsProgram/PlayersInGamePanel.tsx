@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { IPlayerShortInfo } from "../../app/models/matchDetailed";
 import { RootStoreContext } from "../../app/stores/rootStore";
 
 const PlayersInGamePanel = () => {
