@@ -14,7 +14,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
           <Image
             avatar
             floated="left"
-            src={"../assets/logo-dalk.png"}
+            src={team && team.logoUrl}
             style={{ marginLeft: 10 }}
           />
         </Segment>
@@ -38,7 +38,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
           {!team && "Team name"}
         </Segment>
         <Segment size="mini">
-          <Image avatar src={"../assets/logo-dalk.png"} />
+          <Image avatar src={team && team.logoUrl} />
         </Segment>
       </Segment.Group>
     );

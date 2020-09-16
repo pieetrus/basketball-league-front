@@ -2,12 +2,13 @@ import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { GridColumn, Segment, Grid, GridRow, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import Shot from "./eventPanelModals/Shot";
 
 const EventPanel = () => {
   const buttonStyle = { width: 150, height: 60, marginTop: 10 };
   const rootStore = useContext(RootStoreContext);
   const { playerChosen } = rootStore.statsStore;
-  const { openModal } = rootStore.modalStore;
+  const { openModal, setModalSize } = rootStore.modalStore;
   return (
     <Segment>
       <Grid centered>
@@ -19,9 +20,12 @@ const EventPanel = () => {
               style={buttonStyle}
               color="green"
               onClick={() => {
-                if (playerChosen) openModal(<p>{playerChosen.name}</p>);
+                if (playerChosen) {
+                  setModalSize("large");
+                  openModal(<Shot shotMade={true} />);
+                }
               }}
-              disabled={playerChosen === undefined}
+              // disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -31,9 +35,12 @@ const EventPanel = () => {
               style={buttonStyle}
               color="red"
               onClick={() => {
-                if (playerChosen) openModal(<p>{playerChosen.name}</p>);
+                if (playerChosen) {
+                  setModalSize("large");
+                  openModal(<Shot shotMade={false} />);
+                }
               }}
-              disabled={playerChosen === undefined}
+              // disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -45,7 +52,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
-              disabled={playerChosen === undefined}
+              // disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">
@@ -57,7 +64,7 @@ const EventPanel = () => {
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
               }}
-              disabled={playerChosen === undefined}
+              // disabled={playerChosen === undefined}
             />
           </GridRow>
           <GridRow centered verticalAlign="middle">

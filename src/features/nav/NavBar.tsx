@@ -26,6 +26,7 @@ function NavBar() {
       <Menu.Item name="TABLES" />
       <Menu.Item name="STATS" />
       <Menu.Item name="CONTACT" />
+      <Menu.Item name="TEST" as={NavLink} to="/test" />
       {/* <Menu.Menu position="right">
         <Menu.Item name="MANAGE" />
         <Menu.Item>

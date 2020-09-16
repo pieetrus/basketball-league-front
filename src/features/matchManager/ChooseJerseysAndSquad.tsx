@@ -145,19 +145,19 @@ const ChooseJerseysAndSquad: React.FC = () => {
           positive
           size="big"
           onClick={() => {
-            if (validate()) {
-              setTeams(match?.teamHome!, match?.teamGuest!);
-              setTeamsJerseysColors(
-                getSelectedJerseyColor(false),
-                getSelectedJerseyColor(true)
-              );
-              setTeamsChosenPlayers(
-                getSelectedPlayers(false),
-                getSelectedPlayers(true)
-              );
-              closeModal();
-              history.push("/statsProgram");
-            }
+            // if (validate()) {
+            setTeams(match?.teamHome!, match?.teamGuest!);
+            setTeamsJerseysColors(
+              getSelectedJerseyColor(false),
+              getSelectedJerseyColor(true)
+            );
+            setTeamsChosenPlayers(
+              getSelectedPlayers(false),
+              getSelectedPlayers(true)
+            );
+            closeModal();
+            history.push("/statsProgram");
+            // }
           }}
         />
       </Segment>
