@@ -7,7 +7,7 @@ const PlayersInGamePanel = () => {
   const rootStore = useContext(RootStoreContext);
   const {
     playerChosen,
-    setplayerChosen,
+    setPlayerChosen: setplayerChosen,
     getChosenPlayerJerseyColor,
     teamGuestJerseyColor,
     teamHomeJerseyColor,

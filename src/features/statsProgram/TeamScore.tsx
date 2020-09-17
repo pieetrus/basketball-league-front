@@ -1,12 +1,16 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useContext } from "react";
 import { Segment, Image } from "semantic-ui-react";
 import { ITeam } from "../../app/models/team";
+import { RootStoreContext } from "../../app/stores/rootStore";
 
 const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
   team,
   isHomeTeam,
 }) => {
+  const rootStore = useContext(RootStoreContext);
+  const { teamHomePts, teamGuestPts } = rootStore.statsStore;
+
   if (isHomeTeam)
     return (
       <Segment.Group horizontal>
@@ -23,7 +27,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
           {!team && "Team name"}
         </Segment>
         <Segment textAlign="center" vertical>
-          <h3>90</h3>
+          <h3>{teamHomePts}</h3>
         </Segment>
       </Segment.Group>
     );
@@ -31,7 +35,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
     return (
       <Segment.Group horizontal>
         <Segment textAlign="center" vertical>
-          <h3>90</h3>
+          <h3>{teamGuestPts}</h3>
         </Segment>
         <Segment size="huge" textAlign="center">
           {team && team.name}

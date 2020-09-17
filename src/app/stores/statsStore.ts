@@ -17,14 +17,6 @@ export default class StatsStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-
-    // reaction(
-    //   () => this.predicate.keys(),
-    //   () => {
-    //     this.teamsRegistry.clear();
-    //     this.loadTeams();
-    //   }
-    // );
   }
   @observable submitting = false;
   @observable target = 0;
@@ -34,6 +26,8 @@ export default class StatsStore {
   @observable quater: number = 1;
   @observable teamHomePlayers: IPlayerShortInfo[] = [];
   @observable teamGuestPlayers: IPlayerShortInfo[] = [];
+  @observable teamHomePts: number = 0;
+  @observable teamGuestPts: number = 0;
   @observable teamHome: ITeam | null = null;
   @observable teamGuest: ITeam | null = null;
   @observable teamHomeJerseyColor: any;
@@ -76,13 +70,26 @@ export default class StatsStore {
       let bSeconds = Number.parseInt(b.seconds);
       if (a.quater === b.quater) {
         if (aMinutes === bMinutes) {
-          if (aSeconds < bSeconds) return -1;
+          if (aSeconds === bSeconds) {
+            if (a.id! < b.id!) return 1;
+            else return -1;
+          } else if (aSeconds < bSeconds) return -1;
           else return 1;
         } else if (aMinutes < bMinutes) return -1;
         else return 1;
       } else if (a.quater < b.quater) return 1;
       else return -1;
     });
+  }
+
+  @action setTeamPoints(isGuest: boolean, deletion: boolean, pts: number) {
+    if (deletion) {
+      if (isGuest) this.teamGuestPts = this.teamGuestPts - pts;
+      else this.teamHomePts = this.teamHomePts - pts;
+    } else {
+      if (isGuest) this.teamGuestPts = this.teamGuestPts + pts;
+      else this.teamHomePts = this.teamHomePts + pts;
+    }
   }
 
   @action setTeamPlayers = (
@@ -95,6 +102,8 @@ export default class StatsStore {
 
   @action setMatch = (match: IMatchDetailedSquads) => {
     this.match = match;
+    this.teamHomePts = match.teamHomePts;
+    this.teamGuestPts = match.teamGuestPts;
   };
 
   @action setTeams = (teamHome: ITeam, teamGuest: ITeam) => {
@@ -102,7 +111,7 @@ export default class StatsStore {
     this.teamGuest = teamGuest;
   };
 
-  @action setplayerChosen = (
+  @action setPlayerChosen = (
     playerChosen: IPlayerShortInfo | undefined,
     isGuest: boolean
   ) => {
@@ -110,7 +119,7 @@ export default class StatsStore {
     this.playerChosen = playerChosen;
   };
 
-  @action setplayerChosen2 = (
+  @action setPlayerChosen2 = (
     playerChosen2: IPlayerShortInfo | undefined,
     isGuest: boolean
   ) => {
@@ -148,9 +157,11 @@ export default class StatsStore {
           seconds: shot.seconds,
           shot,
           id: incidentId,
+          isGuest: shot.isGuest,
         };
         this.incidentsRegistry.set(incident.id, incident);
       });
+      if (shot.isAccurate) this.setTeamPoints(shot.isGuest, false, shot.value);
       return shot.id;
     } catch (error) {
       runInAction("create shot error", () => {
@@ -195,6 +206,8 @@ export default class StatsStore {
     try {
       await agent.Incidents.delete(id);
       runInAction("deleteing incident", () => {
+        let incident: IIncident = this.incidentsRegistry.get(id);
+        this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
         this.incidentsRegistry.delete(id);
         this.submitting = false;
         this.target = 0;

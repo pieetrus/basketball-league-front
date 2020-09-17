@@ -13,14 +13,14 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   const rootStore = useContext(RootStoreContext);
   const {
     playerChosen,
-    setplayerChosen,
+    setPlayerChosen: setplayerChosen,
     createShot,
     submitting,
     getChosenTeamHomePlayers,
     getChosenTeamGuestPlayers,
     teamHomeJerseyColor,
     teamGuestJerseyColor,
-    setplayerChosen2,
+    setPlayerChosen2: setplayerChosen2,
     playerChosen2,
     quater,
   } = rootStore.statsStore;
@@ -58,6 +58,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       isFastAttack: false,
       value: shotValue,
       playerAssistId: playerChosen2?.id!,
+      isGuest,
     };
     console.log(model);
     createShot(model)

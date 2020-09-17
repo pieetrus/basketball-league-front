@@ -20,6 +20,8 @@ export interface IMatchDetailedSquads {
   attendance: number;
   startDate: Date;
   ended: boolean;
+  teamHomePts: number;
+  teamGuestPts: number;
 }
 
 export interface IPlayerShortInfo {

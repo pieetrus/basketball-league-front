@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, GridColumn, GridRow, Header, Segment } from "semantic-ui-react";
+import { MatchDurationInSeconds } from "../global";
 
 const Timer: React.FC<{
   seconds: any;
@@ -44,9 +45,9 @@ const Timer: React.FC<{
             className="angle double up icon"
             style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
-              if (timeLeft < seconds) {
-                if (timeLeft > seconds - 61) {
-                  setTimeLeft(seconds);
+              if (timeLeft < MatchDurationInSeconds) {
+                if (timeLeft > MatchDurationInSeconds - 61) {
+                  setTimeLeft(MatchDurationInSeconds);
                   setMinutesLeft(10);
                   setSecondsLeft(0);
                 } else {
@@ -80,7 +81,7 @@ const Timer: React.FC<{
           compact
           style={{ position: "absolute", bottom: 35, right: 6, width: 90 }}
         >
-          {"Quater " + quater}
+          {"Quarter " + quater}
         </Segment>
         <Header size="large">
           <span id="minutes-left">
@@ -100,7 +101,7 @@ const Timer: React.FC<{
             className="angle double up icon"
             style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
-              if (timeLeft < seconds) {
+              if (timeLeft < MatchDurationInSeconds) {
                 setTimeLeft(timeLeft + 1);
                 if (secondsLeft < 59) setSecondsLeft(secondsLeft + 1);
                 if (secondsLeft > 58) {

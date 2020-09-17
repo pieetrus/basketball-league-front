@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Segment, Grid, GridColumn, Button } from "semantic-ui-react";
-import { MatchDurationInSeconds } from "../../app/common/global";
 import Timer from "../../app/common/timer/Timer";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import TeamScore from "./TeamScore";
@@ -17,11 +16,6 @@ const StatsHeader = () => {
   } = rootStore.statsStore;
 
   const [timerActive, setTimerActive] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(MatchDurationInSeconds);
-
-  useEffect(() => {
-    setSecondsLeft(timeInSeconds);
-  }, [setSecondsLeft, timeInSeconds]);
 
   return (
     <Grid.Row>

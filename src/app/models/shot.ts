@@ -11,6 +11,7 @@ export interface IShot {
   isFastAttack: boolean; // not in use yet
   value: number;
   playerAssistId: number;
+  isGuest: boolean;
 }
 
 // export class ShotFormValues implements IShot {

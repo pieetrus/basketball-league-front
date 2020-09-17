@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { Segment } from "semantic-ui-react";
+import { Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { toJS } from "mobx";
@@ -17,14 +17,20 @@ const ActionLog = () => {
       </Segment>
     );
   return (
-    <Segment style={{ overflow: "auto", maxHeight: 450 }}>
-      {getIncidents &&
-        toJS(getIncidents).map(
-          (incident) =>
-            incident.incidentType === 3 && (
-              <ShotLog incident={incident} key={incident.id} />
-            )
-        )}
+    <Segment>
+      <Segment>
+        <Header content="Action log" color="teal" textAlign="center" />
+      </Segment>
+      {getIncidents && (
+        <Segment style={{ overflow: "auto", maxHeight: 450 }}>
+          {toJS(getIncidents).map(
+            (incident) =>
+              incident.incidentType === 3 && (
+                <ShotLog incident={incident} key={incident.id} />
+              )
+          )}
+        </Segment>
+      )}
     </Segment>
   );
 };

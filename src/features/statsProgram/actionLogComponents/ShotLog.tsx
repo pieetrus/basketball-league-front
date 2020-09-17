@@ -7,7 +7,18 @@ import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   const rootStore = useContext(RootStoreContext);
-  const { deleteIncident, submitting, target } = rootStore.statsStore;
+  const {
+    deleteIncident,
+    submitting,
+    target,
+    teamGuestJerseyColor,
+    teamHomeJerseyColor,
+  } = rootStore.statsStore;
+
+  const jerseyColor = (isGuest: boolean) => {
+    if (isGuest) return teamGuestJerseyColor;
+    else return teamHomeJerseyColor;
+  };
 
   return (
     <Segment key={incident.id}>
@@ -66,14 +77,14 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                       {incident.shot!.isAccurate && (
                         <Segment
                           inverted
-                          color="blue"
+                          color={jerseyColor(incident.isGuest)}
                           content={incident.shot!.value + "PM"}
                         />
                       )}
                       {!incident.shot!.isAccurate && (
                         <Segment
                           inverted
-                          color="red"
+                          color={jerseyColor(incident.isGuest)}
                           content={incident.shot!.value + "PA"}
                         />
                       )}
@@ -85,7 +96,11 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                   {incident.shot!.playerAssistId && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        <Segment inverted color="blue" content="AST" />
+                        <Segment
+                          inverted
+                          color={jerseyColor(incident.isGuest)}
+                          content="AST"
+                        />
                       </Grid.Column>
                       <Grid.Column width={10}>
                         <Segment content={incident.shot!.playerAssistId} />
@@ -95,7 +110,11 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                   {!incident.shot!.isAccurate && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        <Segment inverted color="blue" content="REB" />
+                        <Segment
+                          inverted
+                          color={jerseyColor(incident.isGuest)}
+                          content="REB"
+                        />
                       </Grid.Column>
                       <Grid.Column width={10}>
                         <Segment content={incident.shot!.playerAssistId} />
