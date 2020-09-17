@@ -6,7 +6,7 @@ import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
 import { IShot } from "../../../app/models/shot";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
-const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
+const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   shotMade,
   isGuest,
 }) => {
@@ -22,6 +22,7 @@ const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
     teamGuestJerseyColor,
     setplayerChosen2,
     playerChosen2,
+    quater,
   } = rootStore.statsStore;
   const { selectedMatch } = rootStore.matchStore;
   const { closeModal } = rootStore.modalStore;
@@ -30,11 +31,11 @@ const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   let jerseyColor: any;
 
   if (isGuest) {
-    players = getChosenTeamHomePlayers;
-    jerseyColor = teamHomeJerseyColor;
-  } else {
     players = getChosenTeamGuestPlayers;
     jerseyColor = teamGuestJerseyColor;
+  } else {
+    players = getChosenTeamHomePlayers;
+    jerseyColor = teamHomeJerseyColor;
   }
 
   const [shotValue, setShotValue] = useState(0);
@@ -50,7 +51,7 @@ const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       playerId: playerChosen?.id!,
       seconds: document.getElementById("seconds-left")?.innerHTML!,
       minutes: document.getElementById("minutes-left")?.innerHTML!,
-      quater: 1,
+      quater: quater,
       flagged: false,
       shotType: shotType.value,
       isAccurate: shotMade,
@@ -211,4 +212,4 @@ const Shot: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   );
 };
 
-export default observer(Shot);
+export default observer(ShotModal);

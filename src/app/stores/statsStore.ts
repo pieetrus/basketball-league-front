@@ -1,8 +1,8 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
-import { isNumeric } from "revalidate";
 import agent from "../api/agent";
+import { MatchDurationInSeconds } from "../common/global";
 import { IIncident } from "../models/incident";
 import {
   IMatchDetailedSquads,
@@ -30,8 +30,8 @@ export default class StatsStore {
   @observable target = 0;
   @observable loadingIncidents = false;
   @observable match: IMatchDetailedSquads | undefined;
-  @observable timeInSeconds: number = 0;
-  @observable quater: number = 0;
+  @observable timeInSeconds: number = MatchDurationInSeconds;
+  @observable quater: number = 1;
   @observable teamHomePlayers: IPlayerShortInfo[] = [];
   @observable teamGuestPlayers: IPlayerShortInfo[] = [];
   @observable teamHome: ITeam | null = null;
@@ -63,8 +63,26 @@ export default class StatsStore {
   }
 
   @computed get getIncidents() {
+    return this.incidentsOrderByTimeAndQuater();
+  }
+
+  incidentsOrderByTimeAndQuater() {
     let incidents: IIncident[] = Array.from(this.incidentsRegistry.values());
-    return incidents;
+
+    return incidents.sort((a, b) => {
+      let aMinutes = Number.parseInt(a.minutes);
+      let bMinutes = Number.parseInt(b.minutes);
+      let aSeconds = Number.parseInt(a.seconds);
+      let bSeconds = Number.parseInt(b.seconds);
+      if (a.quater === b.quater) {
+        if (aMinutes === bMinutes) {
+          if (aSeconds < bSeconds) return -1;
+          else return 1;
+        } else if (aMinutes < bMinutes) return -1;
+        else return 1;
+      } else if (a.quater < b.quater) return 1;
+      else return -1;
+    });
   }
 
   @action setTeamPlayers = (
@@ -119,9 +137,19 @@ export default class StatsStore {
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
-      shot.id = await agent.Incidents.createShot(shot);
+      let incidentId = await agent.Incidents.createShot(shot);
       runInAction("creating shot", () => {
         this.submitting = false;
+        let incident: IIncident = {
+          flagged: false,
+          incidentType: 3,
+          minutes: shot.minutes,
+          quater: shot.quater,
+          seconds: shot.seconds,
+          shot,
+          id: incidentId,
+        };
+        this.incidentsRegistry.set(incident.id, incident);
       });
       return shot.id;
     } catch (error) {
@@ -142,10 +170,12 @@ export default class StatsStore {
           this.incidentsRegistry.set(incident.id, incident)
         );
         let lastIncident = incidents[0];
-        this.timeInSeconds =
-          Number.parseInt(lastIncident?.minutes!) * 60 +
-          Number.parseInt(lastIncident?.seconds!);
-        this.quater = lastIncident.quater;
+        if (lastIncident) {
+          this.timeInSeconds =
+            Number.parseInt(lastIncident?.minutes!) * 60 +
+            Number.parseInt(lastIncident?.seconds!);
+          this.quater = lastIncident.quater;
+        }
         this.loadingIncidents = false;
       });
     } catch (error) {

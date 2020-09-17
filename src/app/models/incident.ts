@@ -8,7 +8,7 @@ export interface IIncident {
   incidentType: number;
   quater: number;
   flagged: boolean;
-  shot: IShot;
+  shot?: IShot;
   //   foul: IFoul;
   //   substitution: IFoul;
   //   timeout: IFoul;

@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { GridColumn, Segment, Grid, GridRow, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
-import Shot from "./eventPanelModals/Shot";
+import ShotModal from "./eventPanelModals/ShotModal";
 
 const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const buttonStyle = { width: 150, height: 60, marginTop: 10 };
@@ -22,7 +22,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               onClick={() => {
                 if (playerChosen) {
                   setModalSize("large");
-                  openModal(<Shot shotMade={true} isGuest={isGuest} />);
+                  openModal(<ShotModal shotMade={true} isGuest={isGuest} />);
                 }
               }}
               // disabled={playerChosen === undefined}
@@ -37,7 +37,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               onClick={() => {
                 if (playerChosen) {
                   setModalSize("large");
-                  openModal(<Shot shotMade={false} isGuest={isGuest} />);
+                  openModal(<ShotModal shotMade={false} isGuest={isGuest} />);
                 }
               }}
               // disabled={playerChosen === undefined}
