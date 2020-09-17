@@ -14,6 +14,8 @@ import { IPlayerSeason } from "../models/playerSeason";
 import { IShot } from "../models/shot";
 import { IIncident } from "../models/incident";
 import { IFoul } from "../models/foul";
+import { ITimeout } from "../models/timeout";
+import { ITurnover } from "../models/turnover";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -165,6 +167,8 @@ const Profiles = {
 const Incidents = {
   createShot: (shot: IShot) => request.post("/shot", shot),
   createFoul: (foul: IFoul) => request.post("/foul", foul),
+  createTimeout: (timeout: ITimeout) => request.post("/timeout", timeout),
+  createTurnover: (turnover: ITurnover) => request.post("/turnover", turnover),
   list: (matchId: number): Promise<IIncident[]> =>
     request.get("/incident?matchId=" + matchId),
   delete: (id: number) => request.del(`/incident/${id}`),

@@ -2,15 +2,36 @@ import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import { GridColumn, Segment, Grid, GridRow, Button } from "semantic-ui-react";
+import { ITeam } from "../../app/models/team";
+import { ITimeout } from "../../app/models/timeout";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import FoulModal from "./eventPanelModals/FoulModal";
 import ShotModal from "./eventPanelModals/ShotModal";
+import TurnoverModal from "./eventPanelModals/TurnoverModal";
 
 const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const buttonStyle = { width: 150, height: 60, marginTop: 10 };
   const rootStore = useContext(RootStoreContext);
-  const { playerChosen } = rootStore.statsStore;
+  const { playerChosen, createTimeout, match, quater } = rootStore.statsStore;
   const { openModal, setModalSize } = rootStore.modalStore;
+
+  const handleTimeoutSubmit = () => {
+    let team: ITeam;
+    if (isGuest) team = match?.teamGuest!;
+    else team = match?.teamHome!;
+
+    let model: ITimeout = {
+      matchId: match?.id!,
+      seconds: document.getElementById("seconds-left")?.innerHTML!,
+      minutes: document.getElementById("minutes-left")?.innerHTML!,
+      quater: quater,
+      flagged: false,
+      isGuest,
+      teamId: team.id!,
+    };
+    createTimeout(model).then(() => toast.success("Timeout for " + team.name));
+  };
+
   return (
     <Segment>
       <Grid centered>
@@ -73,7 +94,8 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               style={buttonStyle}
               color="blue"
               onClick={() => {
-                if (playerChosen) openModal(<p>{playerChosen.name}</p>);
+                if (playerChosen)
+                  openModal(<TurnoverModal isGuest={isGuest} />);
                 else {
                   toast.info("First choose player");
                 }
@@ -88,7 +110,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               style={buttonStyle}
               color="orange"
               onClick={() => {
-                openModal(<p>Timeout modal</p>);
+                handleTimeoutSubmit();
               }}
             />
           </GridRow>

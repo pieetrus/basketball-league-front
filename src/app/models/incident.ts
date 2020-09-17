@@ -1,5 +1,7 @@
 import { IFoul } from "./foul";
 import { IShot } from "./shot";
+import { ITimeout } from "./timeout";
+import { ITurnover } from "./turnover";
 
 export interface IIncident {
   id?: number;
@@ -13,8 +15,8 @@ export interface IIncident {
   shot?: IShot;
   foul?: IFoul;
   //   substitution: IFoul;
-  //   timeout: IFoul;
-  //   turnover: IFoul;
+  timeout?: ITimeout;
+  turnover?: ITurnover;
   //   jumpBall: IFoul;
   //   rebound: IFoul;
   //   jumpBall: IFoul;

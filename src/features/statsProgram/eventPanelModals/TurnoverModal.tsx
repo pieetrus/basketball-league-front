@@ -1,20 +1,17 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
-import { shotTypes } from "../../../app/common/options/shotTypes";
+import { turnoverTypes } from "../../../app/common/options/turnoverTypes";
 import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
-import { IShot } from "../../../app/models/shot";
+import { ITurnover } from "../../../app/models/turnover";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
-const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
-  shotMade,
-  isGuest,
-}) => {
+const TurnoverModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const rootStore = useContext(RootStoreContext);
   const {
     playerChosen,
-    setPlayerChosen: setplayerChosen,
-    createShot,
+    setPlayerChosen,
+    createTurnover,
     submitting,
     getChosenTeamHomePlayers,
     getChosenTeamGuestPlayers,
@@ -31,79 +28,60 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   let jerseyColor: any;
 
   if (isGuest) {
-    players = getChosenTeamGuestPlayers;
-    jerseyColor = teamGuestJerseyColor;
-  } else {
+    //rivals
     players = getChosenTeamHomePlayers;
     jerseyColor = teamHomeJerseyColor;
+  } else {
+    players = getChosenTeamGuestPlayers;
+    jerseyColor = teamGuestJerseyColor;
   }
 
-  const [shotValue, setShotValue] = useState(0);
-  const [assist, setAssist] = useState(false);
-  const [shotType, setShotType] = useState({
+  const [steal, setSteal] = useState(false);
+  const [turnoverType, setTurnoverType] = useState({
     name: "",
     value: 0,
   });
 
   const handleSubmit = () => {
-    let model: IShot = {
+    let model: ITurnover = {
       matchId: selectedMatch?.id!,
       playerId: playerChosen?.playerId!,
       seconds: document.getElementById("seconds-left")?.innerHTML!,
       minutes: document.getElementById("minutes-left")?.innerHTML!,
       quater: quater,
       flagged: false,
-      shotType: shotType.value,
-      isAccurate: shotMade,
-      isFastAttack: false,
-      value: shotValue,
-      playerAssistId: playerChosen2?.id!,
       isGuest,
+      turnoverType: turnoverType.value,
     };
-    createShot(model)
-      .then(() => setplayerChosen(undefined, false))
+    createTurnover(model)
+      .then(() => setPlayerChosen(undefined, false))
       .then(() => setPlayerChosen2(undefined, false))
       .then(closeModal);
   };
 
   return (
     <Grid centered>
-      {shotMade && <Header content="Shot made" color="green" />}
-      {!shotMade && <Header content="Shot missed" color="red" />}
+      {<Header content="Turnover" color="blue" />}
       <Grid.Row centered>
-        <Grid.Column width={3}>
-          <Button positive size="huge" onClick={() => setShotValue(3)}>
-            3 PTS
-          </Button>
-        </Grid.Column>
         <Grid.Column width={6}>
           <Segment.Group horizontal>
-            {shotValue !== 0 && (
-              <Segment
-                compact
-                onClick={() => setShotValue(0)}
-                style={{ cursor: "pointer", width: 40 }}
-              >
-                {shotValue} PTS
-              </Segment>
-            )}
-            {shotType.value !== 0 && (
+            {turnoverType.value !== 0 && (
               <Segment
                 compact
                 onClick={() =>
-                  setShotType({
+                  setTurnoverType({
                     name: "",
                     value: 0,
                   })
                 }
                 style={{ cursor: "pointer", width: 40 }}
               >
-                {shotType.name}
+                {turnoverType.name}
               </Segment>
             )}
             {playerChosen && (
               <Segment compact style={{ width: 40 }}>
-                {"PTS: " +
+                {"TO: " +
                   playerChosen.jerseyNr +
                   ". " +
                   playerChosen.name +
@@ -113,7 +91,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
             )}
             {playerChosen2 && (
               <Segment compact style={{ width: 40 }}>
-                {"AST: " +
+                {"STEAL: " +
                   playerChosen2.jerseyNr +
                   ". " +
                   playerChosen2.name +
@@ -123,57 +101,42 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
             )}
           </Segment.Group>
         </Grid.Column>
-        <Grid.Column width={3}>
-          <Button positive size="huge" onClick={() => setShotValue(2)}>
-            2 PTS
-          </Button>
-        </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        {shotTypes.map((shotType) => (
-          <Grid.Column width={3} key={shotType.value}>
+        {turnoverTypes.map((turnoverType) => (
+          <Grid.Column width={3} key={turnoverType.value}>
             <Button
               color="brown"
               size="huge"
               style={{ marginBottom: 30 }}
-              disabled={
-                shotValue === 0 ||
-                (shotValue === 3 &&
-                  (shotType.value === 6 ||
-                    shotType.value === 7 ||
-                    shotType.value === 8 ||
-                    shotType.value === 9))
-              }
-              onClick={() => setShotType(shotType)}
+              onClick={() => setTurnoverType(turnoverType)}
             >
-              {shotType.name}
+              {turnoverType.name}
             </Button>
           </Grid.Column>
         ))}
       </Grid.Row>
-      {shotMade && (
-        <Grid.Row>
-          <Button
-            content="Assist"
-            size="massive"
-            floated="left"
-            style={{ marginRight: 50 }}
-            onClick={() => setAssist(true)}
-          />
-          <Button
-            content="No Assist"
-            size="massive"
-            floated="right"
-            style={{ marginLeft: 50 }}
-            onClick={() => {
-              setAssist(false);
-              setPlayerChosen2(undefined, false);
-            }}
-          />
-        </Grid.Row>
-      )}
       <Grid.Row>
-        {assist &&
+        <Button
+          content="Steal"
+          size="massive"
+          floated="left"
+          style={{ marginRight: 50 }}
+          onClick={() => setSteal(true)}
+        />
+        <Button
+          content="No Steal"
+          size="massive"
+          floated="right"
+          style={{ marginLeft: 50 }}
+          onClick={() => {
+            setSteal(false);
+            setPlayerChosen2(undefined, false);
+          }}
+        />
+      </Grid.Row>
+      <Grid.Row>
+        {steal &&
           players
             ?.filter((player) => player.id !== playerChosen?.id)
             .map((player) => (
@@ -212,4 +175,4 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   );
 };
 
-export default observer(ShotModal);
+export default observer(TurnoverModal);

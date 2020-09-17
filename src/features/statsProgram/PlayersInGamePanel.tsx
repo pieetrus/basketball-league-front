@@ -1,3 +1,4 @@
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
@@ -36,6 +37,7 @@ const PlayersInGamePanel = () => {
                 clearing="true"
                 onClick={() => {
                   setplayerChosen(player, false);
+                  console.log(toJS(player));
                 }}
                 compact
               />
@@ -67,6 +69,7 @@ const PlayersInGamePanel = () => {
                 clearing="true"
                 onClick={() => {
                   setplayerChosen(player, true);
+                  console.log(toJS(player));
                 }}
                 compact
               />

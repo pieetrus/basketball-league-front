@@ -11,6 +11,8 @@ import {
 } from "../models/matchDetailed";
 import { IShot } from "../models/shot";
 import { ITeam } from "../models/team";
+import { ITimeout } from "../models/timeout";
+import { ITurnover } from "../models/turnover";
 import { RootStore } from "./rootStore";
 
 export default class StatsStore {
@@ -25,8 +27,6 @@ export default class StatsStore {
   @observable match: IMatchDetailedSquads | undefined;
   @observable timeInSeconds: number = MatchDurationInSeconds;
   @observable quater: number = 1;
-  @observable teamHomePlayers: IPlayerShortInfo[] = [];
-  @observable teamGuestPlayers: IPlayerShortInfo[] = [];
   @observable teamHomePts: number = 0;
   @observable teamGuestPts: number = 0;
   @observable teamHome: ITeam | null = null;
@@ -93,14 +93,6 @@ export default class StatsStore {
     }
   }
 
-  @action setTeamPlayers = (
-    teamHomePlayers: IPlayerShortInfo[],
-    teamGuestPlayers: IPlayerShortInfo[]
-  ) => {
-    this.teamHomePlayers = teamHomePlayers;
-    this.teamGuestPlayers = teamGuestPlayers;
-  };
-
   @action setMatch = (match: IMatchDetailedSquads) => {
     this.match = match;
     this.teamHomePts = match.teamHomePts;
@@ -159,6 +151,7 @@ export default class StatsStore {
           shot,
           id: incidentId,
           isGuest: shot.isGuest,
+          matchId: shot.matchId,
         };
         this.incidentsRegistry.set(incident.id, incident);
       });
@@ -188,11 +181,68 @@ export default class StatsStore {
           foul,
           id: incidentId,
           isGuest: foul.isGuest,
+          matchId: foul.matchId,
         };
         this.incidentsRegistry.set(incident.id, incident);
       });
     } catch (error) {
       runInAction("create foul error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
+  @action createTurnover = async (turnover: ITurnover) => {
+    this.submitting = true;
+    try {
+      let incidentId = await agent.Incidents.createTurnover(turnover);
+      runInAction("creating turnover", () => {
+        this.submitting = false;
+        let incident: IIncident = {
+          flagged: false,
+          incidentType: 4,
+          minutes: turnover.minutes,
+          quater: turnover.quater,
+          seconds: turnover.seconds,
+          turnover,
+          id: incidentId,
+          isGuest: turnover.isGuest,
+          matchId: turnover.matchId,
+        };
+        this.incidentsRegistry.set(incident.id, incident);
+      });
+    } catch (error) {
+      runInAction("create turnover error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
+  @action createTimeout = async (timeout: ITimeout) => {
+    this.submitting = true;
+    try {
+      let incidentId = await agent.Incidents.createTimeout(timeout);
+      runInAction("creating timeout", () => {
+        this.submitting = false;
+        let incident: IIncident = {
+          flagged: false,
+          incidentType: 6,
+          minutes: timeout.minutes,
+          quater: timeout.quater,
+          seconds: timeout.seconds,
+          timeout,
+          id: incidentId,
+          isGuest: timeout.isGuest,
+          matchId: timeout.matchId,
+        };
+        this.incidentsRegistry.set(incident.id, incident);
+      });
+    } catch (error) {
+      runInAction("create timeout error", () => {
         this.submitting = false;
       });
       toast.error("Problem submitting data");
@@ -235,7 +285,8 @@ export default class StatsStore {
       await agent.Incidents.delete(id);
       runInAction("deleteing incident", () => {
         let incident: IIncident = this.incidentsRegistry.get(id);
-        this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
+        if (incident.incidentType === 3)
+          this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
         this.incidentsRegistry.delete(id);
         this.submitting = false;
         this.target = 0;

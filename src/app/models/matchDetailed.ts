@@ -26,6 +26,7 @@ export interface IMatchDetailedSquads {
 
 export interface IPlayerShortInfo {
   id?: number; // playerSeasonId
+  playerId?: number; // playerId
   name: string;
   surname: string;
   jerseyNr: string;

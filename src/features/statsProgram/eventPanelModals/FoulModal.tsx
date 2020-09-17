@@ -41,8 +41,8 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       flagged: false,
       isGuest,
       foulType: foulType.value,
-      playerWhoFouledId: playerChosen?.id,
-      playerWhoWasFouledId: playerChosen2?.id,
+      playerWhoFouledId: playerChosen?.playerId,
+      playerWhoWasFouledId: playerChosen2?.playerId,
     };
     createFoul(model)
       .then(() => setPlayerChosen(undefined, false))

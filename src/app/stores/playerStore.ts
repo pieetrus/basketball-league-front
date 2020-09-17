@@ -166,7 +166,8 @@ export default class PlayerStore {
   };
 
   getPlayer = (id: number) => {
-    return this.playersRegistry.get(id);
+    let player: IPlayer = this.playersRegistry.get(id);
+    return player;
   };
 
   @action createPlayer = async (player: IPlayer) => {

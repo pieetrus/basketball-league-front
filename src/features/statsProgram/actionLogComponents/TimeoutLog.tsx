@@ -1,12 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Segment, ItemGroup, Item, Grid, Divider } from "semantic-ui-react";
-import { foulTypes } from "../../../app/common/options/foulTypes";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { IIncident } from "../../../app/models/incident";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
-const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
+const TimeoutLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   const rootStore = useContext(RootStoreContext);
   const {
     deleteIncident,
@@ -22,21 +21,10 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     else return teamHomeJerseyColor;
   };
 
-  const foulTypeToText = (value: number) => {
-    return foulTypes.find((x) => x.value === value)?.name.toUpperCase();
+  const getTeamName = (id: number) => {
+    if (match?.teamHome.id === id) return match?.teamHome.name;
+    else return match?.teamGuest.name;
   };
-
-  const getPlayerInfo = (id: number) => {
-    let player = match?.teamHomePlayers.find((x) => x.playerId === id);
-    if (!player)
-      player = match?.teamGuestPlayers.find((x) => x.playerId === id);
-
-    let response =
-      player?.jerseyNr + "." + player?.name + " " + player?.surname;
-
-    return response;
-  };
-
   return (
     <Segment key={incident.id}>
       <ItemGroup divided>
@@ -44,7 +32,7 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
           <Item>
             <Item.Content>
               <Grid>
-                <Grid.Column width={4}>
+                <Grid.Column width={8}>
                   {"Q" +
                     incident.quater +
                     " " +
@@ -52,9 +40,7 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                     ":" +
                     incident.seconds}
                 </Grid.Column>
-                <Grid.Column width={8}>
-                  {foulTypeToText(incident.foul?.foulType!) + " FOUL"}
-                </Grid.Column>
+                <Grid.Column width={4}>{"TIMEOUT"}</Grid.Column>
                 <Grid.Column width={2}>
                   <i
                     className="edit icon"
@@ -85,41 +71,9 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
               </Grid>
               <Divider />
               <Item.Meta>
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={3} verticalAlign="middle">
-                      <Segment color={jerseyColor(incident.isGuest)} inverted>
-                        FOUL
-                      </Segment>
-                    </Grid.Column>
-                    <Grid.Column width={10}>
-                      <Segment
-                        content={getPlayerInfo(
-                          incident.foul!.playerWhoFouledId!
-                        )}
-                      />
-                    </Grid.Column>
-                  </Grid.Row>
-                  {incident.foul!.playerWhoWasFouledId && (
-                    <Grid.Row>
-                      <Grid.Column width={3} verticalAlign="middle">
-                        <Segment
-                          color={jerseyColor(!incident.isGuest)}
-                          inverted
-                        >
-                          ON
-                        </Segment>
-                      </Grid.Column>
-                      <Grid.Column width={10}>
-                        <Segment
-                          content={getPlayerInfo(
-                            incident.foul!.playerWhoWasFouledId!
-                          )}
-                        />
-                      </Grid.Column>
-                    </Grid.Row>
-                  )}
-                </Grid>
+                <Segment color={jerseyColor(incident.isGuest)}>
+                  {getTeamName(incident.timeout?.teamId!)}
+                </Segment>
               </Item.Meta>
             </Item.Content>
           </Item>
@@ -129,4 +83,4 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   );
 };
 
-export default observer(FoulLog);
+export default observer(TimeoutLog);

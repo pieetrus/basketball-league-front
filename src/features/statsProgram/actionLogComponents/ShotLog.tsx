@@ -13,11 +13,23 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     target,
     teamGuestJerseyColor,
     teamHomeJerseyColor,
+    match,
   } = rootStore.statsStore;
 
   const jerseyColor = (isGuest: boolean) => {
     if (isGuest) return teamGuestJerseyColor;
     else return teamHomeJerseyColor;
+  };
+
+  const getPlayerInfo = (id: number) => {
+    let player = match?.teamHomePlayers.find((x) => x.playerId === id);
+    if (player === undefined)
+      player = match?.teamGuestPlayers.find((x) => x.playerId === id);
+
+    let response =
+      player?.jerseyNr + "." + player?.name + " " + player?.surname;
+
+    return response;
   };
 
   return (
@@ -90,7 +102,9 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                       )}
                     </Grid.Column>
                     <Grid.Column width={10}>
-                      <Segment content={incident.shot!.playerId} />
+                      <Segment
+                        content={getPlayerInfo(incident.shot!.playerId)}
+                      />
                     </Grid.Column>
                   </Grid.Row>
                   {incident.shot!.playerAssistId && (
@@ -117,7 +131,7 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                         />
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        <Segment content={incident.shot!.playerAssistId} />
+                        <Segment content={"player who rebound"} />
                       </Grid.Column>
                     </Grid.Row>
                   )}

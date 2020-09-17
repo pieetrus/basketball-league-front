@@ -6,6 +6,8 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import { toJS } from "mobx";
 import ShotLog from "./actionLogComponents/ShotLog";
 import FoulLog from "./actionLogComponents/FoulLog";
+import TimeoutLog from "./actionLogComponents/TimeoutLog";
+import TurnoverLog from "./actionLogComponents/TurnoverLog";
 
 const ActionLog = () => {
   const rootStore = useContext(RootStoreContext);
@@ -26,11 +28,17 @@ const ActionLog = () => {
         <Segment style={{ overflow: "auto", maxHeight: 450 }}>
           {toJS(getIncidents).map((incident) => (
             <Fragment key={incident.id}>
+              {incident.incidentType === 1 && (
+                <FoulLog incident={incident} key={incident.id} />
+              )}
               {incident.incidentType === 3 && (
                 <ShotLog incident={incident} key={incident.id} />
               )}
-              {incident.incidentType === 1 && (
-                <FoulLog incident={incident} key={incident.id} />
+              {incident.incidentType === 4 && (
+                <TurnoverLog incident={incident} key={incident.id} />
+              )}
+              {incident.incidentType === 6 && (
+                <TimeoutLog incident={incident} key={incident.id} />
               )}
             </Fragment>
           ))}
