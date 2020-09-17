@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
+import { RouteComponentProps } from "react-router-dom";
 import { Grid, GridColumn } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ActionLog from "./ActionLog";
@@ -7,9 +8,16 @@ import EventPanel from "./EventPanel";
 import PlayersInGamePanel from "./PlayersInGamePanel";
 import StatsHeader from "./StatsHeader";
 
-const StatsDashboard = () => {
+interface DetailParams {
+  id: string;
+}
+
+const StatsDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
+  match,
+}) => {
   const rootStore = useContext(RootStoreContext);
   const { loadIncidents } = rootStore.statsStore;
+
   useEffect(() => {
     loadIncidents();
   }, [loadIncidents]);

@@ -12,7 +12,13 @@ import TurnoverModal from "./eventPanelModals/TurnoverModal";
 const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const buttonStyle = { width: 150, height: 60, marginTop: 10 };
   const rootStore = useContext(RootStoreContext);
-  const { playerChosen, createTimeout, match, quater } = rootStore.statsStore;
+  const {
+    playerChosen,
+    createTimeout,
+    match,
+    quater,
+    setPlayerChosen2,
+  } = rootStore.statsStore;
   const { openModal, setModalSize } = rootStore.modalStore;
 
   const handleTimeoutSubmit = () => {
@@ -46,6 +52,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={true} isGuest={isGuest} />);
+                  setPlayerChosen2(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -63,6 +70,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={false} isGuest={isGuest} />);
+                  setPlayerChosen2(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -80,6 +88,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   setModalSize("large");
                   openModal(<FoulModal isGuest={isGuest} />);
+                  setPlayerChosen2(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -94,9 +103,10 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               style={buttonStyle}
               color="blue"
               onClick={() => {
-                if (playerChosen)
+                if (playerChosen) {
                   openModal(<TurnoverModal isGuest={isGuest} />);
-                else {
+                  setPlayerChosen2(undefined, false);
+                } else {
                   toast.info("First choose player");
                 }
               }}

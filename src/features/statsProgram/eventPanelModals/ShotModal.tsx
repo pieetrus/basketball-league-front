@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
+import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { shotTypes } from "../../../app/common/options/shotTypes";
 import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
 import { IShot } from "../../../app/models/shot";
@@ -27,20 +28,33 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
   const { selectedMatch } = rootStore.matchStore;
   const { closeModal } = rootStore.modalStore;
 
-  let players: IPlayerShortInfo[] | undefined;
-  let jerseyColor: any;
+  const getPlayers = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return getChosenTeamHomePlayers;
+      return getChosenTeamGuestPlayers;
+    } else {
+      if (isRival) return getChosenTeamGuestPlayers;
+      return getChosenTeamHomePlayers;
+    }
+  };
 
-  if (isGuest) {
-    players = getChosenTeamGuestPlayers;
-    jerseyColor = teamGuestJerseyColor;
-  } else {
-    players = getChosenTeamHomePlayers;
-    jerseyColor = teamHomeJerseyColor;
-  }
+  const getJerseys = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return teamHomeJerseyColor;
+      return teamGuestJerseyColor;
+    } else {
+      if (isRival) return teamGuestJerseyColor;
+      return teamHomeJerseyColor;
+    }
+  };
 
   const [shotValue, setShotValue] = useState(0);
   const [assist, setAssist] = useState(false);
   const [shotType, setShotType] = useState({
+    name: "",
+    value: 0,
+  });
+  const [reboundType, setReboundType] = useState({
     name: "",
     value: 0,
   });
@@ -111,9 +125,19 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                   playerChosen.surname}
               </Segment>
             )}
-            {playerChosen2 && (
+            {playerChosen2 && shotMade && (
               <Segment compact style={{ width: 40 }}>
                 {"AST: " +
+                  playerChosen2.jerseyNr +
+                  ". " +
+                  playerChosen2.name +
+                  " " +
+                  playerChosen2.surname}
+              </Segment>
+            )}
+            {playerChosen2 && !shotMade && (
+              <Segment compact style={{ width: 40 }}>
+                {"REB: " +
                   playerChosen2.jerseyNr +
                   ". " +
                   playerChosen2.name +
@@ -174,7 +198,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       )}
       <Grid.Row>
         {assist &&
-          players
+          getPlayers(false)
             ?.filter((player) => player.id !== playerChosen?.id)
             .map((player) => (
               <Grid.Column key={player.id} width={1} textAlign="center">
@@ -186,7 +210,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                     fontSize: 17,
                     color: "black",
                   }}
-                  color={jerseyColor}
+                  color={getJerseys(false)}
                   inverted
                   content={player.jerseyNr}
                   clearing="true"
@@ -197,6 +221,74 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                 />
               </Grid.Column>
             ))}
+      </Grid.Row>
+      <Grid.Row>
+        {!shotMade &&
+          reboundTypes.map((reboundType) => (
+            <Grid.Column width={3} key={reboundType.value}>
+              <Button
+                color="brown"
+                size="huge"
+                style={{ marginBottom: 30 }}
+                disabled={shotType.value === 0}
+                onClick={() => {
+                  if (reboundType.value === 3 || reboundType.value === 4)
+                    setPlayerChosen2(undefined, false);
+                  setReboundType(reboundType);
+                }}
+              >
+                {reboundType.name}
+              </Button>
+            </Grid.Column>
+          ))}
+      </Grid.Row>
+      <Grid.Row>
+        {reboundType.value === 1 &&
+          getPlayers(true)!.map((player) => (
+            <Grid.Column key={player.id} width={1} textAlign="center">
+              <Button
+                toggle
+                style={{
+                  width: 50,
+                  height: 50,
+                  fontSize: 17,
+                  color: "black",
+                }}
+                color={getJerseys(true)}
+                inverted
+                content={player.jerseyNr}
+                clearing="true"
+                onClick={() => {
+                  setPlayerChosen2(player, false);
+                }}
+                compact
+              />
+            </Grid.Column>
+          ))}
+      </Grid.Row>
+      <Grid.Row>
+        {reboundType.value === 2 &&
+          getPlayers(false)!.map((player) => (
+            <Grid.Column key={player.id} width={1} textAlign="center">
+              <Button
+                toggle
+                style={{
+                  width: 50,
+                  height: 50,
+                  fontSize: 17,
+                  color: "black",
+                }}
+                color={getJerseys(false)}
+                inverted
+                content={player.jerseyNr}
+                clearing="true"
+                onClick={() => {
+                  setPlayerChosen2(player, false);
+                }}
+                compact
+              />
+            </Grid.Column>
+          ))}
       </Grid.Row>
       <Grid.Row>
         <Button

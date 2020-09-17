@@ -75,6 +75,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route path="/login" component={LoginForm} />
                 <Route path="/matchManager" component={MatchManagerDashboard} />
                 <Route path="/statsProgram" component={StatsDashboard} />
+                <Route path="/statsProgram:id" component={StatsDashboard} />
                 <Route exact path="/manager" component={ManagerDashboard} />
                 <Route path="/manager/season" component={SeasonDashboard} />
                 <Route path="/manager/division" component={DivisionDashboard} />
