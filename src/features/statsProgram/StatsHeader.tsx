@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Segment, Grid, GridColumn, Button } from "semantic-ui-react";
 import { MatchDurationInSeconds } from "../../app/common/global";
 import Timer from "../../app/common/timer/Timer";
@@ -8,10 +8,20 @@ import TeamScore from "./TeamScore";
 
 const StatsHeader = () => {
   const rootStore = useContext(RootStoreContext);
-  const { teamGuest, teamHome } = rootStore.statsStore;
+  const {
+    teamGuest,
+    teamHome,
+    timeInSeconds,
+    loadingIncidents,
+    quater,
+  } = rootStore.statsStore;
 
   const [timerActive, setTimerActive] = useState(false);
-  const [secondsLeft] = useState(MatchDurationInSeconds);
+  const [secondsLeft, setSecondsLeft] = useState(MatchDurationInSeconds);
+
+  useEffect(() => {
+    setSecondsLeft(timeInSeconds);
+  }, [setSecondsLeft, timeInSeconds]);
 
   return (
     <Grid.Row>
@@ -23,7 +33,14 @@ const StatsHeader = () => {
             </GridColumn>
             <GridColumn width={4}>
               <Segment textAlign="center">
-                <Timer seconds={secondsLeft} paused={!timerActive} />
+                {!loadingIncidents && (
+                  <Timer
+                    seconds={timeInSeconds}
+                    quater={quater}
+                    paused={!timerActive}
+                  />
+                )}
+
                 {!timerActive && (
                   <Button
                     content={"Start clock"}

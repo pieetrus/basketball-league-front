@@ -1,5 +1,7 @@
 import { action, computed, observable, runInAction } from "mobx";
+import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
+import { isNumeric } from "revalidate";
 import agent from "../api/agent";
 import { IIncident } from "../models/incident";
 import {
@@ -25,9 +27,11 @@ export default class StatsStore {
     // );
   }
   @observable submitting = false;
+  @observable target = 0;
   @observable loadingIncidents = false;
   @observable match: IMatchDetailedSquads | undefined;
   @observable timeInSeconds: number = 0;
+  @observable quater: number = 0;
   @observable teamHomePlayers: IPlayerShortInfo[] = [];
   @observable teamGuestPlayers: IPlayerShortInfo[] = [];
   @observable teamHome: ITeam | null = null;
@@ -137,11 +141,38 @@ export default class StatsStore {
         incidents.map((incident) =>
           this.incidentsRegistry.set(incident.id, incident)
         );
+        let lastIncident = incidents[0];
+        this.timeInSeconds =
+          Number.parseInt(lastIncident?.minutes!) * 60 +
+          Number.parseInt(lastIncident?.seconds!);
+        this.quater = lastIncident.quater;
         this.loadingIncidents = false;
       });
     } catch (error) {
       runInAction("loading incidents error", () => {
         this.loadingIncidents = false;
+      });
+      console.log(error.response);
+    }
+  };
+
+  @action deleteIncident = async (
+    event: SyntheticEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    this.submitting = true;
+    this.target = Number.parseInt(event.currentTarget.id);
+    try {
+      await agent.Incidents.delete(id);
+      runInAction("deleteing incident", () => {
+        this.incidentsRegistry.delete(id);
+        this.submitting = false;
+        this.target = 0;
+      });
+    } catch (error) {
+      runInAction("deleteing incidents error", () => {
+        this.submitting = false;
+        this.target = 0;
       });
       console.log(error.response);
     }

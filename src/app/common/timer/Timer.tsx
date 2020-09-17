@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Grid, GridColumn, GridRow, Header } from "semantic-ui-react";
+import { Grid, GridColumn, GridRow, Header, Segment } from "semantic-ui-react";
 
 const Timer: React.FC<{
   seconds: any;
   paused: boolean;
-}> = ({ seconds, paused }) => {
+  quater: number;
+}> = ({ seconds, paused, quater }) => {
   // initialize timeLeft with the seconds prop
   const [timeLeft, setTimeLeft] = useState(seconds);
   const [minutesLeft, setMinutesLeft] = useState(Math.floor(seconds / 60));
@@ -75,6 +76,12 @@ const Timer: React.FC<{
         </GridRow>
       </GridColumn>
       <GridColumn width={6} verticalAlign="middle">
+        <Segment
+          compact
+          style={{ position: "absolute", bottom: 35, right: 6, width: 90 }}
+        >
+          {"Quater " + quater}
+        </Segment>
         <Header size="large">
           <span id="minutes-left">
             {minutesLeft < 10 && "0" + minutesLeft}

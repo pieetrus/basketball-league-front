@@ -165,6 +165,8 @@ const Incidents = {
   createShot: (shot: IShot) => request.post("/shot", shot),
   list: (matchId: number): Promise<IIncident[]> =>
     request.get("/incident?matchId=" + matchId),
+  delete: (id: number) => request.del(`/incident/${id}`),
+
   // listDetailed: (): Promise<IMatchDetailed[]> => request.get(`/match/detailed`),
   // details: (id: number): Promise<IMatchDetailed> => request.get(`/match/${id}`),
   // detailsDetailed: (id: number): Promise<IMatchDetailedSquads> =>

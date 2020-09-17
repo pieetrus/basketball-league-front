@@ -82,6 +82,11 @@ const ChooseJerseysAndSquad: React.FC = () => {
       toast.error("Select team guest jersey color");
       return false;
     }
+
+    if (getSelectedJerseyColor(true) === getSelectedJerseyColor(false)) {
+      toast.error("Teams cannot have the same jersey colors");
+      return false;
+    }
     return true;
   };
 
