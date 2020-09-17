@@ -13,6 +13,7 @@ import { ITeamSeason } from "../models/teamSeason";
 import { IPlayerSeason } from "../models/playerSeason";
 import { IShot } from "../models/shot";
 import { IIncident } from "../models/incident";
+import { IFoul } from "../models/foul";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -163,6 +164,7 @@ const Profiles = {
 
 const Incidents = {
   createShot: (shot: IShot) => request.post("/shot", shot),
+  createFoul: (foul: IFoul) => request.post("/foul", foul),
   list: (matchId: number): Promise<IIncident[]> =>
     request.get("/incident?matchId=" + matchId),
   delete: (id: number) => request.del(`/incident/${id}`),

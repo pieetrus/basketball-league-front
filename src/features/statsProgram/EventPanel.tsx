@@ -1,7 +1,9 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
+import { toast } from "react-toastify";
 import { GridColumn, Segment, Grid, GridRow, Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import FoulModal from "./eventPanelModals/FoulModal";
 import ShotModal from "./eventPanelModals/ShotModal";
 
 const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
@@ -23,6 +25,8 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={true} isGuest={isGuest} />);
+                } else {
+                  toast.info("First choose player");
                 }
               }}
               // disabled={playerChosen === undefined}
@@ -38,6 +42,8 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={false} isGuest={isGuest} />);
+                } else {
+                  toast.info("First choose player");
                 }
               }}
               // disabled={playerChosen === undefined}
@@ -50,7 +56,12 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               style={buttonStyle}
               color="purple"
               onClick={() => {
-                if (playerChosen) openModal(<p>{playerChosen.name}</p>);
+                if (playerChosen) {
+                  setModalSize("large");
+                  openModal(<FoulModal isGuest={isGuest} />);
+                } else {
+                  toast.info("First choose player");
+                }
               }}
               // disabled={playerChosen === undefined}
             />
@@ -63,6 +74,9 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               color="blue"
               onClick={() => {
                 if (playerChosen) openModal(<p>{playerChosen.name}</p>);
+                else {
+                  toast.info("First choose player");
+                }
               }}
               // disabled={playerChosen === undefined}
             />

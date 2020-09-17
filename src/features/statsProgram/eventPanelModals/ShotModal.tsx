@@ -20,7 +20,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
     getChosenTeamGuestPlayers,
     teamHomeJerseyColor,
     teamGuestJerseyColor,
-    setPlayerChosen2: setplayerChosen2,
+    setPlayerChosen2,
     playerChosen2,
     quater,
   } = rootStore.statsStore;
@@ -60,10 +60,9 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       playerAssistId: playerChosen2?.id!,
       isGuest,
     };
-    console.log(model);
     createShot(model)
       .then(() => setplayerChosen(undefined, false))
-      .then(() => setplayerChosen2(undefined, false))
+      .then(() => setPlayerChosen2(undefined, false))
       .then(closeModal);
   };
 
@@ -168,7 +167,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
             style={{ marginLeft: 50 }}
             onClick={() => {
               setAssist(false);
-              setplayerChosen2(undefined, false);
+              setPlayerChosen2(undefined, false);
             }}
           />
         </Grid.Row>
@@ -192,7 +191,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                   content={player.jerseyNr}
                   clearing="true"
                   onClick={() => {
-                    setplayerChosen2(player, false);
+                    setPlayerChosen2(player, false);
                   }}
                   compact
                 />

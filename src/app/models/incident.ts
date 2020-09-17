@@ -1,3 +1,4 @@
+import { IFoul } from "./foul";
 import { IShot } from "./shot";
 
 export interface IIncident {
@@ -10,7 +11,7 @@ export interface IIncident {
   flagged: boolean;
   isGuest: boolean;
   shot?: IShot;
-  //   foul: IFoul;
+  foul?: IFoul;
   //   substitution: IFoul;
   //   timeout: IFoul;
   //   turnover: IFoul;

@@ -28,7 +28,7 @@ import SeasonDashboard from "../../features/season/SeasonDashboard";
 import DivisionDashboard from "../../features/division/DivisionDashboard";
 import StatsDashboard from "../../features/statsProgram/StatsDashboard";
 import MatchManagerDashboard from "../../features/matchManager/MatchManagerDashboard";
-import ShotModal from "../../features/statsProgram/eventPanelModals/ShotModal";
+import FoulModal from "../../features/statsProgram/eventPanelModals/FoulModal";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   const rootStore = useContext(RootStoreContext);
@@ -78,7 +78,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route exact path="/manager" component={ManagerDashboard} />
                 <Route path="/manager/season" component={SeasonDashboard} />
                 <Route path="/manager/division" component={DivisionDashboard} />
-                <Route path="/test" component={ShotModal} />
+                <Route path="/test" component={FoulModal} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

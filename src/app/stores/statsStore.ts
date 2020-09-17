@@ -3,6 +3,7 @@ import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
 import { MatchDurationInSeconds } from "../common/global";
+import { IFoul } from "../models/foul";
 import { IIncident } from "../models/incident";
 import {
   IMatchDetailedSquads,
@@ -165,6 +166,33 @@ export default class StatsStore {
       return shot.id;
     } catch (error) {
       runInAction("create shot error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
+  @action createFoul = async (foul: IFoul) => {
+    this.submitting = true;
+    try {
+      let incidentId = await agent.Incidents.createFoul(foul);
+      runInAction("creating foul", () => {
+        this.submitting = false;
+        let incident: IIncident = {
+          flagged: false,
+          incidentType: 1,
+          minutes: foul.minutes,
+          quater: foul.quater,
+          seconds: foul.seconds,
+          foul,
+          id: incidentId,
+          isGuest: foul.isGuest,
+        };
+        this.incidentsRegistry.set(incident.id, incident);
+      });
+    } catch (error) {
+      runInAction("create foul error", () => {
         this.submitting = false;
       });
       toast.error("Problem submitting data");
