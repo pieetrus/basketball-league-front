@@ -35,7 +35,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
 
   const [freeThrows, setFreeThrows] = useState(false);
   const [assist, setAssist] = useState(false);
-  // const [rebound, setRebound] = useState(false);
+  const [rebound, setRebound] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [made, setMade] = useState(0);
 
@@ -117,7 +117,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 playerChosen2?.surname}
             </Segment>
           )}
-          {playerChosen3 && (
+          {playerChosen3 && assist && (
             <Segment>
               {"Assist : " +
                 playerChosen3?.jerseyNr +
@@ -127,8 +127,18 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 playerChosen3?.surname}
             </Segment>
           )}
+          {playerChosen3 && rebound && (
+            <Segment>
+              {"Rebound : " +
+                playerChosen3?.jerseyNr +
+                "." +
+                playerChosen3?.name +
+                " " +
+                playerChosen3?.surname}
+            </Segment>
+          )}
           {attempts !== 0 && <Segment>{"Attemps: " + attempts}</Segment>}
-          {made !== 0 && <Segment>{"Made: " + made}</Segment>}
+          {attempts !== 0 && <Segment>{"Made: " + made}</Segment>}
         </Segment.Group>
       </Grid.Row>
       <Grid.Row>
@@ -280,6 +290,18 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               toggle
               color="linkedin"
               inverted
+              content="0"
+              clearing="true"
+              onClick={() => {
+                setMade(0);
+              }}
+            />
+          </Grid.Column>
+          <Grid.Column width={2} textAlign="center">
+            <Button
+              toggle
+              color="linkedin"
+              inverted
               content="1"
               clearing="true"
               onClick={() => {
@@ -320,6 +342,34 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       {assist && freeThrows && <Header content="Assist" color="teal" />}
       {assist &&
         freeThrows &&
+        players
+          ?.filter((player) => player.id !== playerChosen2?.id)
+          .map((player) => (
+            <Grid.Column key={player.id} width={1} textAlign="center">
+              <Button
+                toggle
+                style={{
+                  width: 50,
+                  height: 50,
+                  fontSize: 17,
+                  color: "black",
+                }}
+                color={jerseyColor}
+                inverted
+                content={player.jerseyNr}
+                clearing="true"
+                onClick={() => {
+                  setPlayerChosen3(player, false);
+                }}
+                compact
+              />
+            </Grid.Column>
+          ))}
+      {freeThrows && attempts > made && (
+        <Header content="Rebound" color="teal" />
+      )}
+      {freeThrows &&
+        attempts > made &&
         players
           ?.filter((player) => player.id !== playerChosen2?.id)
           .map((player) => (
