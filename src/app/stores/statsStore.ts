@@ -35,6 +35,7 @@ export default class StatsStore {
   @observable teamGuestJerseyColor: any;
   @observable playerChosen: IPlayerShortInfo | undefined;
   @observable playerChosen2: IPlayerShortInfo | undefined;
+  @observable playerChosen3: IPlayerShortInfo | undefined;
   @observable teamChosen: ITeam | undefined;
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
@@ -125,6 +126,14 @@ export default class StatsStore {
     this.playerChosen2 = playerChosen2;
   };
 
+  @action setPlayerChosen3 = (
+    playerChosen3: IPlayerShortInfo | undefined,
+    isGuest: boolean
+  ) => {
+    if (playerChosen3) playerChosen3.isGuest = isGuest;
+    this.playerChosen3 = playerChosen3;
+  };
+
   @action setTeamsJerseysColors = (
     teamHomeJerseyColor: String,
     teamGuestJerseyColor: String
@@ -190,6 +199,8 @@ export default class StatsStore {
         };
         this.incidentsRegistry.set(incident.id, incident);
       });
+      if (foul.freeThrows)
+        this.setTeamPoints(!foul.isGuest, false, foul.freeThrows.accurateShots);
     } catch (error) {
       runInAction("create foul error", () => {
         this.submitting = false;

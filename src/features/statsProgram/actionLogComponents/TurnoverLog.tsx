@@ -33,7 +33,7 @@ const TurnoverLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   };
 
   return (
-    <Segment key={incident.id}>
+    <Segment>
       <ItemGroup divided>
         {
           <Item>

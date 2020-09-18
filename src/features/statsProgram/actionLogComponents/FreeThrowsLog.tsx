@@ -5,7 +5,7 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { IIncident } from "../../../app/models/incident";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
-const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
+const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   const rootStore = useContext(RootStoreContext);
   const {
     deleteIncident,
@@ -32,14 +32,6 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     return response;
   };
 
-  const getTeamInfo = (id: number) => {
-    let team;
-    if (match?.teamGuest.id === id) team = match.teamGuest;
-    if (match?.teamHome.id === id) team = match.teamHome;
-
-    return team?.name;
-  };
-
   return (
     <Segment>
       <ItemGroup divided>
@@ -47,7 +39,7 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
           <Item>
             <Item.Content>
               <Grid>
-                <Grid.Column width={8}>
+                <Grid.Column width={6}>
                   {"Q" +
                     incident.quater +
                     " " +
@@ -55,12 +47,7 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                     ":" +
                     incident.seconds}
                 </Grid.Column>
-                {incident.shot!.isAccurate && (
-                  <Grid.Column width={4}>SHOT MADE</Grid.Column>
-                )}
-                {!incident.shot!.isAccurate && (
-                  <Grid.Column width={4}>SHOT MISSED</Grid.Column>
-                )}
+                <Grid.Column width={6}>{"FREE THROWS"}</Grid.Column>
                 <Grid.Column width={2}>
                   <i
                     className="edit icon"
@@ -94,82 +81,57 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={3} verticalAlign="middle">
-                      {incident.shot!.isAccurate && (
-                        <Segment
-                          inverted
-                          color={jerseyColor(incident.isGuest)}
-                          content={incident.shot!.value + "PM"}
-                        />
-                      )}
-                      {!incident.shot!.isAccurate && (
-                        <Segment
-                          inverted
-                          color={jerseyColor(incident.isGuest)}
-                          content={incident.shot!.value + "PA"}
-                        />
-                      )}
+                      <Segment
+                        inverted
+                        color={jerseyColor(!incident.isGuest)}
+                        content={
+                          incident.foul?.freeThrows?.accurateShots +
+                          "/" +
+                          incident.foul?.freeThrows?.attempts
+                        }
+                      />
                     </Grid.Column>
                     <Grid.Column width={10}>
                       <Segment
-                        content={getPlayerInfo(incident.shot!.playerId)}
+                        content={getPlayerInfo(
+                          incident.foul?.freeThrows?.playerShooterId!
+                        )}
                       />
                     </Grid.Column>
                   </Grid.Row>
-                  {incident.shot!.assist?.playerId && (
+                  {incident.foul?.freeThrows?.assist && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
                         <Segment
                           inverted
-                          color={jerseyColor(incident.isGuest)}
-                          content="AST"
+                          color={jerseyColor(!incident.isGuest)}
+                          content={"AST"}
                         />
                       </Grid.Column>
                       <Grid.Column width={10}>
                         <Segment
                           content={getPlayerInfo(
-                            incident.shot!.assist?.playerId
+                            incident.foul?.freeThrows?.assist.playerId!
                           )}
                         />
                       </Grid.Column>
                     </Grid.Row>
                   )}
-                  {!incident.shot!.isAccurate && (
+                  {incident.foul?.freeThrows?.rebound && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        {(incident.shot!.rebound?.reboundType === 1 ||
-                          incident.shot!.rebound?.reboundType === 3) && (
-                          <Segment
-                            inverted
-                            color={jerseyColor(incident.isGuest)}
-                            content="REB"
-                          />
-                        )}
-                        {(incident.shot!.rebound?.reboundType === 2 ||
-                          incident.shot!.rebound?.reboundType === 4) && (
-                          <Segment
-                            inverted
-                            color={jerseyColor(!incident.isGuest)}
-                            content="REB"
-                          />
-                        )}
+                        <Segment
+                          inverted
+                          color={jerseyColor(!incident.isGuest)}
+                          content={"REB"}
+                        />
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        {(incident.shot!.rebound?.reboundType === 1 ||
-                          incident.shot!.rebound?.reboundType === 2) && (
-                          <Segment
-                            content={getPlayerInfo(
-                              incident.shot?.rebound?.playerId!
-                            )}
-                          />
-                        )}
-                        {(incident.shot!.rebound?.reboundType === 3 ||
-                          incident.shot!.rebound?.reboundType === 4) && (
-                          <Segment
-                            content={getTeamInfo(
-                              incident.shot?.rebound?.teamId!
-                            )}
-                          />
-                        )}
+                        <Segment
+                          content={getPlayerInfo(
+                            incident.foul?.freeThrows?.rebound.playerId!
+                          )}
+                        />
                       </Grid.Column>
                     </Grid.Row>
                   )}
@@ -183,4 +145,4 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
   );
 };
 
-export default observer(ShotLog);
+export default observer(FreeThrowsLog);

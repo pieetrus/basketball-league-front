@@ -26,7 +26,7 @@ const TimeoutLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     else return match?.teamGuest.name;
   };
   return (
-    <Segment key={incident.id}>
+    <Segment>
       <ItemGroup divided>
         {
           <Item>

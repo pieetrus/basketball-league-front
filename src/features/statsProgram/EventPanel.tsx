@@ -18,6 +18,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     match,
     quater,
     setPlayerChosen2,
+    setPlayerChosen3,
   } = rootStore.statsStore;
   const { openModal, setModalSize } = rootStore.modalStore;
 
@@ -53,6 +54,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={true} isGuest={isGuest} />);
                   setPlayerChosen2(undefined, false);
+                  setPlayerChosen3(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -71,6 +73,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                   setModalSize("large");
                   openModal(<ShotModal shotMade={false} isGuest={isGuest} />);
                   setPlayerChosen2(undefined, false);
+                  setPlayerChosen3(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -89,6 +92,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                   setModalSize("large");
                   openModal(<FoulModal isGuest={isGuest} />);
                   setPlayerChosen2(undefined, false);
+                  setPlayerChosen3(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }
@@ -106,6 +110,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 if (playerChosen) {
                   openModal(<TurnoverModal isGuest={isGuest} />);
                   setPlayerChosen2(undefined, false);
+                  setPlayerChosen3(undefined, false);
                 } else {
                   toast.info("First choose player");
                 }

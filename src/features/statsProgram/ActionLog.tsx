@@ -8,6 +8,7 @@ import ShotLog from "./actionLogComponents/ShotLog";
 import FoulLog from "./actionLogComponents/FoulLog";
 import TimeoutLog from "./actionLogComponents/TimeoutLog";
 import TurnoverLog from "./actionLogComponents/TurnoverLog";
+import FreeThrowsLog from "./actionLogComponents/FreeThrowsLog";
 
 const ActionLog = () => {
   const rootStore = useContext(RootStoreContext);
@@ -28,8 +29,16 @@ const ActionLog = () => {
         <Segment style={{ overflow: "auto", maxHeight: 450 }}>
           {toJS(getIncidents).map((incident) => (
             <Fragment key={incident.id}>
-              {incident.incidentType === 1 && (
-                <FoulLog incident={incident} key={incident.id} />
+              {incident.incidentType === 1 && incident.foul?.freeThrows && (
+                <Fragment key={incident.id}>
+                  <FreeThrowsLog incident={incident} />
+                  <FoulLog incident={incident} />
+                </Fragment>
+              )}
+              {incident.incidentType === 1 && !incident.foul?.freeThrows && (
+                <Fragment key={incident.id}>
+                  <FoulLog incident={incident} />
+                </Fragment>
               )}
               {incident.incidentType === 3 && (
                 <ShotLog incident={incident} key={incident.id} />
