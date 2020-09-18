@@ -1,3 +1,5 @@
+import { IRebound } from "./rebound";
+
 export interface IShot {
   id?: number;
   matchId: number;
@@ -10,17 +12,10 @@ export interface IShot {
   isAccurate: boolean;
   isFastAttack: boolean; // not in use yet
   value: number;
-  playerAssistId: number;
+  playerAssistId?: number;
   isGuest: boolean;
+  reboundType?: number;
+  playerReboundId?: number;
+  teamReboundId?: number;
+  rebound?: IRebound;
 }
-
-// export class ShotFormValues implements IShot {
-//   id?: number = undefined;
-//   name: string = "";
-//   shortName: string = "";
-//   logoUrl: string = "";
-
-//   constructor(init?: IShot) {
-//     Object.assign(this, init);
-//   }
-// }

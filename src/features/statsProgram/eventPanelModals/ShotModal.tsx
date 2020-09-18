@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
 import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { shotTypes } from "../../../app/common/options/shotTypes";
-import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
+import { IRebound } from "../../../app/models/rebound";
 import { IShot } from "../../../app/models/shot";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
@@ -71,9 +71,28 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       isAccurate: shotMade,
       isFastAttack: false,
       value: shotValue,
-      playerAssistId: playerChosen2?.id!,
       isGuest,
     };
+
+    if (shotMade && assist) model.playerAssistId = playerChosen2?.playerId;
+    else if (!shotMade) {
+      let rebound: IRebound = {
+        reboundType: reboundType.value,
+      };
+      model.reboundType = reboundType.value;
+      model.rebound = rebound;
+
+      if (reboundType.value === 1 || reboundType.value === 2) {
+        // player rebounds
+        rebound.playerId = playerChosen2?.playerId!;
+        model.playerReboundId = playerChosen2?.playerId;
+      } else if (reboundType.value === 3 || reboundType.value === 4) {
+        // team rebounds
+        // model.playerReboundId = playerChosen2?.playerId;
+        // rebound.teamId = 2;
+      }
+    }
+
     createShot(model)
       .then(() => setplayerChosen(undefined, false))
       .then(() => setPlayerChosen2(undefined, false))
@@ -244,7 +263,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       </Grid.Row>
       <Grid.Row>
         {reboundType.value === 1 &&
-          getPlayers(true)!.map((player) => (
+          getPlayers(false)!.map((player) => (
             <Grid.Column key={player.id} width={1} textAlign="center">
               <Button
                 toggle
@@ -254,7 +273,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                   fontSize: 17,
                   color: "black",
                 }}
-                color={getJerseys(true)}
+                color={getJerseys(false)}
                 inverted
                 content={player.jerseyNr}
                 clearing="true"
@@ -268,7 +287,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       </Grid.Row>
       <Grid.Row>
         {reboundType.value === 2 &&
-          getPlayers(false)!.map((player) => (
+          getPlayers(true)!.map((player) => (
             <Grid.Column key={player.id} width={1} textAlign="center">
               <Button
                 toggle
@@ -278,7 +297,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                   fontSize: 17,
                   color: "black",
                 }}
-                color={getJerseys(false)}
+                color={getJerseys(true)}
                 inverted
                 content={player.jerseyNr}
                 clearing="true"

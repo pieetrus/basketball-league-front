@@ -124,14 +124,29 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                   {!incident.shot!.isAccurate && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        <Segment
-                          inverted
-                          color={jerseyColor(incident.isGuest)}
-                          content="REB"
-                        />
+                        {(incident.shot!.rebound?.reboundType === 1 ||
+                          incident.shot!.rebound?.reboundType === 3) && (
+                          <Segment
+                            inverted
+                            color={jerseyColor(incident.isGuest)}
+                            content="REB"
+                          />
+                        )}
+                        {(incident.shot!.rebound?.reboundType === 2 ||
+                          incident.shot!.rebound?.reboundType === 4) && (
+                          <Segment
+                            inverted
+                            color={jerseyColor(!incident.isGuest)}
+                            content="REB"
+                          />
+                        )}
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        <Segment content={"player who rebound"} />
+                        <Segment
+                          content={getPlayerInfo(
+                            incident.shot?.rebound?.playerId!
+                          )}
+                        />
                       </Grid.Column>
                     </Grid.Row>
                   )}
