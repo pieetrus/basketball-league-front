@@ -107,7 +107,7 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                       />
                     </Grid.Column>
                   </Grid.Row>
-                  {incident.shot!.playerAssistId && (
+                  {incident.shot!.assist?.playerId && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
                         <Segment
@@ -117,7 +117,11 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                         />
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        <Segment content={incident.shot!.playerAssistId} />
+                        <Segment
+                          content={getPlayerInfo(
+                            incident.shot!.assist?.playerId
+                          )}
+                        />
                       </Grid.Column>
                     </Grid.Row>
                   )}

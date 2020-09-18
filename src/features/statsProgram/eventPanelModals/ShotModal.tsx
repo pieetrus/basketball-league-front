@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
 import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { shotTypes } from "../../../app/common/options/shotTypes";
+import { IAssist } from "../../../app/models/assist";
 import { IRebound } from "../../../app/models/rebound";
 import { IShot } from "../../../app/models/shot";
 import { RootStoreContext } from "../../../app/stores/rootStore";
@@ -74,8 +75,13 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       isGuest,
     };
 
-    if (shotMade && assist) model.playerAssistId = playerChosen2?.playerId;
-    else if (!shotMade) {
+    if (shotMade && assist) {
+      let assist: IAssist = {
+        playerId: playerChosen2?.playerId!,
+      };
+      model.assist = assist;
+      model.playerAssistId = playerChosen2?.playerId;
+    } else if (!shotMade) {
       let rebound: IRebound = {
         reboundType: reboundType.value,
       };

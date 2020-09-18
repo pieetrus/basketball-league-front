@@ -1,3 +1,4 @@
+import { IAssist } from "./assist";
 import { IRebound } from "./rebound";
 
 export interface IShot {
@@ -18,4 +19,5 @@ export interface IShot {
   playerReboundId?: number;
   teamReboundId?: number;
   rebound?: IRebound;
+  assist?: IAssist;
 }
