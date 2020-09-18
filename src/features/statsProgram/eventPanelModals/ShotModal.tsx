@@ -24,9 +24,11 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
     teamGuestJerseyColor,
     setPlayerChosen2,
     playerChosen2,
+    setTeamChosen,
+    teamChosen,
     quater,
+    match: selectedMatch,
   } = rootStore.statsStore;
-  const { selectedMatch } = rootStore.matchStore;
   const { closeModal } = rootStore.modalStore;
 
   const getPlayers = (isRival: boolean) => {
@@ -36,6 +38,16 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
     } else {
       if (isRival) return getChosenTeamGuestPlayers;
       return getChosenTeamHomePlayers;
+    }
+  };
+
+  const getTeam = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return selectedMatch?.teamHome;
+      return selectedMatch?.teamGuest;
+    } else {
+      if (isRival) return selectedMatch?.teamGuest;
+      return selectedMatch?.teamHome;
     }
   };
 
@@ -94,8 +106,8 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
         model.playerReboundId = playerChosen2?.playerId;
       } else if (reboundType.value === 3 || reboundType.value === 4) {
         // team rebounds
-        // model.playerReboundId = playerChosen2?.playerId;
-        // rebound.teamId = 2;
+        model.teamReboundId = teamChosen?.id;
+        rebound.teamId = teamChosen?.id;
       }
     }
 
@@ -162,12 +174,15 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
             )}
             {playerChosen2 && !shotMade && (
               <Segment compact style={{ width: 40 }}>
-                {"REB: " +
-                  playerChosen2.jerseyNr +
-                  ". " +
-                  playerChosen2.name +
-                  " " +
-                  playerChosen2.surname}
+                {(reboundType.value === 1 || reboundType.value === 2) &&
+                  "REB: " +
+                    playerChosen2.jerseyNr +
+                    ". " +
+                    playerChosen2.name +
+                    " " +
+                    playerChosen2.surname}
+                {(reboundType.value === 3 || reboundType.value === 4) &&
+                  "REB: " + teamChosen?.name}
               </Segment>
             )}
           </Segment.Group>
@@ -259,6 +274,8 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                 onClick={() => {
                   if (reboundType.value === 3 || reboundType.value === 4)
                     setPlayerChosen2(undefined, false);
+                  if (reboundType.value === 3) setTeamChosen(getTeam(true)!);
+                  if (reboundType.value === 4) setTeamChosen(getTeam(false)!);
                   setReboundType(reboundType);
                 }}
               >

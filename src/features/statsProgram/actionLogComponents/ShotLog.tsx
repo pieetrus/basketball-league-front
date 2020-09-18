@@ -32,6 +32,14 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     return response;
   };
 
+  const getTeamInfo = (id: number) => {
+    let team;
+    if (match?.teamGuest.id === id) team = match.teamGuest;
+    if (match?.teamHome.id === id) team = match.teamHome;
+
+    return team?.name;
+  };
+
   return (
     <Segment key={incident.id}>
       <ItemGroup divided>
@@ -146,11 +154,22 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                         )}
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        <Segment
-                          content={getPlayerInfo(
-                            incident.shot?.rebound?.playerId!
-                          )}
-                        />
+                        {(incident.shot!.rebound?.reboundType === 1 ||
+                          incident.shot!.rebound?.reboundType === 2) && (
+                          <Segment
+                            content={getPlayerInfo(
+                              incident.shot?.rebound?.playerId!
+                            )}
+                          />
+                        )}
+                        {(incident.shot!.rebound?.reboundType === 3 ||
+                          incident.shot!.rebound?.reboundType === 4) && (
+                          <Segment
+                            content={getTeamInfo(
+                              incident.shot?.rebound?.teamId!
+                            )}
+                          />
+                        )}
                       </Grid.Column>
                     </Grid.Row>
                   )}

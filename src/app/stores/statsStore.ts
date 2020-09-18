@@ -35,6 +35,7 @@ export default class StatsStore {
   @observable teamGuestJerseyColor: any;
   @observable playerChosen: IPlayerShortInfo | undefined;
   @observable playerChosen2: IPlayerShortInfo | undefined;
+  @observable teamChosen: ITeam | undefined;
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
   @observable incidentsRegistry = new Map();
@@ -102,6 +103,10 @@ export default class StatsStore {
   @action setTeams = (teamHome: ITeam, teamGuest: ITeam) => {
     this.teamHome = teamHome;
     this.teamGuest = teamGuest;
+  };
+
+  @action setTeamChosen = (teamChosen: ITeam) => {
+    this.teamChosen = teamChosen;
   };
 
   @action setPlayerChosen = (
