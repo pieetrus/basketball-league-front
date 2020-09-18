@@ -93,7 +93,7 @@ const TurnoverLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                       />
                     </Grid.Column>
                   </Grid.Row>
-                  {true && (
+                  {incident.turnover?.steal && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
                         <Segment
@@ -104,7 +104,9 @@ const TurnoverLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                       </Grid.Column>
                       <Grid.Column width={10}>
                         <Segment
-                          content={getPlayerInfo(incident.turnover?.playerId!)}
+                          content={getPlayerInfo(
+                            incident.turnover?.steal.playerId!
+                          )}
                         />
                       </Grid.Column>
                     </Grid.Row>

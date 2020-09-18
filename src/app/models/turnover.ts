@@ -1,3 +1,5 @@
+import { ISteal } from "./steal";
+
 export interface ITurnover {
   id?: number;
   matchId: number;
@@ -7,5 +9,7 @@ export interface ITurnover {
   flagged: boolean; // not in use yet
   isGuest: boolean;
   playerId: number;
+  playerStealId?: number;
   turnoverType: number;
+  steal?: ISteal;
 }

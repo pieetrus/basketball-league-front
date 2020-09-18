@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
 import { turnoverTypes } from "../../../app/common/options/turnoverTypes";
 import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
+import { ISteal } from "../../../app/models/steal";
 import { ITurnover } from "../../../app/models/turnover";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
@@ -52,7 +53,15 @@ const TurnoverModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       flagged: false,
       isGuest,
       turnoverType: turnoverType.value,
+      playerStealId: playerChosen2?.playerId,
     };
+    if (steal) {
+      let stealModel: ISteal = {
+        playerId: playerChosen2?.playerId!,
+      };
+      model.steal = stealModel;
+    }
+
     createTurnover(model)
       .then(() => setPlayerChosen(undefined, false))
       .then(() => setPlayerChosen2(undefined, false))
