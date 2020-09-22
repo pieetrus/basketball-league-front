@@ -37,6 +37,10 @@ export default class StatsStore {
   @observable playerChosen2: IPlayerShortInfo | undefined;
   @observable playerChosen3: IPlayerShortInfo | undefined;
   @observable teamChosen: ITeam | undefined;
+  @observable teamHomeFouls: number = 0;
+  @observable teamGuestFouls: number = 0;
+  @observable teamHomeTimeoutsUsed: number = 0;
+  @observable teamGuestTimeoutsUsed: number = 0;
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
   @observable incidentsRegistry = new Map();
@@ -256,6 +260,8 @@ export default class StatsStore {
           matchId: timeout.matchId,
         };
         this.incidentsRegistry.set(incident.id, incident);
+        if (incident.isGuest) this.teamGuestTimeoutsUsed++;
+        else this.teamHomeTimeoutsUsed++;
       });
     } catch (error) {
       runInAction("create timeout error", () => {

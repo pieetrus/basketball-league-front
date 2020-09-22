@@ -19,6 +19,8 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     quater,
     setPlayerChosen2,
     setPlayerChosen3,
+    teamHomeTimeoutsUsed,
+    teamGuestTimeoutsUsed,
   } = rootStore.statsStore;
   const { openModal, setModalSize } = rootStore.modalStore;
 
@@ -26,6 +28,18 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     let team: ITeam;
     if (isGuest) team = match?.teamGuest!;
     else team = match?.teamHome!;
+
+    if (isGuest) {
+      if (teamGuestTimeoutsUsed === 3) {
+        toast.error(team.name + " have no timeouts left.");
+        return;
+      }
+    } else {
+      if (teamHomeTimeoutsUsed === 3) {
+        toast.error(team.name + " have no timeouts left.");
+        return;
+      }
+    }
 
     let model: ITimeout = {
       matchId: match?.id!,
