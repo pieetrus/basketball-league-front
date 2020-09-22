@@ -3,6 +3,12 @@ export interface ITeam {
   name: string;
   shortName: string;
   logoUrl: string;
+  fouls1Qtr?: number;
+  fouls2Qtr?: number;
+  fouls3Qtr?: number;
+  fouls4Qtr?: number;
+  timeouts1Half?: number;
+  timeouts2Half?: number;
 }
 
 export class TeamFormValues implements ITeam {

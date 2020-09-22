@@ -32,6 +32,14 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     return response;
   };
 
+  const getTeamInfo = (id: number) => {
+    let team;
+    if (match?.teamGuest.id === id) team = match.teamGuest;
+    if (match?.teamHome.id === id) team = match.teamHome;
+
+    return team?.name;
+  };
+
   return (
     <Segment>
       <ItemGroup divided>
@@ -130,6 +138,7 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                             content="REB"
                           />
                         )}
+
                         {(incident.foul?.freeThrows.rebound?.reboundType ===
                           2 ||
                           incident.foul?.freeThrows.rebound?.reboundType ===
@@ -142,11 +151,26 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                         )}
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        <Segment
-                          content={getPlayerInfo(
-                            incident.foul?.freeThrows?.rebound.playerId!
-                          )}
-                        />
+                        {(incident.foul?.freeThrows.rebound?.reboundType ===
+                          1 ||
+                          incident.foul?.freeThrows.rebound?.reboundType ===
+                            2) && (
+                          <Segment
+                            content={getPlayerInfo(
+                              incident.foul?.freeThrows?.rebound.playerId!
+                            )}
+                          />
+                        )}
+                        {(incident.foul?.freeThrows.rebound?.reboundType ===
+                          3 ||
+                          incident.foul?.freeThrows.rebound?.reboundType ===
+                            4) && (
+                          <Segment
+                            content={getTeamInfo(
+                              incident.foul?.freeThrows?.rebound.teamId!
+                            )}
+                          />
+                        )}
                       </Grid.Column>
                     </Grid.Row>
                   )}

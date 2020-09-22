@@ -114,6 +114,33 @@ export default class StatsStore {
     this.teamChosen = teamChosen;
   };
 
+  @action setTeamFoulsAndTimeouts = () => {
+    if (this.quater === 1) {
+      this.teamHomeFouls = this.match?.teamHome.fouls1Qtr!;
+      this.teamHomeTimeoutsUsed = this.match?.teamHome.timeouts1Half!;
+      this.teamGuestFouls = this.match?.teamGuest.fouls1Qtr!;
+      this.teamGuestTimeoutsUsed = this.match?.teamGuest.timeouts1Half!;
+    }
+    if (this.quater === 2) {
+      this.teamHomeFouls = this.match?.teamHome.fouls2Qtr!;
+      this.teamHomeTimeoutsUsed = this.match?.teamHome.timeouts1Half!;
+      this.teamGuestFouls = this.match?.teamGuest.fouls2Qtr!;
+      this.teamGuestTimeoutsUsed = this.match?.teamGuest.timeouts1Half!;
+    }
+    if (this.quater === 3) {
+      this.teamHomeFouls = this.match?.teamHome.fouls3Qtr!;
+      this.teamHomeTimeoutsUsed = this.match?.teamHome.timeouts1Half!;
+      this.teamGuestFouls = this.match?.teamGuest.fouls3Qtr!;
+      this.teamGuestTimeoutsUsed = this.match?.teamGuest.timeouts2Half!;
+    }
+    if (this.quater === 4) {
+      this.teamHomeFouls = this.match?.teamHome.fouls4Qtr!;
+      this.teamHomeTimeoutsUsed = this.match?.teamHome.timeouts1Half!;
+      this.teamGuestFouls = this.match?.teamGuest.fouls4Qtr!;
+      this.teamGuestTimeoutsUsed = this.match?.teamGuest.timeouts2Half!;
+    }
+  };
+
   @action setPlayerChosen = (
     playerChosen: IPlayerShortInfo | undefined,
     isGuest: boolean
@@ -286,6 +313,7 @@ export default class StatsStore {
             Number.parseInt(lastIncident?.minutes!) * 60 +
             Number.parseInt(lastIncident?.seconds!);
           this.quater = lastIncident.quater;
+          this.setTeamFoulsAndTimeouts();
         }
         this.loadingIncidents = false;
       });
