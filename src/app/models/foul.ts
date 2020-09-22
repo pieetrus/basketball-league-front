@@ -13,6 +13,7 @@ export interface IFoul {
   playerAssistId?: number;
   playerReboundId?: number;
   teamReboundId?: number;
+  reboundType?: number;
   coachId?: number;
   foulType: number;
   playerShooterId?: number;

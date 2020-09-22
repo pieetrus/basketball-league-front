@@ -2,10 +2,13 @@ import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
 import { foulTypes } from "../../../app/common/options/foulTypes";
+import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { IAssist } from "../../../app/models/assist";
 import { IFoul } from "../../../app/models/foul";
 import { IFreeThrow } from "../../../app/models/freethrow";
 import { IPlayerShortInfo } from "../../../app/models/matchDetailed";
+import { IRebound } from "../../../app/models/rebound";
+import { ITeam } from "../../../app/models/team";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
@@ -36,6 +39,14 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
   const [freeThrows, setFreeThrows] = useState(false);
   const [assist, setAssist] = useState(false);
   const [rebound, setRebound] = useState(false);
+  const [reboundPlayer, setReboundPlayer] = useState<
+    IPlayerShortInfo | undefined
+  >(undefined);
+  const [reboundTeam, setReboundTeam] = useState<ITeam | undefined>(undefined);
+  const [reboundType, setReboundType] = useState({
+    name: "",
+    value: 0,
+  });
   const [attempts, setAttempts] = useState(0);
   const [made, setMade] = useState(0);
 
@@ -66,6 +77,9 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       model.attempts = freeThrowModel.attempts;
       model.playerShooterId = freeThrowModel.playerShooterId;
       if (assist) {
+        if (made === 0) {
+          return;
+        }
         let assistModel: IAssist = {
           playerId: playerChosen3?.playerId!,
         };
@@ -73,15 +87,55 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
         model.playerAssistId = assistModel.playerId;
       }
 
-      // if (rebound) {
-      //   let reboundModel: IRebound = {
-      //   };
-      // }
+      if (rebound) {
+        let reboundModel: IRebound = {
+          reboundType: reboundType.value,
+        };
+        if (reboundPlayer) {
+          reboundModel.playerId = reboundPlayer.playerId;
+          model.playerReboundId = reboundPlayer?.playerId;
+        }
+        if (reboundTeam) reboundModel.teamId = reboundTeam.id;
+        freeThrowModel.rebound = reboundModel;
+        model.teamReboundId = reboundTeam?.id;
+      }
+      model.freeThrows = freeThrowModel;
+      model.reboundType = reboundType.value;
     }
     createFoul(model)
       .then(() => setPlayerChosen(undefined, false))
       .then(() => setPlayerChosen2(undefined, false))
       .then(closeModal);
+  };
+
+  const getTeam = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return selectedMatch?.teamHome;
+      return selectedMatch?.teamGuest;
+    } else {
+      if (isRival) return selectedMatch?.teamGuest;
+      return selectedMatch?.teamHome;
+    }
+  };
+
+  const getPlayers = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return getChosenTeamHomePlayers;
+      return getChosenTeamGuestPlayers;
+    } else {
+      if (isRival) return getChosenTeamGuestPlayers;
+      return getChosenTeamHomePlayers;
+    }
+  };
+
+  const getJerseys = (isRival: boolean) => {
+    if (isGuest) {
+      if (isRival) return teamHomeJerseyColor;
+      return teamGuestJerseyColor;
+    } else {
+      if (isRival) return teamGuestJerseyColor;
+      return teamHomeJerseyColor;
+    }
   };
 
   if (isGuest) {
@@ -127,14 +181,14 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 playerChosen3?.surname}
             </Segment>
           )}
-          {playerChosen3 && rebound && (
+          {reboundPlayer && rebound && (
             <Segment>
               {"Rebound : " +
-                playerChosen3?.jerseyNr +
+                reboundPlayer?.jerseyNr +
                 "." +
-                playerChosen3?.name +
+                reboundPlayer?.name +
                 " " +
-                playerChosen3?.surname}
+                reboundPlayer?.surname}
             </Segment>
           )}
           {attempts !== 0 && <Segment>{"Attemps: " + attempts}</Segment>}
@@ -294,6 +348,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               clearing="true"
               onClick={() => {
                 setMade(0);
+                setRebound(true);
               }}
             />
           </Grid.Column>
@@ -306,6 +361,8 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               clearing="true"
               onClick={() => {
                 setMade(1);
+                if (attempts > 1) setRebound(true);
+                else setRebound(false);
               }}
             />
           </Grid.Column>
@@ -319,6 +376,8 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 clearing="true"
                 onClick={() => {
                   setMade(2);
+                  if (attempts > 2) setRebound(true);
+                  else setRebound(false);
                 }}
               />
             </Grid.Column>
@@ -333,6 +392,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 clearing="true"
                 onClick={() => {
                   setMade(3);
+                  setRebound(false);
                 }}
               />
             </Grid.Column>
@@ -365,34 +425,77 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
               />
             </Grid.Column>
           ))}
-      {freeThrows && attempts > made && (
-        <Header content="Rebound" color="teal" />
-      )}
-      {freeThrows &&
-        attempts > made &&
-        players
-          ?.filter((player) => player.id !== playerChosen2?.id)
-          .map((player) => (
-            <Grid.Column key={player.id} width={1} textAlign="center">
+      {freeThrows && rebound && <Header content="Rebound" color="teal" />}
+      {freeThrows && rebound && (
+        <Grid.Row>
+          {reboundTypes.map((reboundType) => (
+            <Grid.Column width={3} key={reboundType.value}>
               <Button
-                toggle
-                style={{
-                  width: 50,
-                  height: 50,
-                  fontSize: 17,
-                  color: "black",
-                }}
-                color={jerseyColor}
-                inverted
-                content={player.jerseyNr}
-                clearing="true"
+                color="brown"
+                size="huge"
+                style={{ marginBottom: 30 }}
                 onClick={() => {
-                  setPlayerChosen3(player, false);
+                  if (reboundType.value === 1 || reboundType.value === 2)
+                    setReboundTeam(undefined);
+                  if (reboundType.value === 3) setReboundTeam(getTeam(false)!);
+                  if (reboundType.value === 4) setReboundTeam(getTeam(true)!);
+                  setReboundType(reboundType);
                 }}
-                compact
-              />
+              >
+                {reboundType.name}
+              </Button>
             </Grid.Column>
           ))}
+        </Grid.Row>
+      )}
+      {freeThrows &&
+        rebound &&
+        reboundType.value === 1 &&
+        getPlayers(true)?.map((player) => (
+          <Grid.Column key={player.id} width={1} textAlign="center">
+            <Button
+              toggle
+              style={{
+                width: 50,
+                height: 50,
+                fontSize: 17,
+                color: "black",
+              }}
+              color={getJerseys(true)}
+              inverted
+              content={player.jerseyNr}
+              clearing="true"
+              onClick={() => {
+                setReboundPlayer(player);
+              }}
+              compact
+            />
+          </Grid.Column>
+        ))}
+      {freeThrows &&
+        rebound &&
+        reboundType.value === 2 &&
+        getPlayers(false)?.map((player) => (
+          <Grid.Column key={player.id} width={1} textAlign="center">
+            <Button
+              toggle
+              style={{
+                width: 50,
+                height: 50,
+                fontSize: 17,
+                color: "black",
+              }}
+              color={getJerseys(false)}
+              inverted
+              content={player.jerseyNr}
+              clearing="true"
+              onClick={() => {
+                setReboundPlayer(player);
+              }}
+              compact
+            />
+          </Grid.Column>
+        ))}
       <Grid.Row>
         <Button
           content="OK"

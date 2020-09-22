@@ -120,11 +120,26 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                   {incident.foul?.freeThrows?.rebound && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        <Segment
-                          inverted
-                          color={jerseyColor(!incident.isGuest)}
-                          content={"REB"}
-                        />
+                        {(incident.foul?.freeThrows.rebound?.reboundType ===
+                          1 ||
+                          incident.foul?.freeThrows.rebound?.reboundType ===
+                            3) && (
+                          <Segment
+                            inverted
+                            color={jerseyColor(!incident.isGuest)}
+                            content="REB"
+                          />
+                        )}
+                        {(incident.foul?.freeThrows.rebound?.reboundType ===
+                          2 ||
+                          incident.foul?.freeThrows.rebound?.reboundType ===
+                            4) && (
+                          <Segment
+                            inverted
+                            color={jerseyColor(incident.isGuest)}
+                            content="REB"
+                          />
+                        )}
                       </Grid.Column>
                       <Grid.Column width={10}>
                         <Segment
