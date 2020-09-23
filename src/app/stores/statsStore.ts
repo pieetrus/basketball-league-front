@@ -289,13 +289,15 @@ export default class StatsStore {
         this.incidentsRegistry.set(incident.id, incident);
         if (incident.isGuest) this.teamGuestTimeoutsUsed++;
         else this.teamHomeTimeoutsUsed++;
+        if (incident.isGuest)
+          toast.success("Timeout for" + this.teamGuest?.name);
+        else toast.success("Timeout for" + this.teamHome?.name);
       });
     } catch (error) {
       runInAction("create timeout error", () => {
         this.submitting = false;
       });
-      toast.error("Problem submitting data");
-      console.log(error.response);
+      toast.error(error.data.error);
     }
   };
 

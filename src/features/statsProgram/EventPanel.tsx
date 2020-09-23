@@ -28,14 +28,17 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     let team: ITeam;
     if (isGuest) team = match?.teamGuest!;
     else team = match?.teamHome!;
+    let timeoutsLimit;
+    if (quater === 1 || quater === 2) timeoutsLimit = 2;
+    else timeoutsLimit = 3;
 
     if (isGuest) {
-      if (teamGuestTimeoutsUsed === 3) {
+      if (teamGuestTimeoutsUsed === timeoutsLimit) {
         toast.error(team.name + " have no timeouts left.");
         return;
       }
     } else {
-      if (teamHomeTimeoutsUsed === 3) {
+      if (teamHomeTimeoutsUsed === timeoutsLimit) {
         toast.error(team.name + " have no timeouts left.");
         return;
       }
@@ -50,7 +53,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       isGuest,
       teamId: team.id!,
     };
-    createTimeout(model).then(() => toast.success("Timeout for " + team.name));
+    createTimeout(model);
   };
 
   return (

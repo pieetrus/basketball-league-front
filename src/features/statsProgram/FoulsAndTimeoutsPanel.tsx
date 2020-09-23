@@ -10,13 +10,19 @@ const FoulsAndTimeoutsPanel = () => {
     teamHomeFouls,
     teamHomeTimeoutsUsed,
     teamGuestTimeoutsUsed,
+    quater,
   } = rootStore.statsStore;
 
   return (
     <Grid.Row>
       <Grid.Column floated="left" width={3}>
         <Segment.Group>
-          <Segment>{"TIMEOUTS: " + (3 - teamHomeTimeoutsUsed)}</Segment>
+          {(quater === 1 || quater === 2) && (
+            <Segment>{"TIMEOUTS: " + (2 - teamHomeTimeoutsUsed)}</Segment>
+          )}
+          {(quater === 3 || quater === 4) && (
+            <Segment>{"TIMEOUTS: " + (3 - teamHomeTimeoutsUsed)}</Segment>
+          )}
         </Segment.Group>
       </Grid.Column>
       <Grid.Column floated="left" width={2}>
@@ -26,7 +32,12 @@ const FoulsAndTimeoutsPanel = () => {
         <Segment>{"FOULS: " + teamGuestFouls}</Segment>
       </Grid.Column>
       <Grid.Column floated="right" width={3}>
-        <Segment>{"TIMEOUTS: " + (3 - teamGuestTimeoutsUsed)}</Segment>
+        {(quater === 1 || quater === 2) && (
+          <Segment>{"TIMEOUTS: " + (2 - teamGuestTimeoutsUsed)}</Segment>
+        )}
+        {(quater === 3 || quater === 4) && (
+          <Segment>{"TIMEOUTS: " + (3 - teamGuestTimeoutsUsed)}</Segment>
+        )}
       </Grid.Column>
     </Grid.Row>
   );
