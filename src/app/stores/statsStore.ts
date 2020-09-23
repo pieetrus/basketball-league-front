@@ -26,7 +26,11 @@ export default class StatsStore {
   @observable loadingIncidents = false;
   @observable match: IMatchDetailedSquads | undefined;
   @observable timeInSeconds: number = MatchDurationInSeconds;
+  @observable timeLeft: number = this.timeInSeconds;
+  @observable minutesLeft: number = Math.floor(this.timeLeft / 60);
+  @observable secondsLeft: number = this.timeLeft % 60;
   @observable quater: number = 1;
+  @observable quaterEnded = false;
   @observable teamHomePts: number = 0;
   @observable teamGuestPts: number = 0;
   @observable teamHome: ITeam | null = null;
@@ -112,6 +116,24 @@ export default class StatsStore {
 
   @action setTeamChosen = (teamChosen: ITeam) => {
     this.teamChosen = teamChosen;
+  };
+
+  @action setQuaterEnded = (ended: boolean) => {
+    this.quaterEnded = ended;
+  };
+
+  @action setTimeLeft = (seconds: number) => {
+    this.timeLeft = seconds;
+  };
+  @action setSecondsLeft = (seconds: number) => {
+    this.secondsLeft = seconds;
+  };
+  @action setMinutesLeft = (minutes: number) => {
+    this.minutesLeft = minutes;
+  };
+  @action setNextQuater = () => {
+    this.quater = this.quater + 1;
+    this.quaterEnded = false;
   };
 
   @action setTeamFoulsAndTimeouts = () => {

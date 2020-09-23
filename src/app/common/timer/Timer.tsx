@@ -1,20 +1,32 @@
-import React, { useState, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useContext } from "react";
 import { Grid, GridColumn, GridRow, Header, Segment } from "semantic-ui-react";
+import { RootStoreContext } from "../../stores/rootStore";
 import { MatchDurationInSeconds } from "../global";
 
 const Timer: React.FC<{
-  seconds: any;
   paused: boolean;
   quater: number;
-}> = ({ seconds, paused, quater }) => {
+}> = ({ paused, quater }) => {
+  const rootStore = useContext(RootStoreContext);
+  const {
+    setQuaterEnded,
+    timeLeft,
+    setTimeLeft,
+    setMinutesLeft,
+    setSecondsLeft,
+    minutesLeft,
+    secondsLeft,
+  } = rootStore.statsStore;
+
   // initialize timeLeft with the seconds prop
-  const [timeLeft, setTimeLeft] = useState(seconds);
-  const [minutesLeft, setMinutesLeft] = useState(Math.floor(seconds / 60));
-  const [secondsLeft, setSecondsLeft] = useState(seconds % 60);
 
   useEffect(() => {
     // exit early when we reach 0
-    if (!timeLeft) return;
+    if (!timeLeft) {
+      setQuaterEnded(true);
+      return;
+    }
 
     // save intervalId to clear the interval when the
     // component re-renders
@@ -35,7 +47,16 @@ const Timer: React.FC<{
     return () => clearInterval(intervalId);
     // add timeLeft as a dependency to re-rerun the effect
     // when we update it
-  }, [timeLeft, paused, secondsLeft, minutesLeft]);
+  }, [
+    timeLeft,
+    paused,
+    secondsLeft,
+    minutesLeft,
+    setQuaterEnded,
+    setMinutesLeft,
+    setSecondsLeft,
+    setTimeLeft,
+  ]);
 
   return (
     <Grid centered>
@@ -46,6 +67,7 @@ const Timer: React.FC<{
             style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
               if (timeLeft < MatchDurationInSeconds) {
+                setQuaterEnded(false);
                 if (timeLeft > MatchDurationInSeconds - 61) {
                   setTimeLeft(MatchDurationInSeconds);
                   setMinutesLeft(10);
@@ -72,6 +94,7 @@ const Timer: React.FC<{
                 setTimeLeft(timeLeft - 60);
                 setMinutesLeft(minutesLeft - 1);
               }
+              if (timeLeft === 0) setQuaterEnded(true);
             }}
           ></i>
         </GridRow>
@@ -101,6 +124,7 @@ const Timer: React.FC<{
             className="angle double up icon"
             style={{ fontSize: 15, cursor: "pointer" }}
             onClick={() => {
+              setQuaterEnded(false);
               if (timeLeft < MatchDurationInSeconds) {
                 setTimeLeft(timeLeft + 1);
                 if (secondsLeft < 59) setSecondsLeft(secondsLeft + 1);
@@ -126,6 +150,7 @@ const Timer: React.FC<{
                   setMinutesLeft(minutesLeft - 1);
                 }
               }
+              if (timeLeft === 0) setQuaterEnded(true);
             }}
           ></i>
         </GridRow>
@@ -134,4 +159,4 @@ const Timer: React.FC<{
   );
 };
 
-export default Timer;
+export default observer(Timer);

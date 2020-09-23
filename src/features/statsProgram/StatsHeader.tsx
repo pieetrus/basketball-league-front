@@ -13,9 +13,21 @@ const StatsHeader = () => {
     timeInSeconds,
     loadingIncidents,
     quater,
+    quaterEnded,
+    setNextQuater,
+    setTimeLeft,
+    setMinutesLeft,
+    setSecondsLeft,
   } = rootStore.statsStore;
 
   const [timerActive, setTimerActive] = useState(false);
+
+  const startNewQuaterHanlder = () => {
+    setNextQuater();
+    setTimeLeft(timeInSeconds);
+    setMinutesLeft(Math.floor(timeInSeconds / 60));
+    setSecondsLeft(timeInSeconds % 60);
+  };
 
   return (
     <Grid.Row>
@@ -28,14 +40,10 @@ const StatsHeader = () => {
             <GridColumn width={4}>
               <Segment textAlign="center">
                 {!loadingIncidents && (
-                  <Timer
-                    seconds={timeInSeconds}
-                    quater={quater}
-                    paused={!timerActive}
-                  />
+                  <Timer quater={quater} paused={!timerActive} />
                 )}
 
-                {!timerActive && (
+                {!quaterEnded && !timerActive && (
                   <Button
                     content={"Start clock"}
                     positive
@@ -44,12 +52,22 @@ const StatsHeader = () => {
                     }}
                   />
                 )}
-                {timerActive && (
+                {!quaterEnded && timerActive && (
                   <Button
                     content={"Stop clock"}
                     negative
                     onClick={() => {
                       setTimerActive(false);
+                    }}
+                  />
+                )}
+                {quaterEnded && (
+                  <Button
+                    content={"End " + quater + ". quater"}
+                    primary
+                    onClick={() => {
+                      setTimerActive(false);
+                      startNewQuaterHanlder();
                     }}
                   />
                 )}
