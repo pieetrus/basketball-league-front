@@ -134,6 +134,10 @@ export default class StatsStore {
   @action setNextQuater = () => {
     this.quater = this.quater + 1;
     this.quaterEnded = false;
+    this.setTimeLeft(this.timeInSeconds);
+    this.setMinutesLeft(Math.floor(this.timeInSeconds / 60));
+    this.setSecondsLeft(this.timeInSeconds % 60);
+    this.setTeamFoulsAndTimeouts();
   };
 
   @action setTeamFoulsAndTimeouts = () => {
@@ -251,9 +255,15 @@ export default class StatsStore {
           matchId: foul.matchId,
         };
         this.incidentsRegistry.set(incident.id, incident);
+        if (foul.freeThrows)
+          this.setTeamPoints(
+            !foul.isGuest,
+            false,
+            foul.freeThrows.accurateShots
+          );
+        if (incident.isGuest) this.teamGuestFouls++;
+        else this.teamHomeFouls++;
       });
-      if (foul.freeThrows)
-        this.setTeamPoints(!foul.isGuest, false, foul.freeThrows.accurateShots);
     } catch (error) {
       runInAction("create foul error", () => {
         this.submitting = false;
@@ -333,9 +343,11 @@ export default class StatsStore {
         );
         let lastIncident = incidents[0];
         if (lastIncident) {
-          this.timeInSeconds =
+          this.timeLeft =
             Number.parseInt(lastIncident?.minutes!) * 60 +
             Number.parseInt(lastIncident?.seconds!);
+          this.secondsLeft = Number.parseInt(lastIncident?.seconds!);
+          this.minutesLeft = Number.parseInt(lastIncident?.minutes!);
           this.quater = lastIncident.quater;
           this.setTeamFoulsAndTimeouts();
         }

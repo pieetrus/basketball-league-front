@@ -10,23 +10,16 @@ const StatsHeader = () => {
   const {
     teamGuest,
     teamHome,
-    timeInSeconds,
     loadingIncidents,
     quater,
     quaterEnded,
     setNextQuater,
-    setTimeLeft,
-    setMinutesLeft,
-    setSecondsLeft,
   } = rootStore.statsStore;
 
   const [timerActive, setTimerActive] = useState(false);
 
   const startNewQuaterHanlder = () => {
     setNextQuater();
-    setTimeLeft(timeInSeconds);
-    setMinutesLeft(Math.floor(timeInSeconds / 60));
-    setSecondsLeft(timeInSeconds % 60);
   };
 
   return (
@@ -61,9 +54,19 @@ const StatsHeader = () => {
                     }}
                   />
                 )}
-                {quaterEnded && (
+                {quaterEnded && quater !== 4 && (
                   <Button
                     content={"End " + quater + ". quater"}
+                    primary
+                    onClick={() => {
+                      setTimerActive(false);
+                      startNewQuaterHanlder();
+                    }}
+                  />
+                )}
+                {quaterEnded && quater === 4 && (
+                  <Button
+                    content={"End match"}
                     primary
                     onClick={() => {
                       setTimerActive(false);
