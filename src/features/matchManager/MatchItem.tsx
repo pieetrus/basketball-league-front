@@ -44,7 +44,18 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
               setModalSize("large");
             });
           }}
+          disabled={match.ended}
         />
+        {match.ended && (
+          <Button
+            content="See stats"
+            onClick={() => {
+              console.log("wil be soon");
+            }}
+            primary
+            style={{ marginLeft: 60 }}
+          />
+        )}
         <Button
           content="Delete match"
           onClick={(e) => {
@@ -54,6 +65,7 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
           name={match.id}
           floated="right"
           loading={target === match.id && submitting}
+          disabled={true}
         />
       </Segment>
     </Segment.Group>

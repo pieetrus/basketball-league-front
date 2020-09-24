@@ -237,6 +237,22 @@ export default class StatsStore {
     }
   };
 
+  @action endMatch = async () => {
+    this.submitting = true;
+    try {
+      await agent.Matches.end(this.match?.id!);
+      runInAction("ending match", () => {
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("ending match error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
   @action createFoul = async (foul: IFoul) => {
     this.submitting = true;
     try {

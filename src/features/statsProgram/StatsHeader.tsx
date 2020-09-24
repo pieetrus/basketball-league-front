@@ -4,6 +4,8 @@ import { Segment, Grid, GridColumn, Button } from "semantic-ui-react";
 import Timer from "../../app/common/timer/Timer";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import TeamScore from "./TeamScore";
+import { history } from "../..";
+import { toast } from "react-toastify";
 
 const StatsHeader = () => {
   const rootStore = useContext(RootStoreContext);
@@ -14,6 +16,7 @@ const StatsHeader = () => {
     quater,
     quaterEnded,
     setNextQuater,
+    endMatch,
   } = rootStore.statsStore;
 
   const [timerActive, setTimerActive] = useState(false);
@@ -69,8 +72,9 @@ const StatsHeader = () => {
                     content={"End match"}
                     primary
                     onClick={() => {
-                      setTimerActive(false);
-                      startNewQuaterHanlder();
+                      endMatch()
+                        .then(() => history.push("/matchManager"))
+                        .then(() => toast.success("Match succesfully ended"));
                     }}
                   />
                 )}
