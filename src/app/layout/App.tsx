@@ -29,6 +29,7 @@ import DivisionDashboard from "../../features/division/DivisionDashboard";
 import StatsProgramDashboard from "../../features/statsProgram/StatsProgramDashboard";
 import MatchManagerDashboard from "../../features/matchManager/MatchManagerDashboard";
 import StatsDashboard from "../../features/stats/StatsDashboard";
+import ScheduleDashoard from "../../features/schedule/ScheduleDashoard";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   const rootStore = useContext(RootStoreContext);
@@ -84,6 +85,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route path="/manager/division" component={DivisionDashboard} />
                 {/* <Route path="/test" component={FoulModal} /> */}
                 <Route path="/stats" component={StatsDashboard} />
+                <Route path="/schedule" component={ScheduleDashoard} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

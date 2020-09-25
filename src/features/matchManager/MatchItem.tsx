@@ -25,7 +25,7 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
         <Item>
           <Item.Content>
             <Item.Header>
-              {match.teamHome} - {match.teamGuest}
+              {match.teamHome.name} - {match.teamGuest.name}
             </Item.Header>
             <Item.Description>{match.division}</Item.Description>
           </Item.Content>

@@ -3,7 +3,7 @@ import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { IMatch } from "../models/match";
 import { toast } from "react-toastify";
-import { IMatchDetailedSquads } from "../models/matchDetailed";
+import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 import { SyntheticEvent } from "react";
 
 export default class MatchStore {
@@ -25,7 +25,10 @@ export default class MatchStore {
   @observable selectedMatch: IMatchDetailedSquads | null = null;
 
   @computed get matchesDetailedByDate() {
-    return Array.from(this.matchesDetailedRegistry.values());
+    let temp: IMatchDetailed[] = Array.from(
+      this.matchesDetailedRegistry.values()
+    );
+    return temp;
   }
 
   @action loadMatches = async () => {
