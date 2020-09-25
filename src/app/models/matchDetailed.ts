@@ -13,6 +13,9 @@ export interface IMatchDetailed {
   teamGuestJerseyColor: string;
   teamHome: ITeam;
   teamGuest: ITeam;
+  lastIncidentMinutes: string;
+  lastIncidentSeconds: string;
+  lastIncidentQuater: number;
 }
 
 export interface IMatchDetailedSquads {
@@ -31,6 +34,9 @@ export interface IMatchDetailedSquads {
   teamGuestPts: number;
   teamHomeJerseyColor: string;
   teamGuestJerseyColor: string;
+  lastIncidentMinutes: string;
+  lastIncidentSeconds: string;
+  lastIncidentQuater: number;
 }
 
 export interface IPlayerShortInfo {

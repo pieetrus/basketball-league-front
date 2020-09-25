@@ -67,7 +67,6 @@ export default class MatchStore {
       console.log(error);
     }
   };
-
   @action createMatch = async (match: IMatch) => {
     this.submitting = true;
     try {
@@ -96,7 +95,9 @@ export default class MatchStore {
       });
     } catch (error) {
       console.log(error);
-      this.loading = false;
+      runInAction("loading match error", () => {
+        this.loading = false;
+      });
     }
   };
 

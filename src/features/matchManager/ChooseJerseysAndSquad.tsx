@@ -161,17 +161,18 @@ const ChooseJerseysAndSquad: React.FC = () => {
           positive
           size="big"
           onClick={() => {
-            // if (validate()) {
-            setMatch(match!);
-            setTeams(match?.teamHome!, match?.teamGuest!);
             if (match?.started) {
+              setMatch(match!);
+              setTeams(match?.teamHome!, match?.teamGuest!);
               setTeamsJerseysColors(
                 match.teamHomeJerseyColor,
                 match.teamGuestJerseyColor
               );
               setPlayersInGameFromMatchModel();
             }
-            if (!match?.started) {
+            if (!match?.started && validate()) {
+              setMatch(match!);
+              setTeams(match?.teamHome!, match?.teamGuest!);
               setTeamsJerseysColors(
                 getSelectedJerseyColor(false),
                 getSelectedJerseyColor(true)
@@ -184,7 +185,6 @@ const ChooseJerseysAndSquad: React.FC = () => {
             }
             closeModal();
             history.push("/statsProgram");
-            // }
           }}
         />
       </Segment>
