@@ -25,6 +25,7 @@ export default class StatsProgramStore {
   @observable submitting = false;
   @observable target = 0;
   @observable loadingIncidents = false;
+  @observable loadingMatch = false;
   @observable match: IMatchDetailedSquads | undefined;
   @observable timeInSeconds: number = MatchDurationInSeconds;
   @observable timeLeft: number = this.timeInSeconds;
@@ -259,6 +260,27 @@ export default class StatsProgramStore {
     }
   };
 
+  @action loadMatch = async (id: number) => {
+    this.loadingMatch = true;
+    try {
+      let match = await agent.Matches.detailsDetailed(id);
+      runInAction("loading match", () => {
+        this.match = match;
+        this.setTeamsJerseysColors(
+          match.teamHomeJerseyColor,
+          match.teamGuestJerseyColor
+        );
+        this.loadingMatch = false;
+      });
+    } catch (error) {
+      runInAction("loading match error", () => {
+        this.loadingMatch = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
   @action startMatch = async () => {
     this.submitting = true;
     try {
@@ -394,10 +416,10 @@ export default class StatsProgramStore {
     }
   };
 
-  @action loadIncidents = async () => {
+  @action loadIncidents = async (matchId: number) => {
     this.loadingIncidents = true;
     try {
-      let incidents: IIncident[] = await agent.Incidents.list(this.match?.id!);
+      let incidents: IIncident[] = await agent.Incidents.list(matchId);
       runInAction("loading incidents", () => {
         incidents.map((incident) =>
           this.incidentsRegistry.set(incident.id, incident)

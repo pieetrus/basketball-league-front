@@ -14,14 +14,14 @@ interface DetailParams {
 }
 
 const StatsProgramDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
-  match,
+  match: match2,
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { loadIncidents } = rootStore.statsProgramStore;
+  const { loadIncidents, match } = rootStore.statsProgramStore;
 
   useEffect(() => {
-    loadIncidents();
-  }, [loadIncidents]);
+    loadIncidents(match!.id!);
+  }, [loadIncidents, match]);
   return (
     <Grid centered>
       <StatsHeader />
