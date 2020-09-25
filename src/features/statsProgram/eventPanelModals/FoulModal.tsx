@@ -26,7 +26,8 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     setPlayerChosen3,
     quater,
     createFoul,
-  } = rootStore.statsStore;
+    submitting,
+  } = rootStore.statsProgramStore;
 
   const { selectedMatch } = rootStore.matchStore;
   const { closeModal } = rootStore.modalStore;
@@ -506,7 +507,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
             foulType.value === 0 ||
             (foulType.value !== 4 && playerChosen2 === undefined)
           }
-          //   loading={submitting}
+          loading={submitting}
           onClick={() => handleSubmit()}
         />
       </Grid.Row>

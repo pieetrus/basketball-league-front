@@ -17,7 +17,7 @@ const Timer: React.FC<{
     setSecondsLeft,
     minutesLeft,
     secondsLeft,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   // initialize timeLeft with the seconds prop
 

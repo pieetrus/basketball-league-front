@@ -14,7 +14,7 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     teamGuestJerseyColor,
     teamHomeJerseyColor,
     match,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   const jerseyColor = (isGuest: boolean) => {
     if (isGuest) return teamGuestJerseyColor;

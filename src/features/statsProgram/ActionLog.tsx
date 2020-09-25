@@ -12,7 +12,7 @@ import FreeThrowsLog from "./actionLogComponents/FreeThrowsLog";
 
 const ActionLog = () => {
   const rootStore = useContext(RootStoreContext);
-  const { loadingIncidents, getIncidents } = rootStore.statsStore;
+  const { loadingIncidents, getIncidents } = rootStore.statsProgramStore;
 
   if (loadingIncidents)
     return (

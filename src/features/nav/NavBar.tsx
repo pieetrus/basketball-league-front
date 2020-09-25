@@ -21,18 +21,12 @@ function NavBar() {
       <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
       <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
       <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
+      <Menu.Item name="STATS" as={NavLink} to="/stats" />
       <Menu.Item name="NEWS" />
       <Menu.Item name="SCHEDULE" />
       <Menu.Item name="TABLES" />
-      <Menu.Item name="STATS" />
       <Menu.Item name="CONTACT" />
-      <Menu.Item name="TEST" as={NavLink} to="/test" />
-      {/* <Menu.Menu position="right">
-        <Menu.Item name="MANAGE" />
-        <Menu.Item>
-          <img src="../assets/player-icon.png" alt="logo" />
-        </Menu.Item>
-      </Menu.Menu> */}
+      {/* <Menu.Item name="TEST" as={NavLink} to="/test" /> */}
       {user && (
         <Menu.Menu position="right">
           <Menu.Item>

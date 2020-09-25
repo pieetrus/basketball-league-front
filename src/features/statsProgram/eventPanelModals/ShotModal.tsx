@@ -28,7 +28,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
     teamChosen,
     quater,
     match: selectedMatch,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
   const { closeModal } = rootStore.modalStore;
 
   const getPlayers = (isRival: boolean) => {

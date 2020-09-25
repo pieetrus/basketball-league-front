@@ -9,7 +9,7 @@ const TeamScore: React.FC<{ isHomeTeam: boolean; team: ITeam }> = ({
   isHomeTeam,
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { teamHomePts, teamGuestPts } = rootStore.statsStore;
+  const { teamHomePts, teamGuestPts } = rootStore.statsProgramStore;
 
   if (isHomeTeam)
     return (

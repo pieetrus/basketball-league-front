@@ -14,7 +14,7 @@ const PlayersInGamePanel = () => {
     teamHomeJerseyColor,
     getChosenTeamHomePlayers: teamHomePlayers,
     getChosenTeamGuestPlayers: teamGuestPlayers,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   return (
     <Grid.Row>

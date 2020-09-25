@@ -16,7 +16,7 @@ import { ITimeout } from "../models/timeout";
 import { ITurnover } from "../models/turnover";
 import { RootStore } from "./rootStore";
 
-export default class StatsStore {
+export default class StatsProgramStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {

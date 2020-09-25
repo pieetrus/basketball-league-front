@@ -17,7 +17,7 @@ const StatsHeader = () => {
     quaterEnded,
     setNextQuater,
     endMatch,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   const [timerActive, setTimerActive] = useState(false);
 

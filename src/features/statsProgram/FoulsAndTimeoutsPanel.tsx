@@ -11,7 +11,7 @@ const FoulsAndTimeoutsPanel = () => {
     teamHomeTimeoutsUsed,
     teamGuestTimeoutsUsed,
     quater,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   return (
     <Grid.Row>

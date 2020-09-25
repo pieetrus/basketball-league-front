@@ -13,11 +13,11 @@ interface DetailParams {
   id: string;
 }
 
-const StatsDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
+const StatsProgramDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
   match,
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { loadIncidents } = rootStore.statsStore;
+  const { loadIncidents } = rootStore.statsProgramStore;
 
   useEffect(() => {
     loadIncidents();
@@ -40,4 +40,4 @@ const StatsDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
   );
 };
 
-export default observer(StatsDashboard);
+export default observer(StatsProgramDashboard);

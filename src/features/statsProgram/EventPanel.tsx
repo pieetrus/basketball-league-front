@@ -21,7 +21,7 @@ const EventPanel: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     setPlayerChosen3,
     teamHomeTimeoutsUsed,
     teamGuestTimeoutsUsed,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
   const { openModal, setModalSize } = rootStore.modalStore;
 
   const handleTimeoutSubmit = () => {

@@ -26,7 +26,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
     setMatch,
     startMatch,
     setPlayersInGameFromMatchModel,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
 
   const selectedTeamHomePlayersSelector = "td.home div.checked input";
   const selectedTeamGuestPlayersSelector = "td.guest div.checked input";

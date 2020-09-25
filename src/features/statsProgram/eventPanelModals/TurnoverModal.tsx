@@ -21,7 +21,7 @@ const TurnoverModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
     setPlayerChosen2,
     playerChosen2,
     quater,
-  } = rootStore.statsStore;
+  } = rootStore.statsProgramStore;
   const { selectedMatch } = rootStore.matchStore;
   const { closeModal } = rootStore.modalStore;
 
