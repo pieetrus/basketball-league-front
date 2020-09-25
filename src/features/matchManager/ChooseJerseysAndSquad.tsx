@@ -24,6 +24,8 @@ const ChooseJerseysAndSquad: React.FC = () => {
     setTeamsJerseysColors,
     setTeamsChosenPlayers,
     setMatch,
+    startMatch,
+    setPlayersInGameFromMatchModel,
   } = rootStore.statsStore;
 
   const selectedTeamHomePlayersSelector = "td.home div.checked input";
@@ -103,20 +105,24 @@ const ChooseJerseysAndSquad: React.FC = () => {
                 style={{ marginLeft: 20 }}
               />
             </Header>
-            <Segment.Group>
+            {!match?.started && (
+              <Segment.Group>
+                <Segment>
+                  Choose team color
+                  <Select
+                    options={jerseyColorOptions}
+                    style={{ marginLeft: 10 }}
+                    placeholder="Choose jersey color"
+                    id="team-color-home"
+                  />
+                </Segment>
+              </Segment.Group>
+            )}
+            {!match?.started && (
               <Segment>
-                Choose team color
-                <Select
-                  options={jerseyColorOptions}
-                  style={{ marginLeft: 10 }}
-                  placeholder="Choose jersey color"
-                  id="team-color-home"
-                />
+                <SquadTable players={match!.teamHomePlayers} isGuest={false} />
               </Segment>
-            </Segment.Group>
-            <Segment>
-              <SquadTable players={match!.teamHomePlayers} isGuest={false} />
-            </Segment>
+            )}
           </Grid.Column>
           <Grid.Column width={8}>
             <Header textAlign="center">
@@ -127,20 +133,24 @@ const ChooseJerseysAndSquad: React.FC = () => {
                 style={{ marginLeft: 20 }}
               />
             </Header>
-            <Segment.Group>
+            {!match?.started && (
+              <Segment.Group>
+                <Segment>
+                  Choose team color
+                  <Select
+                    options={jerseyColorOptions}
+                    style={{ marginLeft: 10 }}
+                    placeholder="Choose jersey color"
+                    id="team-color-guest"
+                  />
+                </Segment>
+              </Segment.Group>
+            )}
+            {!match?.started && (
               <Segment>
-                Choose team color
-                <Select
-                  options={jerseyColorOptions}
-                  style={{ marginLeft: 10 }}
-                  placeholder="Choose jersey color"
-                  id="team-color-guest"
-                />
+                <SquadTable players={match!.teamGuestPlayers} isGuest={true} />
               </Segment>
-            </Segment.Group>
-            <Segment>
-              <SquadTable players={match!.teamGuestPlayers} isGuest={true} />
-            </Segment>
+            )}
           </Grid.Column>
         </Grid>
         <Divider vertical />
@@ -154,14 +164,24 @@ const ChooseJerseysAndSquad: React.FC = () => {
             // if (validate()) {
             setMatch(match!);
             setTeams(match?.teamHome!, match?.teamGuest!);
-            setTeamsJerseysColors(
-              getSelectedJerseyColor(false),
-              getSelectedJerseyColor(true)
-            );
-            setTeamsChosenPlayers(
-              getSelectedPlayers(false),
-              getSelectedPlayers(true)
-            );
+            if (match?.started) {
+              setTeamsJerseysColors(
+                match.teamHomeJerseyColor,
+                match.teamGuestJerseyColor
+              );
+              setPlayersInGameFromMatchModel();
+            }
+            if (!match?.started) {
+              setTeamsJerseysColors(
+                getSelectedJerseyColor(false),
+                getSelectedJerseyColor(true)
+              );
+              setTeamsChosenPlayers(
+                getSelectedPlayers(false),
+                getSelectedPlayers(true)
+              );
+              startMatch();
+            }
             closeModal();
             history.push("/statsProgram");
             // }

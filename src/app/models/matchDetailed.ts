@@ -8,6 +8,11 @@ export interface IMatchDetailed {
   startDate: Date;
   ended: boolean;
   attendance: number;
+  started: boolean;
+  teamHomePts: number;
+  teamGuestPts: number;
+  teamHomeJerseyColor: string;
+  teamGuestJerseyColor: string;
 }
 
 export interface IMatchDetailedSquads {
@@ -17,11 +22,15 @@ export interface IMatchDetailedSquads {
   teamGuest: ITeam;
   teamHomePlayers: IPlayerShortInfo[];
   teamGuestPlayers: IPlayerShortInfo[];
+  playersInGameIds: Number[];
   attendance: number;
   startDate: Date;
   ended: boolean;
+  started: boolean;
   teamHomePts: number;
   teamGuestPts: number;
+  teamHomeJerseyColor: string;
+  teamGuestJerseyColor: string;
 }
 
 export interface IPlayerShortInfo {

@@ -10,6 +10,7 @@ import {
   IPlayerShortInfo,
 } from "../models/matchDetailed";
 import { IShot } from "../models/shot";
+import { IStartMatchModel } from "../models/startMatchModel";
 import { ITeam } from "../models/team";
 import { ITimeout } from "../models/timeout";
 import { ITurnover } from "../models/turnover";
@@ -207,6 +208,27 @@ export default class StatsStore {
     this.teamGuestChosenPlayers = teamGuestChosenPlayers;
   };
 
+  @action setPlayersInGameFromMatchModel = () => {
+    let teamHomePlayersInGame = this.match?.teamHomePlayers.filter((player) => {
+      return this.match?.playersInGameIds.includes(player.id!);
+    });
+    let teamGuestPlayersInGame = this.match?.teamGuestPlayers.filter(
+      (player) => {
+        return this.match?.playersInGameIds.includes(player.id!);
+      }
+    );
+    let homePlayers: Number[] = [];
+    let guestPlayers: Number[] = [];
+    teamHomePlayersInGame?.map((player) => {
+      homePlayers.push(player.id!);
+    });
+    teamGuestPlayersInGame?.map((player) => {
+      guestPlayers.push(player.id!);
+    });
+    this.teamHomeChosenPlayers = homePlayers;
+    this.teamGuestChosenPlayers = guestPlayers;
+  };
+
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
@@ -230,6 +252,29 @@ export default class StatsStore {
       return shot.id;
     } catch (error) {
       runInAction("create shot error", () => {
+        this.submitting = false;
+      });
+      toast.error("Problem submitting data");
+      console.log(error.response);
+    }
+  };
+
+  @action startMatch = async () => {
+    this.submitting = true;
+    try {
+      let model: IStartMatchModel = {
+        id: this.match?.id,
+        teamGuestJerseyColor: this.teamHomeJerseyColor,
+        teamHomeJerseyColor: this.teamGuestJerseyColor,
+        teamGuestPlayerSeasonIds: this.teamGuestChosenPlayers,
+        teamHomePlayerSeasonIds: this.teamHomeChosenPlayers,
+      };
+      await agent.Matches.start(model);
+      runInAction("starting match", () => {
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("starting match error", () => {
         this.submitting = false;
       });
       toast.error("Problem submitting data");

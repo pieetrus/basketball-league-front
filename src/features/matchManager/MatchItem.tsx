@@ -31,6 +31,11 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
           </Item.Content>
         </Item>
       </Segment>
+      {match.started && (
+        <Segment secondary textAlign="center">
+          {match.teamHomePts + " : " + match.teamGuestPts}{" "}
+        </Segment>
+      )}
       <Segment secondary>
         {match.startDate?.toString().split("T")[0]}{" "}
         {match.startDate?.toString().split("T")[1]}
@@ -65,7 +70,7 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
           name={match.id}
           floated="right"
           loading={target === match.id && submitting}
-          disabled={true}
+          disabled={match.started}
         />
       </Segment>
     </Segment.Group>

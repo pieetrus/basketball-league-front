@@ -16,6 +16,7 @@ import { IIncident } from "../models/incident";
 import { IFoul } from "../models/foul";
 import { ITimeout } from "../models/timeout";
 import { ITurnover } from "../models/turnover";
+import { IStartMatchModel } from "../models/startMatchModel";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -143,6 +144,7 @@ const Matches = {
   detailsDetailed: (id: number): Promise<IMatchDetailedSquads> =>
     request.get(`/match/detailed/${id}`),
   create: (match: IMatch) => request.post("/match", match),
+  start: (model: IStartMatchModel) => request.post("/match/start", model),
   end: (id: number) => request.post("/match/end", { id }),
   update: (match: IMatch) => request.put(`/match/${match.id}`, match),
   delete: (id: number) => request.del(`/match/${id}`),
