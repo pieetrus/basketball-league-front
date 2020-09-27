@@ -1,13 +1,10 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Grid, Segment } from "semantic-ui-react";
-import agent from "../../app/api/agent";
+import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { IPlayerMatch } from "../../app/models/playerMatch";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ActionLog from "../statsProgram/ActionLog";
-import ActisonLog from "../statsProgram/ActionLog";
 import MatchTopBar from "./MatchTopBar";
 import PlayerMatchTable from "./PlayerMatchTable";
 interface DetailParams {

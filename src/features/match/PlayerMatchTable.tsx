@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
-import { Column, useTable } from "react-table";
+import { Column, useTable, useResizeColumns } from "react-table";
 import { IPlayerMatch } from "../../app/models/playerMatch";
+import styled from "styled-components";
 
 const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   playerMatches,
@@ -8,6 +9,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   const makeData = () => {
     let data = playerMatches.map((player) => ({
       nr: player.player.jerseyNr,
+      pos: player.player.position,
       player: player.player.name + " " + player.player.surname,
       min: "00:00",
       pts: player.pts,
@@ -35,6 +37,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
 
   const columns: Column<{
     nr: string;
+    pos: string;
     player: string;
     min: string;
     pts: number;
@@ -61,6 +64,10 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
         accessor: "nr", // accessor is the "key" in the data
       },
       {
+        Header: "Pos",
+        accessor: "pos", // accessor is the "key" in the data
+      },
+      {
         Header: "Player",
         accessor: "player",
       },
@@ -75,6 +82,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
       {
         Header: "FG",
         accessor: "fg",
+        width: 1250,
       },
       {
         Header: "FG%",
@@ -139,7 +147,36 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
     ],
     []
   );
-  const tableInstance = useTable({ columns, data });
+  const tableInstance = useTable({ columns, data }, useResizeColumns);
+
+  const Styles = styled.div`
+    padding: 1rem;
+
+    table {
+      border-spacing: 0;
+      border: 1px solid black;
+
+      tr {
+        :last-child {
+          td {
+            border-bottom: 0;
+          }
+        }
+      }
+
+      th,
+      td {
+        margin: 0;
+        padding: 0.5rem;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+
+        :last-child {
+          border-right: 0;
+        }
+      }
+    }
+  `;
 
   const {
     getTableProps,
@@ -150,60 +187,33 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   } = tableInstance;
 
   return (
-    // apply the table props
-    <table {...getTableProps()}>
-      <thead>
-        {
-          // Loop over the header rows
-          headerGroups.map((headerGroup) => (
-            // Apply the header row props
+    <Styles>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {
-                // Loop over the headers in each row
-                headerGroup.headers.map((column) => (
-                  // Apply the header cell props
-                  <th {...column.getHeaderProps()}>
-                    {
-                      // Render the header
-                      column.render("Header")
-                    }
-                  </th>
-                ))
-              }
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              ))}
             </tr>
-          ))
-        }
-      </thead>
-      {/* Apply the table body props */}
-      <tbody {...getTableBodyProps()}>
-        {
-          // Loop over the table rows
-          rows.map((row) => {
-            // Prepare the row for display
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
             prepareRow(row);
             return (
-              // Apply the row props
               <tr {...row.getRowProps()}>
-                {
-                  // Loop over the rows cells
-                  row.cells.map((cell) => {
-                    // Apply the cell props
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {
-                          // Render the cell contents
-                          cell.render("Cell")
-                        }
-                      </td>
-                    );
-                  })
-                }
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
               </tr>
             );
-          })
-        }
-      </tbody>
-    </table>
+          })}
+        </tbody>
+      </table>
+    </Styles>
   );
 };
 
