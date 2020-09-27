@@ -15,6 +15,7 @@ import { IShot } from "../models/shot";
 import { IIncident } from "../models/incident";
 import { IFoul } from "../models/foul";
 import { ITimeout } from "../models/timeout";
+import { IPlayerMatch } from "../models/playerMatch";
 import { ITurnover } from "../models/turnover";
 import { IStartMatchModel } from "../models/startMatchModel";
 
@@ -187,6 +188,11 @@ const Incidents = {
   // delete: (id: number) => request.del(`/match/${id}`),
 };
 
+const PlayerMatches = {
+  list: (matchId: number): Promise<IPlayerMatch[]> =>
+    request.get("/playermatch?matchId=" + matchId),
+};
+
 export default {
   Players,
   Teams,
@@ -196,4 +202,5 @@ export default {
   Matches,
   Seasons,
   Incidents,
+  PlayerMatches,
 };

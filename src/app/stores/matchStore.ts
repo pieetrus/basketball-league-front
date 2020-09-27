@@ -5,6 +5,7 @@ import { IMatch } from "../models/match";
 import { toast } from "react-toastify";
 import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 import { SyntheticEvent } from "react";
+import { IPlayerMatch } from "../models/playerMatch";
 
 export default class MatchStore {
   rootStore: RootStore;
@@ -16,7 +17,9 @@ export default class MatchStore {
   // @observable matches: IMatch[] | null = null;
   @observable matchesRegistry = new Map();
   @observable matchesDetailedRegistry = new Map();
+  @observable playerMatches: IPlayerMatch[] = [];
   @observable loadingInitial = false;
+  @observable loadingPlayerMatches = false;
   @observable loading = false;
   @observable startDate = "";
   @observable division = null;
@@ -34,7 +37,7 @@ export default class MatchStore {
   @action loadMatches = async () => {
     this.loadingInitial = true;
     try {
-      const matches = await agent.Matches.list();
+      let matches = await agent.Matches.list();
       runInAction("loading matches", () => {
         matches.forEach((match) => {
           match.startDate = new Date(match.startDate!);
@@ -45,6 +48,22 @@ export default class MatchStore {
     } catch (error) {
       runInAction("loading matches error", () => {
         this.loadingInitial = false;
+      });
+      console.log(error);
+    }
+  };
+
+  @action loadPlayerMatches = async (matchId: number) => {
+    this.loadingPlayerMatches = true;
+    try {
+      let players = await agent.PlayerMatches.list(matchId);
+      runInAction("loading playermatches", () => {
+        this.playerMatches = players;
+        this.loadingPlayerMatches = false;
+      });
+    } catch (error) {
+      runInAction("loading maplayermatchestches error", () => {
+        this.loadingPlayerMatches = false;
       });
       console.log(error);
     }
@@ -67,6 +86,7 @@ export default class MatchStore {
       console.log(error);
     }
   };
+
   @action createMatch = async (match: IMatch) => {
     this.submitting = true;
     try {
