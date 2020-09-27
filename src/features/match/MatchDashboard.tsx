@@ -7,7 +7,9 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import { IPlayerMatch } from "../../app/models/playerMatch";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ActionLog from "../statsProgram/ActionLog";
+import ActisonLog from "../statsProgram/ActionLog";
 import MatchTopBar from "./MatchTopBar";
+import PlayerMatchTable from "./PlayerMatchTable";
 interface DetailParams {
   id: string;
 }
@@ -30,17 +32,6 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loadMatch,
     setPlayersInGameFromMatchModel,
   } = rootStore.statsProgramStore;
-
-  // const [playerMatches, setPlayerMatches] = useState<IPlayerMatch[]>([]);
-
-  // let loadPlayerMatches = async (matchId: number) => {
-  //   try {
-  //     let players = await agent.PlayerMatches.list(matchId);
-  //     setPlayerMatches(players);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   useEffect(() => {
     let id = Number(match2.params.id);
@@ -67,14 +58,8 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
   return (
     <Grid centered>
       <MatchTopBar match={match!} />
-      <Grid.Column width={8}>
-        <ActionLog />
-      </Grid.Column>
-      <Grid.Column width={5}>
-        {playerMatches.map((player) => (
-          <p key={player.id}>{player.player.name}</p>
-        ))}
-      </Grid.Column>
+      <ActionLog />
+      <PlayerMatchTable playerMatches={playerMatches} />
     </Grid>
   );
 };
