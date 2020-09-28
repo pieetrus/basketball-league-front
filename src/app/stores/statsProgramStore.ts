@@ -27,6 +27,7 @@ export default class StatsProgramStore {
   @observable loadingIncidents = false;
   @observable loadingMatch = false;
   @observable match: IMatchDetailedSquads | undefined;
+  @observable editableActionLog = false;
   @observable timeInSeconds: number = MatchDurationInSeconds;
   @observable timeLeft: number = this.timeInSeconds;
   @observable minutesLeft: number = Math.floor(this.timeLeft / 60);
@@ -109,6 +110,10 @@ export default class StatsProgramStore {
     this.match = match;
     this.teamHomePts = match.teamHomePts;
     this.teamGuestPts = match.teamGuestPts;
+  };
+
+  @action setEditableActionLog = (editable: boolean) => {
+    this.editableActionLog = editable;
   };
 
   @action setTeams = (teamHome: ITeam, teamGuest: ITeam) => {

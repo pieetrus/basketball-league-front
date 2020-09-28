@@ -13,9 +13,12 @@ const ScheduleDashoard = () => {
     loadingInitial,
   } = rootStore.matchStore;
 
+  const { setEditableActionLog } = rootStore.statsProgramStore;
+
   useEffect(() => {
     loadMatchesDetailed();
-  }, [loadMatchesDetailed]);
+    setEditableActionLog(false);
+  }, [loadMatchesDetailed, setEditableActionLog]);
 
   if (loadingInitial) return <LoadingComponent content="loading matches" />;
 

@@ -11,7 +11,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
       nr: player.player.jerseyNr,
       pos: player.player.position,
       player: player.player.name + " " + player.player.surname,
-      min: "00:00",
+      // min: "00:00",
       pts: player.pts,
       fg: player.fgm + " - " + player.fga,
       fgprc: player.fga !== 0 ? (player.fgm / player.fga) * 100 : 0,
@@ -23,7 +23,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
       ftprc: player.fta !== 0 ? (player.ftm / player.fta) * 100 : 0,
       orb: player.orb,
       drb: player.drb,
-      treb: player.trb,
+      trb: player.trb,
       ast: player.ast,
       stl: player.stl,
       tov: player.tov,
@@ -39,7 +39,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
     nr: string;
     pos: string;
     player: string;
-    min: string;
+    // min: string;
     pts: number;
     fg: string;
     fgprc: number;
@@ -51,7 +51,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
     ftprc: number;
     orb: number;
     drb: number;
-    treb: number;
+    trb: number;
     ast: number;
     stl: number;
     tov: number;
@@ -70,11 +70,12 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
       {
         Header: "Player",
         accessor: "player",
+        width: 400,
       },
-      {
-        Header: "Min",
-        accessor: "min",
-      },
+      // {
+      //   Header: "Min",
+      //   accessor: "min",
+      // },
       {
         Header: "PTS",
         accessor: "pts",
@@ -117,12 +118,12 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
         accessor: "orb",
       },
       {
-        Header: "DREB",
+        Header: "DRB",
         accessor: "drb",
       },
       {
-        Header: "TREB",
-        accessor: "treb",
+        Header: "TRB",
+        accessor: "trb",
       },
       {
         Header: "AST",
@@ -155,6 +156,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
     table {
       border-spacing: 0;
       border: 1px solid black;
+      width: 1000px;
 
       tr {
         :last-child {

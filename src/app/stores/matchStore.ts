@@ -17,7 +17,8 @@ export default class MatchStore {
   // @observable matches: IMatch[] | null = null;
   @observable matchesRegistry = new Map();
   @observable matchesDetailedRegistry = new Map();
-  @observable playerMatches: IPlayerMatch[] = [];
+  @observable homePlayerMatches: IPlayerMatch[] = [];
+  @observable guestPlayerMatches: IPlayerMatch[] = [];
   @observable loadingInitial = false;
   @observable loadingPlayerMatches = false;
   @observable loading = false;
@@ -58,7 +59,12 @@ export default class MatchStore {
     try {
       let players = await agent.PlayerMatches.list(matchId);
       runInAction("loading playermatches", () => {
-        this.playerMatches = players;
+        this.homePlayerMatches = players.filter((player) => {
+          return !player.isGuest;
+        });
+        this.guestPlayerMatches = players.filter((player) => {
+          return player.isGuest;
+        });
         this.loadingPlayerMatches = false;
       });
     } catch (error) {

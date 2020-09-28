@@ -15,6 +15,7 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     teamGuestJerseyColor,
     teamHomeJerseyColor,
     match,
+    editableActionLog,
   } = rootStore.statsProgramStore;
 
   const jerseyColor = (isGuest: boolean) => {
@@ -55,14 +56,16 @@ const FoulLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                 <Grid.Column width={8}>
                   {foulTypeToText(incident.foul?.foulType!) + " FOUL"}
                 </Grid.Column>
-                <Grid.Column width={2}>
-                  <i
-                    className="edit icon"
-                    style={{ fontSize: 20, cursor: "pointer" }}
-                  ></i>
-                </Grid.Column>
+                {editableActionLog && (
+                  <Grid.Column width={2}>
+                    <i
+                      className="edit icon"
+                      style={{ fontSize: 20, cursor: "pointer" }}
+                    ></i>
+                  </Grid.Column>
+                )}
                 {/*  eslint-disable-next-line eqeqeq */}
-                {!submitting && target != incident.id && (
+                {!submitting && target != incident.id && editableActionLog && (
                   <Grid.Column width={2}>
                     <i
                       className="trash icon"

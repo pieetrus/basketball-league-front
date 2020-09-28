@@ -14,6 +14,7 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
     teamGuestJerseyColor,
     teamHomeJerseyColor,
     match,
+    editableActionLog,
   } = rootStore.statsProgramStore;
 
   const jerseyColor = (isGuest: boolean) => {
@@ -56,14 +57,16 @@ const FreeThrowsLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                     incident.seconds}
                 </Grid.Column>
                 <Grid.Column width={6}>{"FREE THROWS"}</Grid.Column>
-                <Grid.Column width={2}>
-                  <i
-                    className="edit icon"
-                    style={{ fontSize: 20, cursor: "pointer" }}
-                  ></i>
-                </Grid.Column>
+                {editableActionLog && (
+                  <Grid.Column width={2}>
+                    <i
+                      className="edit icon"
+                      style={{ fontSize: 20, cursor: "pointer" }}
+                    ></i>
+                  </Grid.Column>
+                )}
                 {/*  eslint-disable-next-line eqeqeq */}
-                {!submitting && target != incident.id && (
+                {!submitting && target != incident.id && editableActionLog && (
                   <Grid.Column width={2}>
                     <i
                       className="trash icon"

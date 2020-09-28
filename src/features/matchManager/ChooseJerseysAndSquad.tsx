@@ -26,6 +26,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
     setMatch,
     startMatch,
     setPlayersInGameFromMatchModel,
+    setEditableActionLog,
   } = rootStore.statsProgramStore;
 
   const selectedTeamHomePlayersSelector = "td.home div.checked input";
@@ -183,6 +184,7 @@ const ChooseJerseysAndSquad: React.FC = () => {
               );
               startMatch();
             }
+            setEditableActionLog(true);
             closeModal();
             history.push("/statsProgram");
           }}

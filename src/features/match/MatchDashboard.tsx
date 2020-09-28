@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Grid } from "semantic-ui-react";
+import { Grid, Tab } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ActionLog from "../statsProgram/ActionLog";
+import MatchPlayerStats from "./MatchPlayerStats";
 import MatchTopBar from "./MatchTopBar";
-import PlayerMatchTable from "./PlayerMatchTable";
 interface DetailParams {
   id: string;
 }
@@ -20,7 +20,6 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loading,
     setSelectedMatch,
     loadPlayerMatches,
-    playerMatches,
     loadingPlayerMatches,
   } = rootStore.matchStore;
   const {
@@ -50,14 +49,37 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loadPlayerMatches,
   ]);
 
+  const panes = [
+    // { menuItem: "Summary", render: () => <Tab.Pane>Summary content</Tab.Pane> },
+    {
+      menuItem: "Stats",
+      render: () => (
+        <Tab.Pane>
+          <MatchPlayerStats />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "Play by play",
+      render: () => (
+        <Tab.Pane>
+          <Grid centered>
+            <Grid.Column width={10}>
+              <ActionLog />
+            </Grid.Column>
+          </Grid>
+        </Tab.Pane>
+      ),
+    },
+  ];
+
   if (loading || loadingMatch || loadingPlayerMatches)
     return <LoadingComponent content="Loading match details" />;
   return (
-    <Grid centered>
+    <Fragment>
       <MatchTopBar match={match!} />
-      <ActionLog />
-      <PlayerMatchTable playerMatches={playerMatches} />
-    </Grid>
+      <Tab panes={panes} style={{ marginTop: 40 }} />
+    </Fragment>
   );
 };
 
