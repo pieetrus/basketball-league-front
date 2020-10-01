@@ -426,6 +426,7 @@ export default class StatsProgramStore {
     try {
       let incidents: IIncident[] = await agent.Incidents.list(matchId);
       runInAction("loading incidents", () => {
+        this.incidentsRegistry.clear();
         incidents.map((incident) =>
           this.incidentsRegistry.set(incident.id, incident)
         );

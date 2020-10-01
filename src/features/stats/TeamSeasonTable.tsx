@@ -7,39 +7,29 @@ const TeamSeasonTable: React.FC<{ teamsSeason: ITeamSeason[] }> = ({
   teamsSeason,
 }) => {
   const makeData = () => {
-    let data = playerSeasonArray.map((player) => ({
-      pos: player.position,
-      player: player.name + " " + player.surname,
-      teamName: player.teamName,
-      pts: player.pts,
-      fg: player.fgm + " - " + player.fga,
+    let data = teamsSeason.map((team) => ({
+      team: team.team.name,
+      pts: team.pts,
+      fg: team.fgm + " - " + team.fga,
       fgprc:
-        player.fga !== 0
-          ? ((player.fgm / player.fga) * 100).toPrecision(3)
-          : "0",
-      p2: player.fg2a + " - " + player.fg2m,
+        team.fga !== 0 ? ((team.fgm / team.fga) * 100).toPrecision(3) : "0",
+      p2: team.fg2a + " - " + team.fg2m,
       p2prc:
-        player.fg2a !== 0
-          ? ((player.fg2m / player.fg2a) * 100).toPrecision(3)
-          : "0",
-      p3: player.fg3m + " - " + player.fg3a,
+        team.fg2a !== 0 ? ((team.fg2m / team.fg2a) * 100).toPrecision(3) : "0",
+      p3: team.fg3m + " - " + team.fg3a,
       p3prc:
-        player.fg3a !== 0
-          ? ((player.fg3m / player.fg3a) * 100).toPrecision(3)
-          : "0",
-      ft: player.ftm + " - " + player.fta,
+        team.fg3a !== 0 ? ((team.fg3m / team.fg3a) * 100).toPrecision(3) : "0",
+      ft: team.ftm + " - " + team.fta,
       ftprc:
-        player.fta !== 0
-          ? ((player.ftm / player.fta) * 100).toPrecision(3)
-          : "0",
-      orb: player.orb,
-      drb: player.drb,
-      trb: player.trb,
-      ast: player.ast,
-      stl: player.stl,
-      tov: player.tov,
-      block: player.blk,
-      fouls: player.fouls,
+        team.fta !== 0 ? ((team.ftm / team.fta) * 100).toPrecision(3) : "0",
+      orb: team.orb,
+      drb: team.drb,
+      trb: team.trb,
+      ast: team.ast,
+      stl: team.stl,
+      tov: team.tov,
+      block: team.blk,
+      fouls: team.fouls,
     }));
     return data;
   };
@@ -47,10 +37,7 @@ const TeamSeasonTable: React.FC<{ teamsSeason: ITeamSeason[] }> = ({
   const data = useMemo(() => makeData(), []);
 
   const columns: Column<{
-    pos: string;
-    player: string;
-    teamName: string;
-    // min: string;
+    team: string;
     pts: number;
     fg: string;
     fgprc: string;
@@ -71,17 +58,8 @@ const TeamSeasonTable: React.FC<{ teamsSeason: ITeamSeason[] }> = ({
   }>[] = useMemo(
     () => [
       {
-        Header: "Pos",
-        accessor: "pos", // accessor is the "key" in the data
-      },
-      {
-        Header: "Player",
-        accessor: "player",
-        width: 400,
-      },
-      {
         Header: "Team",
-        accessor: "teamName",
+        accessor: "team",
       },
       {
         Header: "PTS",

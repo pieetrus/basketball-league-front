@@ -102,11 +102,13 @@ const Players = {
 
 const Teams = {
   list: (): Promise<ITeam[]> => request.get(`/team`),
-  listSeason: (params: URLSearchParams): Promise<ITeam[]> =>
+  listSeasonDto: (params: URLSearchParams): Promise<ITeam[]> =>
     axios
-      .get("/teamSeason", { params: params })
+      .get("/teamSeason/dto", { params: params })
       .then(sleep(1000))
       .then(responseBody),
+  listSeason: (): Promise<ITeamSeason[]> =>
+    axios.get("/teamSeason").then(sleep(1000)).then(responseBody),
   details: (id: number): Promise<ITeam> => request.get(`/team/${id}`),
   detailsSeason: (id: number): Promise<ITeam> =>
     request.get(`/teamseason/${id}`),

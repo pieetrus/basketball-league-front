@@ -30,9 +30,9 @@ const TeamSeasonManager: React.FC<IProps> = ({ season, division }) => {
     submitting,
     loadTeams,
     loadingInitial: loadingTeams,
-    loadTeamsSeason,
+    loadTeamsSeasonDto: loadTeamsSeason,
     loadingInitialSeason,
-    teamsSeasonByName,
+    teamsSeasonDtoByName: teamsSeasonByName,
     deleteTeamSeason,
     target,
   } = rootStore.teamStore;

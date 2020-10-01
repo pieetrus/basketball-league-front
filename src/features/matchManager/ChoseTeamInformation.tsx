@@ -25,7 +25,7 @@ const ChoseTeamInformation: React.FC<IProps> = ({ startDate, divisionId }) => {
   const {
     teamSeasonOptions: options,
     loadingInitial,
-    loadTeamsSeason,
+    loadTeamsSeasonDto: loadTeamsSeason,
   } = rootStore.teamStore;
 
   const { createMatch, loadMatchesDetailed, submitting } = rootStore.matchStore;

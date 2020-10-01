@@ -26,6 +26,7 @@ export default class TeamStore {
   @observable submitting = false;
   @observable target = 0;
   @observable teamsRegistry = new Map();
+  @observable teamsSeasonDtoRegistry = new Map();
   @observable teamsSeasonRegistry = new Map();
   @observable chosenTeamOptions: ITeam[] = [];
   @observable team: ITeam | null = null;
@@ -58,7 +59,7 @@ export default class TeamStore {
   }
 
   @computed get teamSeasonOptions() {
-    let options = this.teamsSeasonByName?.map((team) => ({
+    let options = this.teamsSeasonDtoByName?.map((team) => ({
       key: team.name,
       text: team.name,
       value: team.id,
@@ -94,8 +95,14 @@ export default class TeamStore {
     return this.sortTeamsByName(Array.from(this.teamsRegistry.values()));
   }
 
+  @computed get teamsSeasonDtoByName() {
+    return this.sortTeamsByName(
+      Array.from(this.teamsSeasonDtoRegistry.values())
+    );
+  }
+
   @computed get teamsSeasonByName() {
-    return this.sortTeamsByName(Array.from(this.teamsSeasonRegistry.values()));
+    return Array.from(this.teamsSeasonRegistry.values());
   }
 
   sortTeamsByName(teams: ITeam[]) {
@@ -125,13 +132,32 @@ export default class TeamStore {
     }
   };
 
-  @action loadTeamsSeason = async () => {
-    this.teamsSeasonRegistry.clear();
+  @action loadTeamsSeasonDto = async () => {
+    this.teamsSeasonDtoRegistry.clear();
     this.loadingInitialSeason = true;
     try {
-      const teams = await agent.Teams.listSeason(this.axiosParams);
+      const teams = await agent.Teams.listSeasonDto(this.axiosParams);
       runInAction("loading teamsSeason", () => {
         this.chosenTeamOptions = teams;
+        teams.forEach((team) => {
+          this.teamsSeasonDtoRegistry.set(team.id, team);
+        });
+        this.loadingInitialSeason = false;
+      });
+    } catch (error) {
+      runInAction("loading teamsSeason error", () => {
+        this.loadingInitialSeason = false;
+      });
+      console.log(error);
+    }
+  };
+
+  @action loadTeamsSeason = async () => {
+    this.teamsSeasonDtoRegistry.clear();
+    this.loadingInitialSeason = true;
+    try {
+      const teams = await agent.Teams.listSeason();
+      runInAction("loading teamsSeason", () => {
         teams.forEach((team) => {
           this.teamsSeasonRegistry.set(team.id, team);
         });
@@ -203,9 +229,9 @@ export default class TeamStore {
     try {
       teamSeason.id = await agent.Teams.createTeamSeason(teamSeason);
       runInAction("creating teamSeason", () => {
-        this.teamsSeasonRegistry.set(teamSeason.id, teamSeason);
+        this.teamsSeasonDtoRegistry.set(teamSeason.id, teamSeason);
         this.submitting = false;
-        this.loadTeamsSeason();
+        this.loadTeamsSeasonDto();
       });
       return teamSeason.id;
     } catch (error) {
@@ -266,7 +292,7 @@ export default class TeamStore {
     try {
       await agent.Teams.deleteTeamSeason(id);
       runInAction("deleting teamSeason", () => {
-        this.teamsSeasonRegistry.delete(id);
+        this.teamsSeasonDtoRegistry.delete(id);
         this.submitting = false;
         this.target = 0;
       });

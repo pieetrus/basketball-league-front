@@ -1,3 +1,5 @@
+import { ITeam } from "./team";
+
 export interface ITeamSeason {
   id: number;
   seasonId: number;
@@ -5,19 +7,24 @@ export interface ITeamSeason {
   coachId: number | null;
   capitainId: number | null;
   teamId: number | null;
-  // rankingPoints: number;
-}
-
-export class TeamSeasonFormValues implements ITeamSeason {
-  id: number = 0;
-  seasonId: number = 0;
-  divisionId: number = 0;
-  coachId: number | null = null;
-  capitainId: number | null = null;
-  teamId: number | null = null;
-  // rankingPoints: number = 0;
-
-  constructor(init?: ITeamSeason) {
-    Object.assign(this, init);
-  }
+  rankingPoints: number;
+  pts: number;
+  fga: number;
+  fgm: number;
+  fg3a: number;
+  fg3m: number;
+  fg2a: number;
+  fg2m: number;
+  fta: number;
+  ftm: number;
+  trb: number;
+  orb: number;
+  drb: number;
+  ast: number;
+  stl: number;
+  blk: number;
+  tov: number;
+  fouls: number;
+  offFouls: number;
+  team: ITeam;
 }

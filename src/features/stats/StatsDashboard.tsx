@@ -5,6 +5,7 @@ import { Header } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import PlayerSeasonTable from "./PlayerSeasonTable";
+import TeamSeasonTable from "./TeamSeasonTable";
 
 const StatsDashboard: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
@@ -18,7 +19,8 @@ const StatsDashboard: React.FC = () => {
 
   useEffect(() => {
     loadPlayersSeason();
-  }, [loadPlayersSeason]);
+    loadTeamsSeason();
+  }, [loadTeamsSeason, loadPlayersSeason]);
 
   if (loadingInitial) return <LoadingComponent content="Loading players..." />;
   return (
@@ -26,6 +28,7 @@ const StatsDashboard: React.FC = () => {
       <Header content="Player stats" />
       <PlayerSeasonTable playerSeasonArray={playersSeason} />
       <Header content="Team stats" />
+      <TeamSeasonTable teamsSeason={teamsSeasonByName} />
     </Fragment>
   );
 };
