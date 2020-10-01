@@ -91,6 +91,8 @@ const Players = {
       .get("/playerseason", { params: params })
       .then(sleep(1000))
       .then(responseBody),
+  listSeasonStats: (playerId: number): Promise<IPlayerSeason[]> =>
+    request.get(`/playerseason?playerId=${playerId}`),
   details: (id: number): Promise<IPlayer> => request.get(`/player/${id}`),
   create: (player: IPlayer) => request.post("/player", player),
   createPlayerSeason: (player: IPlayer) =>

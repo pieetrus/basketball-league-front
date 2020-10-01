@@ -25,6 +25,7 @@ export default class PlayerStore {
   @observable playersSeasonRegistry = new Map();
   @observable player: IPlayer | null = null;
   @observable loadingInitial = false;
+  @observable loadingInitialPlayerSeason = false;
   @observable submitting = false;
   @observable target = 0;
   @observable predicate = new Map(); // route params
@@ -135,6 +136,26 @@ export default class PlayerStore {
     } catch (error) {
       runInAction("loading playersSeason error", () => {
         this.loadingInitial = false;
+      });
+      console.log(error);
+    }
+  };
+
+  @action loadPlayerSeasonStats = async (playerId: number) => {
+    this.loadingInitialPlayerSeason = true;
+    this.playersSeasonRegistry.clear();
+    try {
+      const players = await agent.Players.listSeasonStats(playerId);
+      runInAction("loading playersSeason", () => {
+        players.forEach((player) => {
+          player.birthdate = new Date(player.birthdate!);
+          this.playersSeasonRegistry.set(player.id, player);
+        });
+        this.loadingInitialPlayerSeason = false;
+      });
+    } catch (error) {
+      runInAction("loading playersSeason error", () => {
+        this.loadingInitialPlayerSeason = false;
       });
       console.log(error);
     }

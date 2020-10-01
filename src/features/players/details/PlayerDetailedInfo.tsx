@@ -8,17 +8,17 @@ const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
       <Segment attached="top">
         <Grid>
           <Grid.Column width={1}>
-            <Icon size="large" color="teal" name="info" />
+            <Icon size="large" color="teal" name="arrow up" />
           </Grid.Column>
           <Grid.Column width={15}>
-            <p>{"description"}</p>
+            <p>{player.height + " cm"}</p>
           </Grid.Column>
         </Grid>
       </Segment>
       <Segment attached>
         <Grid verticalAlign="middle">
           <Grid.Column width={1}>
-            <Icon name="calendar" size="large" color="teal" />
+            <Icon name="birthday" size="large" color="teal" />
           </Grid.Column>
           <Grid.Column width={15}>
             <span>{format(player.birthdate!, "d.MM.yyyy")}</span>
@@ -28,7 +28,7 @@ const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
       <Segment attached>
         <Grid verticalAlign="middle">
           <Grid.Column width={1}>
-            <Icon name="marker" size="large" color="teal" />
+            <Icon name="basketball ball" size="large" color="teal" />
           </Grid.Column>
           <Grid.Column width={11}>
             <span>{player.position}</span>

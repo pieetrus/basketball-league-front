@@ -2,6 +2,7 @@ export interface IPlayerSeason {
   id?: number;
   seasonId?: number;
   divisionName: string;
+  season: string;
   playerId?: number;
   teamName: string;
   name: string;
