@@ -1,32 +1,34 @@
-import { ITeam } from "./team";
-
 export interface IPlayerSeason {
   id?: number;
   seasonId?: number;
-  divisionId?: number;
+  divisionName: string;
   playerId?: number;
-  teamId?: number;
+  teamName: string;
   name: string;
   surname: string;
   position: string;
   birthdate: Date | null;
   height: string;
-  teams?: ITeam[];
-}
-
-export class PlayerSeasonFormValues implements IPlayerSeason {
-  id?: number = undefined;
-  seasonId?: number = undefined;
-  divisionId?: number = undefined;
-  playerId?: number = undefined;
-  teamId?: number = undefined;
-  name: string = "";
-  surname: string = "";
-  position: string = "";
-  birthdate: Date | null = null;
-  height: string = "";
-
-  constructor(init?: IPlayerSeason) {
-    Object.assign(this, init);
-  }
+  photoUrl: string;
+  jerseyNr: string;
+  pts: number;
+  fga: number;
+  fgm: number;
+  fg3a: number;
+  fg3m: number;
+  fg2a: number;
+  fg2m: number;
+  fta: number;
+  ftm: number;
+  trb: number;
+  orb: number;
+  drb: number;
+  ast: number;
+  stl: number;
+  blk: number;
+  tov: number;
+  fouls: number;
+  offFouls: number;
+  divisionId: number;
+  teamId?: number;
 }

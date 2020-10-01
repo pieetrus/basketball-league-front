@@ -4,6 +4,7 @@ import { IMatchDetailed } from "../../app/models/matchDetailed";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ChooseJerseysAndSquad from "./ChooseJerseysAndSquad";
 import { observer } from "mobx-react-lite";
+import { history } from "../..";
 
 interface IProps {
   match: IMatchDetailed;
@@ -55,7 +56,7 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
           <Button
             content="See stats"
             onClick={() => {
-              console.log("wil be soon");
+              history.push(`/match/${match.id}`);
             }}
             primary
             style={{ marginLeft: 60 }}

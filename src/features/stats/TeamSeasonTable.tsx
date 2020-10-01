@@ -1,17 +1,16 @@
 import React, { useMemo } from "react";
 import { Column, useTable, useResizeColumns } from "react-table";
-import { IPlayerMatch } from "../../app/models/playerMatch";
 import styled from "styled-components";
+import { ITeamSeason } from "../../app/models/teamSeason";
 
-const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
-  playerMatches,
+const TeamSeasonTable: React.FC<{ teamsSeason: ITeamSeason[] }> = ({
+  teamsSeason,
 }) => {
   const makeData = () => {
-    let data = playerMatches.map((player) => ({
-      nr: player.player.jerseyNr,
-      pos: player.player.position,
-      player: player.player.name + " " + player.player.surname,
-      // min: "00:00",
+    let data = playerSeasonArray.map((player) => ({
+      pos: player.position,
+      player: player.name + " " + player.surname,
+      teamName: player.teamName,
       pts: player.pts,
       fg: player.fgm + " - " + player.fga,
       fgprc:
@@ -48,9 +47,9 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   const data = useMemo(() => makeData(), []);
 
   const columns: Column<{
-    nr: string;
     pos: string;
     player: string;
+    teamName: string;
     // min: string;
     pts: number;
     fg: string;
@@ -72,10 +71,6 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   }>[] = useMemo(
     () => [
       {
-        Header: "Nr",
-        accessor: "nr", // accessor is the "key" in the data
-      },
-      {
         Header: "Pos",
         accessor: "pos", // accessor is the "key" in the data
       },
@@ -84,10 +79,10 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
         accessor: "player",
         width: 400,
       },
-      // {
-      //   Header: "Min",
-      //   accessor: "min",
-      // },
+      {
+        Header: "Team",
+        accessor: "teamName",
+      },
       {
         Header: "PTS",
         accessor: "pts",
@@ -168,7 +163,7 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
     table {
       border-spacing: 0;
       border: 1px solid black;
-      width: 1000px;
+      width: 1300px;
 
       tr {
         :last-child {
@@ -231,4 +226,4 @@ const PlayerMatchTable: React.FC<{ playerMatches: IPlayerMatch[] }> = ({
   );
 };
 
-export default PlayerMatchTable;
+export default TeamSeasonTable;

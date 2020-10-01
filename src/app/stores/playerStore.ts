@@ -53,7 +53,10 @@ export default class PlayerStore {
   }
 
   @computed get playersSeason() {
-    return Array.from(this.playersSeasonRegistry.values());
+    let playersSeason: IPlayerSeason[] = Array.from(
+      this.playersSeasonRegistry.values()
+    );
+    return playersSeason;
   }
 
   @computed get optionsExludingSelected() {
