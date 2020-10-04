@@ -31,6 +31,9 @@ import MatchManagerDashboard from "../../features/matchManager/MatchManagerDashb
 import StatsDashboard from "../../features/stats/StatsDashboard";
 import ScheduleDashoard from "../../features/schedule/ScheduleDashoard";
 import MatchDashboard from "../../features/match/MatchDashboard";
+import TablesDashboard from "../../features/tables/TablesDashboard";
+import Contact from "../../features/contact/Contact";
+import NewsDashboard from "../../features/news/NewsDashboard";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   const rootStore = useContext(RootStoreContext);
@@ -84,10 +87,12 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                 <Route exact path="/manager" component={ManagerDashboard} />
                 <Route path="/manager/season" component={SeasonDashboard} />
                 <Route path="/manager/division" component={DivisionDashboard} />
-                {/* <Route path="/test" component={FoulModal} /> */}
                 <Route path="/match/:id" component={MatchDashboard} />
                 <Route path="/stats" component={StatsDashboard} />
                 <Route path="/schedule" component={ScheduleDashoard} />
+                <Route path="/tables" component={TablesDashboard} />
+                <Route path="/contact" component={Contact} />
+                <Route path="/news" component={NewsDashboard} />
                 <Route component={NotFound} />
               </Switch>
             </Container>

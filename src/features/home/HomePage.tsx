@@ -30,8 +30,8 @@ const HomePage = () => {
               inverted
               content={`Welcome back ${user.displayName}`}
             />
-            <Button as={Link} to="/players" size="huge" inverted>
-              Go to players!
+            <Button as={Link} to="/news" size="huge" inverted>
+              Go to news!
             </Button>
           </>
         ) : (
