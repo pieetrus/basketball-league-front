@@ -71,13 +71,13 @@ const PlayerSeasonTable: React.FC<{ playerSeasonArray: IPlayerSeason[] }> = ({
   }>[] = useMemo(
     () => [
       {
-        Header: "Pos",
-        accessor: "pos", // accessor is the "key" in the data
-      },
-      {
         Header: "Player",
         accessor: "player",
         width: 400,
+      },
+      {
+        Header: "Pos",
+        accessor: "pos", // accessor is the "key" in the data
       },
       {
         Header: "Team",

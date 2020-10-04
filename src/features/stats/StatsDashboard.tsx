@@ -66,8 +66,11 @@ const StatsDashboard: React.FC = () => {
             />
           ))}
       </Menu>
+
       <Header content="Player stats" />
-      {playersSeason && <PlayerSeasonTable playerSeasonArray={playersSeason} />}
+      {playersSeason && playersSeason.length > 0 && (
+        <PlayerSeasonTable playerSeasonArray={playersSeason} />
+      )}
       <Header content="Team stats" />
       {teamsSeasonByName && <TeamSeasonTable teamsSeason={teamsSeasonByName} />}
     </Fragment>

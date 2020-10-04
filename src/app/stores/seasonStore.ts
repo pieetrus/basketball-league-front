@@ -60,13 +60,13 @@ export default class SeasonStore {
           season.startDate = new Date(season.startDate!);
           season.endDate = new Date(season.endDate!);
           this.seasonsRegistry.set(season.id, season);
-          this.loadingInitial = false;
         });
         let lastSeasonId = seasons.pop()?.id?.toString();
         this.rootStore.teamStore.clearPredicate();
         this.rootStore.playerStore.setPredicate("", "", true);
         this.rootStore.playerStore.setPredicate("seasonId", lastSeasonId);
         this.rootStore.teamStore.setPredicate("seasonId", lastSeasonId);
+        this.loadingInitial = false;
       });
     } catch (error) {
       runInAction("loading seasons error", () => {

@@ -29,4 +29,6 @@ export interface ITeamSeason {
   fouls: number;
   offFouls: number;
   team: ITeam;
+  wins: number;
+  lost: number;
 }
