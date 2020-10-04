@@ -64,6 +64,7 @@ export default class SeasonStore {
         });
         let lastSeasonId = seasons.pop()?.id?.toString();
         this.rootStore.teamStore.clearPredicate();
+        this.rootStore.playerStore.setPredicate("", "", true);
         this.rootStore.playerStore.setPredicate("seasonId", lastSeasonId);
         this.rootStore.teamStore.setPredicate("seasonId", lastSeasonId);
       });
