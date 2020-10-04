@@ -102,7 +102,8 @@ export default class TeamStore {
   }
 
   @computed get teamsSeasonByName() {
-    return Array.from(this.teamsSeasonRegistry.values());
+    let temp: ITeamSeason[] = Array.from(this.teamsSeasonRegistry.values());
+    return temp;
   }
 
   sortTeamsByName(teams: ITeam[]) {
@@ -153,20 +154,22 @@ export default class TeamStore {
   };
 
   @action loadTeamsSeason = async () => {
-    this.teamsSeasonDtoRegistry.clear();
+    this.teamsSeasonRegistry.clear();
     this.loadingInitialSeason = true;
     try {
-      const teams = await agent.Teams.listSeason();
+      const teams = await agent.Teams.listSeason(this.axiosParams);
       runInAction("loading teamsSeason", () => {
         teams.forEach((team) => {
           this.teamsSeasonRegistry.set(team.id, team);
         });
         this.loadingInitialSeason = false;
+        this.clearPredicate();
       });
     } catch (error) {
       runInAction("loading teamsSeason error", () => {
         this.loadingInitialSeason = false;
       });
+      this.clearPredicate();
       console.log(error);
     }
   };

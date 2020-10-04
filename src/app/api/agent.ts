@@ -109,8 +109,11 @@ const Teams = {
       .get("/teamSeason/dto", { params: params })
       .then(sleep(1000))
       .then(responseBody),
-  listSeason: (): Promise<ITeamSeason[]> =>
-    axios.get("/teamSeason").then(sleep(1000)).then(responseBody),
+  listSeason: (params: URLSearchParams): Promise<ITeamSeason[]> =>
+    axios
+      .get("/teamSeason", { params: params })
+      .then(sleep(1000))
+      .then(responseBody),
   details: (id: number): Promise<ITeam> => request.get(`/team/${id}`),
   detailsSeason: (id: number): Promise<ITeam> =>
     request.get(`/teamseason/${id}`),

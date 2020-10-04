@@ -4,6 +4,8 @@ export interface ITeamSeason {
   id: number;
   seasonId: number;
   divisionId: number;
+  season: string;
+  division: string;
   coachId: number | null;
   capitainId: number | null;
   teamId: number | null;
