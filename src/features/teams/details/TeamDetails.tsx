@@ -22,6 +22,7 @@ const TeamDetails: React.FC<RouteComponentProps<DetailParams>> = ({
     loadTeamsSeason,
     loadingInitialSeason,
     setPredicate,
+    clearPredicate,
   } = rootStore.teamStore;
 
   useEffect(() => {
@@ -29,10 +30,17 @@ const TeamDetails: React.FC<RouteComponentProps<DetailParams>> = ({
     if (isNaN(id)) {
       id = -1;
     }
+    clearPredicate();
     setPredicate("teamId", id.toString());
     loadTeam(id);
     loadTeamsSeason();
-  }, [loadTeam, match.params.id, loadTeamsSeason, setPredicate]);
+  }, [
+    clearPredicate,
+    loadTeam,
+    match.params.id,
+    loadTeamsSeason,
+    setPredicate,
+  ]);
 
   if (loadingInitial || loadingInitialSeason)
     return <LoadingComponent content="Loading team..." />;

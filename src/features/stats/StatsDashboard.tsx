@@ -31,9 +31,10 @@ const StatsDashboard: React.FC = () => {
   } = rootStore.seasonStore;
 
   useEffect(() => {
-    loadPlayersSeason();
-    loadTeamsSeason();
-    loadSeasons();
+    loadSeasons().then(() => {
+      loadPlayersSeason();
+      loadTeamsSeason();
+    });
   }, [loadTeamsSeason, loadPlayersSeason, loadSeasons]);
 
   if (loadingInitial || loadingInitialSeason || loadingSeasons)
@@ -47,19 +48,23 @@ const StatsDashboard: React.FC = () => {
           color="teal"
           content="Season filters"
         />
-        {seasonsByDate.map((season) => (
-          <Menu.Item
-            content={season.name}
-            name={season.name}
-            active={predicate.get("seasonId") === season.id?.toString()}
-            onClick={() => {
-              setPredicate("seasonId", season.id?.toString());
-              setPlayersPredicate("seasonId", season.id?.toString());
-              loadTeamsSeason();
-              loadPlayersSeason();
-            }}
-          />
-        ))}
+        {seasonsByDate &&
+          seasonsByDate.map((season, index) => (
+            <Menu.Item
+              key={index}
+              content={season.name}
+              name={season.name}
+              active={predicate.get("seasonId") === season.id?.toString()}
+              onClick={() => {
+                if (predicate.get("seasonId") !== season.id?.toString()) {
+                  setPredicate("seasonId", season.id?.toString());
+                  setPlayersPredicate("seasonId", season.id?.toString());
+                  loadTeamsSeason();
+                  loadPlayersSeason();
+                }
+              }}
+            />
+          ))}
       </Menu>
       <Header content="Player stats" />
       {playersSeason && <PlayerSeasonTable playerSeasonArray={playersSeason} />}
