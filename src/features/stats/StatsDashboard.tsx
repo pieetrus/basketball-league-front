@@ -30,14 +30,26 @@ const StatsDashboard: React.FC = () => {
     loadingInitial: loadingSeasons,
   } = rootStore.seasonStore;
 
+  const {
+    loadDivisions,
+    divisionsByLevel,
+    loadingInitial: loadingDivisions,
+  } = rootStore.divisionStore;
+
   useEffect(() => {
     loadSeasons().then(() => {
       loadPlayersSeason();
       loadTeamsSeason();
     });
+    loadDivisions();
   }, [loadTeamsSeason, loadPlayersSeason, loadSeasons]);
 
-  if (loadingInitial || loadingInitialSeason || loadingSeasons)
+  if (
+    loadingInitial ||
+    loadingInitialSeason ||
+    loadingSeasons ||
+    loadingDivisions
+  )
     return <LoadingComponent content="Loading data..." />;
   return (
     <Fragment>
@@ -66,13 +78,39 @@ const StatsDashboard: React.FC = () => {
             />
           ))}
       </Menu>
+      <Menu>
+        <Header
+          icon={"filter"}
+          attached
+          color="teal"
+          content="Division filters"
+        />
+        {divisionsByLevel.map((division, index) => (
+          <Menu.Item
+            key={index}
+            content={division.name}
+            name={division.name}
+            active={predicate.get("divisionId") === division.id?.toString()}
+            onClick={() => {
+              if (predicate.get("divisionId") !== division.id?.toString()) {
+                setPredicate("divisionId", division.id?.toString());
+                setPlayersPredicate("divisionId", division.id?.toString());
+                loadPlayersSeason();
+                loadTeamsSeason();
+              }
+            }}
+          />
+        ))}
+      </Menu>
 
       <Header content="Player stats" />
       {playersSeason && playersSeason.length > 0 && (
         <PlayerSeasonTable playerSeasonArray={playersSeason} />
       )}
       <Header content="Team stats" />
-      {teamsSeasonByName && <TeamSeasonTable teamsSeason={teamsSeasonByName} />}
+      {teamsSeasonByName && teamsSeasonByName.length > 0 && (
+        <TeamSeasonTable teamsSeason={teamsSeasonByName} />
+      )}
     </Fragment>
   );
 };
