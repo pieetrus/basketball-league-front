@@ -163,13 +163,11 @@ export default class TeamStore {
           this.teamsSeasonRegistry.set(team.id, team);
         });
         this.loadingInitialSeason = false;
-        this.clearPredicate();
       });
     } catch (error) {
       runInAction("loading teamsSeason error", () => {
         this.loadingInitialSeason = false;
       });
-      this.clearPredicate();
       console.log(error);
     }
   };

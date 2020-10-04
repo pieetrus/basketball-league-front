@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { observer } from "mobx-react-lite";
 import React, { Fragment, useContext, useEffect } from "react";
-import { Header } from "semantic-ui-react";
+import { Header, Menu } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import PlayerSeasonTable from "./PlayerSeasonTable";
@@ -13,22 +13,58 @@ const StatsDashboard: React.FC = () => {
     loadPlayersSeason,
     loadingInitial,
     playersSeason,
+    setPredicate: setPlayersPredicate,
   } = rootStore.playerStore;
 
-  const { loadTeamsSeason, teamsSeasonByName } = rootStore.teamStore;
+  const {
+    loadTeamsSeason,
+    teamsSeasonByName,
+    loadingInitialSeason,
+    setPredicate,
+    predicate,
+  } = rootStore.teamStore;
+
+  const {
+    loadSeasons,
+    seasonsByDate,
+    loadingInitial: loadingSeasons,
+  } = rootStore.seasonStore;
 
   useEffect(() => {
     loadPlayersSeason();
     loadTeamsSeason();
-  }, [loadTeamsSeason, loadPlayersSeason]);
+    loadSeasons();
+  }, [loadTeamsSeason, loadPlayersSeason, loadSeasons]);
 
-  if (loadingInitial) return <LoadingComponent content="Loading players..." />;
+  if (loadingInitial || loadingInitialSeason || loadingSeasons)
+    return <LoadingComponent content="Loading data..." />;
   return (
     <Fragment>
+      <Menu>
+        <Header
+          icon={"filter"}
+          attached
+          color="teal"
+          content="Season filters"
+        />
+        {seasonsByDate.map((season) => (
+          <Menu.Item
+            content={season.name}
+            name={season.name}
+            active={predicate.get("seasonId") === season.id?.toString()}
+            onClick={() => {
+              setPredicate("seasonId", season.id?.toString());
+              setPlayersPredicate("seasonId", season.id?.toString());
+              loadTeamsSeason();
+              loadPlayersSeason();
+            }}
+          />
+        ))}
+      </Menu>
       <Header content="Player stats" />
-      <PlayerSeasonTable playerSeasonArray={playersSeason} />
+      {playersSeason && <PlayerSeasonTable playerSeasonArray={playersSeason} />}
       <Header content="Team stats" />
-      <TeamSeasonTable teamsSeason={teamsSeasonByName} />
+      {teamsSeasonByName && <TeamSeasonTable teamsSeason={teamsSeasonByName} />}
     </Fragment>
   );
 };
