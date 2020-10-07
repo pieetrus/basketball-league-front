@@ -1,3 +1,8 @@
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 import { action, computed, observable, runInAction } from "mobx";
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
@@ -51,6 +56,77 @@ export default class StatsProgramStore {
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
   @observable incidentsRegistry = new Map();
+  @observable.ref hubConnection: HubConnection | null = null;
+
+  @action createHubConnection = () => {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5000/incidentsHub", {
+        accessTokenFactory: () => this.rootStore.commonStore.token!,
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log(this.hubConnection!.state))
+      .catch((err) => {
+        console.log(err);
+      });
+
+    this.hubConnection.on("ReceiveIncident", (incident) => {
+      runInAction(() => {
+        // this.incidentsRegistry.set(incident.id, incident);
+        console.log("object");
+        console.log(incident);
+      });
+    });
+  };
+
+  @action stopHubConnection = () => {
+    this.hubConnection?.stop();
+  };
+
+  @action createShot = async (shot: IShot) => {
+    this.submitting = true;
+    try {
+      await this.hubConnection!.invoke("SendIncident", shot).catch((err) =>
+        console.log(err)
+      );
+      // let incidentId = await agent.Incidents.createShot(shot);
+      runInAction("creating shot", () => {
+        this.submitting = false;
+        if (shot.isAccurate)
+          this.setTeamPoints(shot.isGuest, false, shot.value);
+        // let incident: IIncident = {
+        //   flagged: false,
+        //   incidentType: 3,
+        //   minutes: shot.minutes,
+        //   quater: shot.quater,
+        //   seconds: shot.seconds,
+        //   shot,
+        //   id: this.incidentsOrderByTimeAndQuater().slice(-1)[0].id! + 1,
+        //   isGuest: shot.isGuest,
+        //   matchId: shot.matchId,
+        // };
+        // this.incidentsRegistry.set(incident.id, incident);
+      });
+      // return shot.id;
+    } catch (error) {
+      runInAction("create shot error", () => {
+        this.submitting = false;
+        toast.error("Problem submitting data");
+        console.log(error);
+      });
+    }
+  };
+
+  // @action createIncident = async (incident: IIncident) => {
+  //   try {
+  //     await this.hubConnection!.invoke("SendIncident", incident);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   @computed get getChosenPlayerJerseyColor() {
     if (this.playerChosen?.isGuest) return this.teamGuestJerseyColor;
@@ -235,35 +311,35 @@ export default class StatsProgramStore {
     this.teamGuestChosenPlayers = guestPlayers;
   };
 
-  @action createShot = async (shot: IShot) => {
-    this.submitting = true;
-    try {
-      let incidentId = await agent.Incidents.createShot(shot);
-      runInAction("creating shot", () => {
-        this.submitting = false;
-        let incident: IIncident = {
-          flagged: false,
-          incidentType: 3,
-          minutes: shot.minutes,
-          quater: shot.quater,
-          seconds: shot.seconds,
-          shot,
-          id: incidentId,
-          isGuest: shot.isGuest,
-          matchId: shot.matchId,
-        };
-        this.incidentsRegistry.set(incident.id, incident);
-      });
-      if (shot.isAccurate) this.setTeamPoints(shot.isGuest, false, shot.value);
-      return shot.id;
-    } catch (error) {
-      runInAction("create shot error", () => {
-        this.submitting = false;
-      });
-      toast.error("Problem submitting data");
-      console.log(error.response);
-    }
-  };
+  // @action createShot = async (shot: IShot) => {
+  //   this.submitting = true;
+  //   try {
+  //     let incidentId = await agent.Incidents.createShot(shot);
+  //     runInAction("creating shot", () => {
+  //       this.submitting = false;
+  //       let incident: IIncident = {
+  //         flagged: false,
+  //         incidentType: 3,
+  //         minutes: shot.minutes,
+  //         quater: shot.quater,
+  //         seconds: shot.seconds,
+  //         shot,
+  //         id: incidentId,
+  //         isGuest: shot.isGuest,
+  //         matchId: shot.matchId,
+  //       };
+  //       this.incidentsRegistry.set(incident.id, incident);
+  //     });
+  //     if (shot.isAccurate) this.setTeamPoints(shot.isGuest, false, shot.value);
+  //     return shot.id;
+  //   } catch (error) {
+  //     runInAction("create shot error", () => {
+  //       this.submitting = false;
+  //     });
+  //     toast.error("Problem submitting data");
+  //     console.log(error.response);
+  //   }
+  // };
 
   @action loadMatch = async (id: number) => {
     this.loadingMatch = true;
