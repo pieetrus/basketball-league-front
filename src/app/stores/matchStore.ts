@@ -51,12 +51,13 @@ export default class MatchStore {
 
     this.hubConnection.on(
       "ReceiveShot",
-      (isAccurate, isGuest, value, matchId) => {
+      (isAccurate, isGuest, value, matchId, quater, minutes, seconds) => {
         runInAction(() => {
+          let match: IMatchDetailed = this.matchesDetailedRegistry.get(matchId);
+          match.lastIncidentQuater = quater;
+          match.lastIncidentMinutes = minutes;
+          match.lastIncidentSeconds = seconds;
           if (isAccurate) {
-            let match: IMatchDetailed = this.matchesDetailedRegistry.get(
-              matchId
-            );
             if (isGuest) match.teamGuestPts = match.teamGuestPts + value;
             else match.teamHomePts = match.teamHomePts + value;
           }
