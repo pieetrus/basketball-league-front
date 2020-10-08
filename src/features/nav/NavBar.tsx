@@ -17,7 +17,7 @@ function NavBar() {
         />
         DALK
       </Menu.Item>
-      <Menu.Item name="NEWS" as={NavLink} to="/news" />
+      {/* <Menu.Item name="NEWS" as={NavLink} to="/news" /> */}
       <Menu.Item name="TABLES" as={NavLink} to="/tables" />
       <Menu.Item name="SCHEDULE" as={NavLink} to="/schedule" />
       <Menu.Item name="STATS" as={NavLink} to="/stats" />
