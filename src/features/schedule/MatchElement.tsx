@@ -2,6 +2,7 @@ import React from "react";
 import { history } from "../..";
 import { Grid, Segment, Header, Button, Image } from "semantic-ui-react";
 import { IMatchDetailed } from "../../app/models/matchDetailed";
+import { observer } from "mobx-react-lite";
 
 const MatchElement: React.FC<{ match: IMatchDetailed }> = ({ match }) => {
   const segmentStyle = { display: "flex", alignItems: "center" };
@@ -62,4 +63,4 @@ const MatchElement: React.FC<{ match: IMatchDetailed }> = ({ match }) => {
   );
 };
 
-export default MatchElement;
+export default observer(MatchElement);

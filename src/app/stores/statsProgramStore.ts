@@ -73,13 +73,14 @@ export default class StatsProgramStore {
         console.log(err);
       });
 
-    this.hubConnection.on("ReceiveIncident", (incident) => {
-      runInAction(() => {
-        // this.incidentsRegistry.set(incident.id, incident);
-        console.log("object");
-        console.log(incident);
-      });
-    });
+    this.hubConnection.on(
+      "ReceiveShot",
+      (isAccurate, isGuest, value, matchId) => {
+        runInAction(() => {
+          if (isAccurate) this.setTeamPoints(isGuest, false, value);
+        });
+      }
+    );
   };
 
   @action stopHubConnection = () => {
@@ -89,28 +90,24 @@ export default class StatsProgramStore {
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
-      await this.hubConnection!.invoke("SendIncident", shot).catch((err) =>
+      await this.hubConnection!.invoke("SendShot", shot).catch((err) =>
         console.log(err)
       );
-      // let incidentId = await agent.Incidents.createShot(shot);
       runInAction("creating shot", () => {
         this.submitting = false;
-        if (shot.isAccurate)
-          this.setTeamPoints(shot.isGuest, false, shot.value);
-        // let incident: IIncident = {
-        //   flagged: false,
-        //   incidentType: 3,
-        //   minutes: shot.minutes,
-        //   quater: shot.quater,
-        //   seconds: shot.seconds,
-        //   shot,
-        //   id: this.incidentsOrderByTimeAndQuater().slice(-1)[0].id! + 1,
-        //   isGuest: shot.isGuest,
-        //   matchId: shot.matchId,
-        // };
-        // this.incidentsRegistry.set(incident.id, incident);
+        let incident: IIncident = {
+          flagged: false,
+          incidentType: 3,
+          minutes: shot.minutes,
+          quater: shot.quater,
+          seconds: shot.seconds,
+          shot,
+          id: Array.from(this.incidentsRegistry.values()).pop().id + 1,
+          isGuest: shot.isGuest,
+          matchId: shot.matchId,
+        };
+        this.incidentsRegistry.set(incident.id, incident);
       });
-      // return shot.id;
     } catch (error) {
       runInAction("create shot error", () => {
         this.submitting = false;
@@ -119,14 +116,6 @@ export default class StatsProgramStore {
       });
     }
   };
-
-  // @action createIncident = async (incident: IIncident) => {
-  //   try {
-  //     await this.hubConnection!.invoke("SendIncident", incident);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   @computed get getChosenPlayerJerseyColor() {
     if (this.playerChosen?.isGuest) return this.teamGuestJerseyColor;

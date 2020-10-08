@@ -6,6 +6,11 @@ import { toast } from "react-toastify";
 import { IMatchDetailed, IMatchDetailedSquads } from "../models/matchDetailed";
 import { SyntheticEvent } from "react";
 import { IPlayerMatch } from "../models/playerMatch";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 
 export default class MatchStore {
   rootStore: RootStore;
@@ -27,6 +32,42 @@ export default class MatchStore {
   @observable submitting = false;
   @observable target = 0;
   @observable selectedMatch: IMatchDetailedSquads | null = null;
+  @observable.ref hubConnection: HubConnection | null = null;
+
+  @action createHubConnection = () => {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5000/incidentsHub", {
+        accessTokenFactory: () => this.rootStore.commonStore.token!,
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log(this.hubConnection!.state))
+      .catch((err) => {
+        console.log(err);
+      });
+
+    this.hubConnection.on(
+      "ReceiveShot",
+      (isAccurate, isGuest, value, matchId) => {
+        runInAction(() => {
+          if (isAccurate) {
+            let match: IMatchDetailed = this.matchesDetailedRegistry.get(
+              matchId
+            );
+            if (isGuest) match.teamGuestPts = match.teamGuestPts + value;
+            else match.teamHomePts = match.teamHomePts + value;
+          }
+        });
+      }
+    );
+  };
+
+  @action stopHubConnection = () => {
+    this.hubConnection?.stop();
+  };
 
   @computed get matchesDetailedByDate() {
     let temp: IMatchDetailed[] = Array.from(

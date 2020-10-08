@@ -11,6 +11,7 @@ const ScheduleDashoard = () => {
     loadMatchesDetailed,
     matchesDetailedByDate,
     loadingInitial,
+    createHubConnection,
   } = rootStore.matchStore;
 
   const { setEditableActionLog } = rootStore.statsProgramStore;
@@ -18,7 +19,8 @@ const ScheduleDashoard = () => {
   useEffect(() => {
     loadMatchesDetailed();
     setEditableActionLog(false);
-  }, [loadMatchesDetailed, setEditableActionLog]);
+    createHubConnection();
+  }, [loadMatchesDetailed, setEditableActionLog, createHubConnection]);
 
   if (loadingInitial) return <LoadingComponent content="loading matches" />;
 
