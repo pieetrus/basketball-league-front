@@ -1,4 +1,3 @@
-import { create } from "domain";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -22,15 +21,16 @@ const StatsProgramDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loadIncidents,
     match,
     createHubConnection,
+    stopHubConnection,
   } = rootStore.statsProgramStore;
 
   useEffect(() => {
     loadIncidents(match!.id!);
     createHubConnection();
     return () => {
-      console.log("object");
+      stopHubConnection();
     };
-  }, [loadIncidents, match, createHubConnection]);
+  }, [loadIncidents, match, createHubConnection, stopHubConnection]);
   return (
     <Grid centered>
       <StatsHeader />

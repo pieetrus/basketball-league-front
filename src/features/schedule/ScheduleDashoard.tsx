@@ -12,6 +12,7 @@ const ScheduleDashoard = () => {
     matchesDetailedByDate,
     loadingInitial,
     createHubConnection,
+    stopHubConnection,
   } = rootStore.matchStore;
 
   const { setEditableActionLog } = rootStore.statsProgramStore;
@@ -20,7 +21,15 @@ const ScheduleDashoard = () => {
     loadMatchesDetailed();
     setEditableActionLog(false);
     createHubConnection();
-  }, [loadMatchesDetailed, setEditableActionLog, createHubConnection]);
+    return () => {
+      stopHubConnection();
+    };
+  }, [
+    loadMatchesDetailed,
+    setEditableActionLog,
+    createHubConnection,
+    stopHubConnection,
+  ]);
 
   if (loadingInitial) return <LoadingComponent content="loading matches" />;
 
