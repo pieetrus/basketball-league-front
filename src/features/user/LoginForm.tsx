@@ -7,6 +7,7 @@ import { IUserFormValues } from "../../app/models/user";
 import { FORM_ERROR } from "final-form";
 import { combineValidators, isRequired } from "revalidate";
 import ErrorMessage from "../../app/common/form/ErrorMessage";
+import { history } from "../..";
 
 const validate = combineValidators({
   email: isRequired("email"),
@@ -20,9 +21,11 @@ const LoginForm = () => {
   return (
     <FinalForm
       onSubmit={(values: IUserFormValues) =>
-        login(values).catch((error) => ({
-          [FORM_ERROR]: error,
-        }))
+        login(values)
+          .catch((error) => ({
+            [FORM_ERROR]: error,
+          }))
+          .then(() => history.push(""))
       }
       validate={validate}
       render={({

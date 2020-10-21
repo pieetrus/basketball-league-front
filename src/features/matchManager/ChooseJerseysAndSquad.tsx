@@ -170,8 +170,10 @@ const ChooseJerseysAndSquad: React.FC = () => {
                 match.teamGuestJerseyColor
               );
               setPlayersInGameFromMatchModel();
-            }
-            if (!match?.started && validate()) {
+              setEditableActionLog(true);
+              closeModal();
+              history.push("/statsProgram");
+            } else if (validate()) {
               setMatch(match!);
               setTeams(match?.teamHome!, match?.teamGuest!);
               setTeamsJerseysColors(
@@ -183,10 +185,10 @@ const ChooseJerseysAndSquad: React.FC = () => {
                 getSelectedPlayers(true)
               );
               startMatch();
+              setEditableActionLog(true);
+              closeModal();
+              history.push("/statsProgram");
             }
-            setEditableActionLog(true);
-            closeModal();
-            history.push("/statsProgram");
           }}
         />
       </Segment>
