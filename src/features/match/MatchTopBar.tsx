@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Grid, Segment, Header, Image } from "semantic-ui-react";
 import { IMatchDetailed } from "../../app/models/matchDetailed";
@@ -57,4 +58,4 @@ const MatchTopBar: React.FC<{ match: IMatchDetailed }> = ({ match }) => {
   );
 };
 
-export default MatchTopBar;
+export default observer(MatchTopBar);

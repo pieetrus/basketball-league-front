@@ -53,13 +53,31 @@ export default class MatchStore {
       "ReceiveShot",
       (isAccurate, isGuest, value, matchId, quater, minutes, seconds) => {
         runInAction(() => {
-          let match: IMatchDetailed = this.matchesDetailedRegistry.get(matchId);
-          match.lastIncidentQuater = quater;
-          match.lastIncidentMinutes = minutes;
-          match.lastIncidentSeconds = seconds;
-          if (isAccurate) {
-            if (isGuest) match.teamGuestPts = match.teamGuestPts + value;
-            else match.teamHomePts = match.teamHomePts + value;
+          if (this.selectedMatch?.id === matchId) {
+            // for selected match
+            this.selectedMatch!.lastIncidentQuater = quater;
+            this.selectedMatch!.lastIncidentMinutes = minutes;
+            this.selectedMatch!.lastIncidentSeconds = seconds;
+            if (isAccurate) {
+              if (isGuest)
+                this.selectedMatch!.teamGuestPts =
+                  this.selectedMatch!.teamGuestPts + value;
+              else
+                this.selectedMatch!.teamHomePts =
+                  this.selectedMatch!.teamHomePts + value;
+            }
+          } else {
+            //for schedule
+            let match: IMatchDetailed = this.matchesDetailedRegistry.get(
+              matchId
+            );
+            match.lastIncidentQuater = quater;
+            match.lastIncidentMinutes = minutes;
+            match.lastIncidentSeconds = seconds;
+            if (isAccurate) {
+              if (isGuest) match.teamGuestPts = match.teamGuestPts + value;
+              else match.teamHomePts = match.teamHomePts + value;
+            }
           }
         });
       }

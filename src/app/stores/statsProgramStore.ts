@@ -75,7 +75,7 @@ export default class StatsProgramStore {
 
     this.hubConnection.on(
       "ReceiveShot",
-      (isAccurate, isGuest, value, matchId) => {
+      (isAccurate, isGuest, value, matchId, quater, minutes, seconds) => {
         runInAction(() => {
           if (isAccurate) this.setTeamPoints(isGuest, false, value);
         });
@@ -86,7 +86,6 @@ export default class StatsProgramStore {
   @action stopHubConnection = () => {
     this.hubConnection?.stop();
   };
-
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
@@ -299,36 +298,6 @@ export default class StatsProgramStore {
     this.teamHomeChosenPlayers = homePlayers;
     this.teamGuestChosenPlayers = guestPlayers;
   };
-
-  // @action createShot = async (shot: IShot) => {
-  //   this.submitting = true;
-  //   try {
-  //     let incidentId = await agent.Incidents.createShot(shot);
-  //     runInAction("creating shot", () => {
-  //       this.submitting = false;
-  //       let incident: IIncident = {
-  //         flagged: false,
-  //         incidentType: 3,
-  //         minutes: shot.minutes,
-  //         quater: shot.quater,
-  //         seconds: shot.seconds,
-  //         shot,
-  //         id: incidentId,
-  //         isGuest: shot.isGuest,
-  //         matchId: shot.matchId,
-  //       };
-  //       this.incidentsRegistry.set(incident.id, incident);
-  //     });
-  //     if (shot.isAccurate) this.setTeamPoints(shot.isGuest, false, shot.value);
-  //     return shot.id;
-  //   } catch (error) {
-  //     runInAction("create shot error", () => {
-  //       this.submitting = false;
-  //     });
-  //     toast.error("Problem submitting data");
-  //     console.log(error.response);
-  //   }
-  // };
 
   @action loadMatch = async (id: number) => {
     this.loadingMatch = true;

@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 
 const MatchElement: React.FC<{ match: IMatchDetailed }> = ({ match }) => {
   const segmentStyle = { display: "flex", alignItems: "center" };
+
   return (
     <Grid.Row>
       <Segment.Group style={{ width: 800 }}>

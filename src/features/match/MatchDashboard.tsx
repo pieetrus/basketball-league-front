@@ -21,6 +21,8 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     setSelectedMatch,
     loadPlayerMatches,
     loadingPlayerMatches,
+    createHubConnection,
+    stopHubConnection,
   } = rootStore.matchStore;
   const {
     loadIncidents,
@@ -39,6 +41,10 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loadIncidents(id);
     setPlayersInGameFromMatchModel();
     loadPlayerMatches(id);
+    createHubConnection();
+    return () => {
+      stopHubConnection();
+    };
   }, [
     setSelectedMatch,
     match2.params.id,
@@ -47,6 +53,8 @@ const MatchDashboard: React.FC<RouteComponentProps<DetailParams>> = ({
     loadMatch,
     history,
     loadPlayerMatches,
+    createHubConnection,
+    stopHubConnection,
   ]);
 
   const panes = [
