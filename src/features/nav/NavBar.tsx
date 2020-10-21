@@ -3,6 +3,7 @@ import { Menu, Dropdown, Image } from "semantic-ui-react";
 import { NavLink, Link } from "react-router-dom";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
+import { AdminRole, UserRole } from "../../app/common/global";
 
 function NavBar() {
   const rootStore = useContext(RootStoreContext);
@@ -11,11 +12,11 @@ function NavBar() {
     <Menu fixed="top" inverted>
       <Menu.Item header as={NavLink} exact to="/">
         <img
-          src="../assets/logo-dalk.png"
+          src="../assets/logo.png"
           alt="logo"
-          style={{ marginRight: 20, marginLeft: 30 }}
+          style={{ marginRight: 20, marginLeft: 30, height: 40, width: "auto" }}
         />
-        DALK
+        NBA
       </Menu.Item>
       {/* <Menu.Item name="NEWS" as={NavLink} to="/news" /> */}
       <Menu.Item name="TABLES" as={NavLink} to="/tables" />
@@ -23,8 +24,12 @@ function NavBar() {
       <Menu.Item name="STATS" as={NavLink} to="/stats" />
       <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
       <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
-      <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
-      <Menu.Item name="MATCH MANAGER" as={NavLink} to="/matchManager" />
+      {user?.role === UserRole && (
+        <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
+      )}
+      {user?.role === AdminRole && (
+        <Menu.Item name="MATCH MANAGER" as={NavLink} to="/matchManager" />
+      )}
       <Menu.Item name="CONTACT" as={NavLink} to="/contact" />
       {/* <Menu.Item name="TEST" as={NavLink} to="/test" /> */}
       {user && (

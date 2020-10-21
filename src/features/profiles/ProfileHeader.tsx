@@ -35,24 +35,16 @@ const ProfileHeader: React.FC<IProps> = ({ profile }) => {
           </Item.Group>
         </Grid.Column>
         <Grid.Column width={4}>
-          <Statistic.Group widths={2}>
+          {/* <Statistic.Group widths={2}>
             <Statistic label="Matches win" value="5" />
             <Statistic label="Matches played" value="42" />
-          </Statistic.Group>
-          <Divider />
-          <Reveal animated="move">
+          </Statistic.Group> */}
+          {/* <Divider /> */}
+          {/* <Reveal animated="move">
             <Reveal.Content visible style={{ width: "100%" }}>
               <Button fluid color="teal" content="Following" />
             </Reveal.Content>
-            {/* <Reveal.Content hidden>
-              <Button
-                fluid
-                basic
-                color={true ? "red" : "green"}
-                content={true ? "Unfollow" : "Follow"}
-              />
-            </Reveal.Content> */}
-          </Reveal>
+          </Reveal> */}
         </Grid.Column>
       </Grid>
     </Segment>

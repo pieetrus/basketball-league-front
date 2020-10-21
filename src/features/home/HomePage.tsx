@@ -17,11 +17,11 @@ const HomePage = () => {
         <Header as="h1" inverted>
           <Image
             size="massive"
-            src="/assets/logo-dalk.png"
+            src="/assets/logo.png"
             alt="logo"
             style={{ marginBottom: 12 }}
           />
-          DALK
+          NBA
         </Header>
         {isLoggedIn && user ? (
           <>
@@ -36,7 +36,7 @@ const HomePage = () => {
           </>
         ) : (
           <>
-            <Header as="h2" inverted content="Welcome to DALK" />
+            <Header as="h2" inverted content="Welcome to NBA" />
             <Button
               onClick={() => {
                 openModal(<LoginForm />);

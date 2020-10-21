@@ -6,6 +6,7 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import TeamSeasonStatsTable from "./TeamSeasonStatsTable";
 import { Fragment } from "react";
+import { AdminRole } from "../../../app/common/global";
 
 interface DetailParams {
   id: string;
@@ -24,7 +25,7 @@ const TeamDetails: React.FC<RouteComponentProps<DetailParams>> = ({
     setPredicate,
     clearPredicate,
   } = rootStore.teamStore;
-
+  const { user } = rootStore.userStore;
   useEffect(() => {
     let id = Number(match.params.id);
     if (isNaN(id)) {
@@ -55,12 +56,14 @@ const TeamDetails: React.FC<RouteComponentProps<DetailParams>> = ({
         <Grid.Row>
           <Grid.Column width={10}>{team.shortName}</Grid.Column>
           <Grid.Column width={4}>
-            <Button
-              as={Link}
-              to={`/manager/team/${team.id}`}
-              color="orange"
-              content="Manage team"
-            />
+            {user?.role === AdminRole && (
+              <Button
+                as={Link}
+                to={`/manager/team/${team.id}`}
+                color="orange"
+                content="Manage team"
+              />
+            )}
           </Grid.Column>
         </Grid.Row>
         <Grid.Row style={{ marginTop: 260 }}>
