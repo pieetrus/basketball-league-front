@@ -3,7 +3,7 @@ import { Menu, Dropdown, Image } from "semantic-ui-react";
 import { NavLink, Link } from "react-router-dom";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
-import { AdminRole, UserRole } from "../../app/common/global";
+import { AdminRole } from "../../app/common/global";
 
 function NavBar() {
   const rootStore = useContext(RootStoreContext);
@@ -24,14 +24,13 @@ function NavBar() {
       <Menu.Item name="STATS" as={NavLink} to="/stats" />
       <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
       <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
-      {user?.role === UserRole && (
+      {user?.role === AdminRole && (
         <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
       )}
       {user?.role === AdminRole && (
         <Menu.Item name="MATCH MANAGER" as={NavLink} to="/matchManager" />
       )}
       <Menu.Item name="CONTACT" as={NavLink} to="/contact" />
-      {/* <Menu.Item name="TEST" as={NavLink} to="/test" /> */}
       {user && (
         <Menu.Menu position="right">
           <Menu.Item>
