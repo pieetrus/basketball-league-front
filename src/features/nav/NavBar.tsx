@@ -18,18 +18,18 @@ function NavBar() {
         />
         NBA
       </Menu.Item>
-      {/* <Menu.Item name="NEWS" as={NavLink} to="/news" /> */}
-      <Menu.Item name="TABLES" as={NavLink} to="/tables" />
-      <Menu.Item name="SCHEDULE" as={NavLink} to="/schedule" />
-      <Menu.Item name="STATS" as={NavLink} to="/stats" />
-      <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
-      <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
       {user?.role === AdminRole && (
         <Menu.Item name="MANAGE" as={NavLink} to="/manager" />
       )}
       {user?.role === AdminRole && (
         <Menu.Item name="MATCH MANAGER" as={NavLink} to="/matchManager" />
       )}
+      {/* <Menu.Item name="NEWS" as={NavLink} to="/news" /> */}
+      <Menu.Item name="TABLES" as={NavLink} to="/tables" />
+      <Menu.Item name="SCHEDULE" as={NavLink} to="/schedule" />
+      <Menu.Item name="STATS" as={NavLink} to="/stats" />
+      <Menu.Item name="PLAYERS" as={NavLink} to="/players" />
+      <Menu.Item name="TEAMS" as={NavLink} to="/teams" />
       <Menu.Item name="CONTACT" as={NavLink} to="/contact" />
       {user && (
         <Menu.Menu position="right">

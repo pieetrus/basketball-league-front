@@ -50,11 +50,12 @@ const TeamDetails: React.FC<RouteComponentProps<DetailParams>> = ({
 
   return (
     <Fragment>
-      <Header size="huge">{team.name}</Header>
+      <Header size="huge">
+        {team.shortName} - {team.name}
+      </Header>
       <Image src={team.logoUrl} size="medium" floated="right" avatar />
       <Grid>
         <Grid.Row>
-          <Grid.Column width={10}>{team.shortName}</Grid.Column>
           <Grid.Column width={4}>
             {user?.role === AdminRole && (
               <Button

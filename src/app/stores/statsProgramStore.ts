@@ -101,7 +101,9 @@ export default class StatsProgramStore {
           quater: shot.quater,
           seconds: shot.seconds,
           shot,
-          id: Array.from(this.incidentsRegistry.values()).pop().id + 1,
+          id: Array.from(this.incidentsRegistry.values()).pop()
+            ? Array.from(this.incidentsRegistry.values()).pop().id + 1
+            : 1,
           isGuest: shot.isGuest,
           matchId: shot.matchId,
         };

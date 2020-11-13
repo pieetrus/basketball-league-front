@@ -15,7 +15,6 @@ const TeamDashboard: React.FC = () => {
   if (loadingInitial) return <LoadingComponent content="Loading teams..." />;
   return (
     <>
-      <span>Tu będzie jeszcze filtr: SEZON | DYWIZJA</span>
       <TeamList />
     </>
   );

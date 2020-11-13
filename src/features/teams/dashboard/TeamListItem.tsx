@@ -24,7 +24,7 @@ const TeamListItem: React.FC<{ team: ITeam }> = ({ team }) => {
               as={Link}
               to={`/teams/${team.id}`}
             >
-              {team.name} {team.shortName}
+              {team.shortName} - {team.name}
             </Item.Content>
           </Item.Content>
         </Item>

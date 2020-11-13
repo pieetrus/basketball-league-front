@@ -71,7 +71,7 @@ const MatchItem: React.FC<IProps> = ({ match }) => {
           name={match.id}
           floated="right"
           loading={target === match.id && submitting}
-          disabled={match.started}
+          // disabled={match.started}
         />
       </Segment>
     </Segment.Group>
