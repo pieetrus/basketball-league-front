@@ -252,6 +252,10 @@ export default class StatsProgramStore {
     }
   };
 
+  // @action updateTimeoutsAfterDeletion = (xd : number) => {
+
+  // };
+
   @action setPlayerChosen = (
     playerChosen: IPlayerShortInfo | undefined,
     isGuest: boolean
@@ -510,14 +514,22 @@ export default class StatsProgramStore {
         let incident: IIncident = this.incidentsRegistry.get(id);
         if (incident.incidentType === IncidentType.SHOT)
           this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
-        if (incident.incidentType === IncidentType.SHOT)
-          this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
+        if (incident.incidentType === IncidentType.TIMEOUT) {
+          incident.isGuest
+            ? (this.teamGuestTimeoutsUsed -= 1)
+            : (this.teamHomeTimeoutsUsed -= 1);
+        }
+        if (incident.incidentType === IncidentType.FOUL) {
+          incident.isGuest
+            ? (this.teamGuestFouls -= 1)
+            : (this.teamHomeFouls -= 1);
+        }
         this.incidentsRegistry.delete(id);
         this.submitting = false;
         this.target = 0;
       });
     } catch (error) {
-      runInAction("deleteing incidents error", () => {
+      runInAction("deleting incidents error", () => {
         this.submitting = false;
         this.target = 0;
       });
