@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
+import { ReboundType } from "../../../app/common/global";
 import { foulTypes } from "../../../app/common/options/foulTypes";
 import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { IAssist } from "../../../app/models/assist";
@@ -436,10 +437,15 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
                 size="huge"
                 style={{ marginBottom: 30 }}
                 onClick={() => {
-                  if (reboundType.value === 1 || reboundType.value === 2)
+                  if (
+                    reboundType.value === ReboundType.PLAYER_OFF ||
+                    reboundType.value === ReboundType.PLAYER_DEF
+                  )
                     setReboundTeam(undefined);
-                  if (reboundType.value === 3) setReboundTeam(getTeam(false)!);
-                  if (reboundType.value === 4) setReboundTeam(getTeam(true)!);
+                  if (reboundType.value === ReboundType.TEAM_OFF)
+                    setReboundTeam(getTeam(false)!);
+                  if (reboundType.value === ReboundType.TEAM_DEF)
+                    setReboundTeam(getTeam(true)!);
                   setReboundType(reboundType);
                 }}
               >
@@ -451,7 +457,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
       )}
       {freeThrows &&
         rebound &&
-        reboundType.value === 1 &&
+        reboundType.value === ReboundType.PLAYER_OFF &&
         getPlayers(true)?.map((player) => (
           <Grid.Column key={player.id} width={1} textAlign="center">
             <Button
@@ -475,7 +481,7 @@ const FoulModal: React.FC<{ isGuest: boolean }> = ({ isGuest }) => {
         ))}
       {freeThrows &&
         rebound &&
-        reboundType.value === 2 &&
+        reboundType.value === ReboundType.PLAYER_DEF &&
         getPlayers(false)?.map((player) => (
           <Grid.Column key={player.id} width={1} textAlign="center">
             <Button

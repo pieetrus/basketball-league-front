@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
+import { ReboundType } from "../../../app/common/global";
 import { reboundTypes } from "../../../app/common/options/reboundTypes";
 import { shotTypes } from "../../../app/common/options/shotTypes";
 import { IAssist } from "../../../app/models/assist";
@@ -100,11 +101,17 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
       model.reboundType = reboundType.value;
       model.rebound = rebound;
 
-      if (reboundType.value === 1 || reboundType.value === 2) {
+      if (
+        reboundType.value === ReboundType.PLAYER_DEF ||
+        reboundType.value === ReboundType.PLAYER_OFF
+      ) {
         // player rebounds
         rebound.playerId = playerChosen2?.playerId!;
         model.playerReboundId = playerChosen2?.playerId;
-      } else if (reboundType.value === 3 || reboundType.value === 4) {
+      } else if (
+        reboundType.value === ReboundType.TEAM_DEF ||
+        reboundType.value === ReboundType.TEAM_OFF
+      ) {
         // team rebounds
         model.teamReboundId = teamChosen?.id;
         rebound.teamId = teamChosen?.id;
@@ -174,14 +181,16 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
             )}
             {playerChosen2 && !shotMade && (
               <Segment compact style={{ width: 40 }}>
-                {(reboundType.value === 1 || reboundType.value === 2) &&
+                {(reboundType.value === ReboundType.PLAYER_DEF ||
+                  reboundType.value === ReboundType.PLAYER_OFF) &&
                   "REB: " +
                     playerChosen2.jerseyNr +
                     ". " +
                     playerChosen2.name +
                     " " +
                     playerChosen2.surname}
-                {(reboundType.value === 3 || reboundType.value === 4) &&
+                {(reboundType.value === ReboundType.TEAM_DEF ||
+                  reboundType.value === ReboundType.TEAM_OFF) &&
                   "REB: " + teamChosen?.name}
               </Segment>
             )}
@@ -272,10 +281,15 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
                 style={{ marginBottom: 30 }}
                 disabled={shotType.value === 0}
                 onClick={() => {
-                  if (reboundType.value === 3 || reboundType.value === 4)
+                  if (
+                    reboundType.value === ReboundType.TEAM_DEF ||
+                    reboundType.value === ReboundType.TEAM_DEF
+                  )
                     setPlayerChosen2(undefined, false);
-                  if (reboundType.value === 3) setTeamChosen(getTeam(true)!);
-                  if (reboundType.value === 4) setTeamChosen(getTeam(false)!);
+                  if (reboundType.value === ReboundType.TEAM_OFF)
+                    setTeamChosen(getTeam(true)!);
+                  if (reboundType.value === ReboundType.TEAM_DEF)
+                    setTeamChosen(getTeam(false)!);
                   setReboundType(reboundType);
                 }}
               >
@@ -285,7 +299,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
           ))}
       </Grid.Row>
       <Grid.Row>
-        {reboundType.value === 1 &&
+        {reboundType.value === ReboundType.PLAYER_OFF &&
           getPlayers(false)!.map((player) => (
             <Grid.Column key={player.id} width={1} textAlign="center">
               <Button
@@ -309,7 +323,7 @@ const ShotModal: React.FC<{ shotMade: boolean; isGuest: boolean }> = ({
           ))}
       </Grid.Row>
       <Grid.Row>
-        {reboundType.value === 2 &&
+        {reboundType.value === ReboundType.PLAYER_DEF &&
           getPlayers(true)!.map((player) => (
             <Grid.Column key={player.id} width={1} textAlign="center">
               <Button

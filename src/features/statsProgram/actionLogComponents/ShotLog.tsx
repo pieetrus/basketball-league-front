@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Segment, ItemGroup, Item, Grid, Divider } from "semantic-ui-react";
+import { ReboundType } from "../../../app/common/global";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { IIncident } from "../../../app/models/incident";
 import { RootStoreContext } from "../../../app/stores/rootStore";
@@ -139,16 +140,20 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                   {!incident.shot!.isAccurate && (
                     <Grid.Row>
                       <Grid.Column width={3} verticalAlign="middle">
-                        {(incident.shot!.rebound?.reboundType === 1 ||
-                          incident.shot!.rebound?.reboundType === 3) && (
+                        {(incident.shot!.rebound?.reboundType ===
+                          ReboundType.PLAYER_OFF ||
+                          incident.shot!.rebound?.reboundType ===
+                            ReboundType.TEAM_OFF) && (
                           <Segment
                             inverted
                             color={jerseyColor(incident.isGuest)}
                             content="REB"
                           />
                         )}
-                        {(incident.shot!.rebound?.reboundType === 2 ||
-                          incident.shot!.rebound?.reboundType === 4) && (
+                        {(incident.shot!.rebound?.reboundType ===
+                          ReboundType.PLAYER_DEF ||
+                          incident.shot!.rebound?.reboundType ===
+                            ReboundType.TEAM_DEF) && (
                           <Segment
                             inverted
                             color={jerseyColor(!incident.isGuest)}
@@ -157,16 +162,20 @@ const ShotLog: React.FC<{ incident: IIncident }> = ({ incident }) => {
                         )}
                       </Grid.Column>
                       <Grid.Column width={10}>
-                        {(incident.shot!.rebound?.reboundType === 1 ||
-                          incident.shot!.rebound?.reboundType === 2) && (
+                        {(incident.shot!.rebound?.reboundType ===
+                          ReboundType.PLAYER_OFF ||
+                          incident.shot!.rebound?.reboundType ===
+                            ReboundType.PLAYER_DEF) && (
                           <Segment
                             content={getPlayerInfo(
                               incident.shot?.rebound?.playerId!
                             )}
                           />
                         )}
-                        {(incident.shot!.rebound?.reboundType === 3 ||
-                          incident.shot!.rebound?.reboundType === 4) && (
+                        {(incident.shot!.rebound?.reboundType ===
+                          ReboundType.TEAM_DEF ||
+                          incident.shot!.rebound?.reboundType ===
+                            ReboundType.TEAM_OFF) && (
                           <Segment
                             content={getTeamInfo(
                               incident.shot?.rebound?.teamId!

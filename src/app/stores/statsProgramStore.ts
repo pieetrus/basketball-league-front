@@ -7,7 +7,7 @@ import { action, computed, observable, runInAction } from "mobx";
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
 import agent from "../api/agent";
-import { MatchDurationInSeconds } from "../common/global";
+import { IncidentType, MatchDurationInSeconds } from "../common/global";
 import { IFoul } from "../models/foul";
 import { IIncident } from "../models/incident";
 import {
@@ -56,6 +56,7 @@ export default class StatsProgramStore {
   @observable teamHomeChosenPlayers: Number[] = []; // playerSeasonIds
   @observable teamGuestChosenPlayers: Number[] = []; // playerSeasonIds
   @observable incidentsRegistry = new Map();
+  @observable tempIncident: IIncident | undefined;
   @observable.ref hubConnection: HubConnection | null = null;
 
   @action createHubConnection = () => {
@@ -75,9 +76,25 @@ export default class StatsProgramStore {
 
     this.hubConnection.on(
       "ReceiveShot",
-      (isAccurate, isGuest, value, matchId, quater, minutes, seconds) => {
+      (
+        isAccurate,
+        isGuest,
+        value,
+        matchId,
+        quater,
+        minutes,
+        seconds,
+        incidentId
+      ) => {
         runInAction(() => {
           if (isAccurate) this.setTeamPoints(isGuest, false, value);
+          if (this.tempIncident) {
+            this.tempIncident!.id = incidentId;
+            this.incidentsRegistry.set(
+              this.tempIncident?.id,
+              this.tempIncident
+            );
+          }
         });
       }
     );
@@ -89,26 +106,21 @@ export default class StatsProgramStore {
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
+      this.submitting = false;
+      let incident: IIncident = {
+        flagged: false,
+        incidentType: IncidentType.SHOT,
+        minutes: shot.minutes,
+        quater: shot.quater,
+        seconds: shot.seconds,
+        shot,
+        isGuest: shot.isGuest,
+        matchId: shot.matchId,
+      };
+      this.tempIncident = Object.assign({}, incident);
       await this.hubConnection!.invoke("SendShot", shot).catch((err) =>
         console.log(err)
       );
-      runInAction("creating shot", () => {
-        this.submitting = false;
-        let incident: IIncident = {
-          flagged: false,
-          incidentType: 3,
-          minutes: shot.minutes,
-          quater: shot.quater,
-          seconds: shot.seconds,
-          shot,
-          id: Array.from(this.incidentsRegistry.values()).pop()
-            ? Array.from(this.incidentsRegistry.values()).pop().id + 1
-            : 1,
-          isGuest: shot.isGuest,
-          matchId: shot.matchId,
-        };
-        this.incidentsRegistry.set(incident.id, incident);
-      });
     } catch (error) {
       runInAction("create shot error", () => {
         this.submitting = false;
@@ -369,7 +381,7 @@ export default class StatsProgramStore {
         this.submitting = false;
         let incident: IIncident = {
           flagged: false,
-          incidentType: 1,
+          incidentType: IncidentType.FOUL,
           minutes: foul.minutes,
           quater: foul.quater,
           seconds: foul.seconds,
@@ -405,7 +417,7 @@ export default class StatsProgramStore {
         this.submitting = false;
         let incident: IIncident = {
           flagged: false,
-          incidentType: 4,
+          incidentType: IncidentType.TURNOVER,
           minutes: turnover.minutes,
           quater: turnover.quater,
           seconds: turnover.seconds,
@@ -433,7 +445,7 @@ export default class StatsProgramStore {
         this.submitting = false;
         let incident: IIncident = {
           flagged: false,
-          incidentType: 6,
+          incidentType: IncidentType.TIMEOUT,
           minutes: timeout.minutes,
           quater: timeout.quater,
           seconds: timeout.seconds,
@@ -496,7 +508,9 @@ export default class StatsProgramStore {
       await agent.Incidents.delete(id);
       runInAction("deleteing incident", () => {
         let incident: IIncident = this.incidentsRegistry.get(id);
-        if (incident.incidentType === 3)
+        if (incident.incidentType === IncidentType.SHOT)
+          this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
+        if (incident.incidentType === IncidentType.SHOT)
           this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
         this.incidentsRegistry.delete(id);
         this.submitting = false;

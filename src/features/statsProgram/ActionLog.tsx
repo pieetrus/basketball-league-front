@@ -9,6 +9,7 @@ import FoulLog from "./actionLogComponents/FoulLog";
 import TimeoutLog from "./actionLogComponents/TimeoutLog";
 import TurnoverLog from "./actionLogComponents/TurnoverLog";
 import FreeThrowsLog from "./actionLogComponents/FreeThrowsLog";
+import { IncidentType } from "../../app/common/global";
 
 const ActionLog = () => {
   const rootStore = useContext(RootStoreContext);
@@ -29,24 +30,26 @@ const ActionLog = () => {
         <Segment style={{ overflow: "auto", maxHeight: 450 }}>
           {toJS(getIncidents).map((incident) => (
             <Fragment key={incident.id}>
-              {incident.incidentType === 1 && incident.foul?.freeThrows && (
-                <Fragment key={incident.id}>
-                  <FreeThrowsLog incident={incident} />
-                  <FoulLog incident={incident} />
-                </Fragment>
-              )}
-              {incident.incidentType === 1 && !incident.foul?.freeThrows && (
-                <Fragment key={incident.id}>
-                  <FoulLog incident={incident} />
-                </Fragment>
-              )}
-              {incident.incidentType === 3 && (
+              {incident.incidentType === IncidentType.FOUL &&
+                incident.foul?.freeThrows && (
+                  <Fragment key={incident.id}>
+                    <FreeThrowsLog incident={incident} />
+                    <FoulLog incident={incident} />
+                  </Fragment>
+                )}
+              {incident.incidentType === IncidentType.FOUL &&
+                !incident.foul?.freeThrows && (
+                  <Fragment key={incident.id}>
+                    <FoulLog incident={incident} />
+                  </Fragment>
+                )}
+              {incident.incidentType === IncidentType.SHOT && (
                 <ShotLog incident={incident} key={incident.id} />
               )}
-              {incident.incidentType === 4 && (
+              {incident.incidentType === IncidentType.TURNOVER && (
                 <TurnoverLog incident={incident} key={incident.id} />
               )}
-              {incident.incidentType === 6 && (
+              {incident.incidentType === IncidentType.TIMEOUT && (
                 <TimeoutLog incident={incident} key={incident.id} />
               )}
             </Fragment>
