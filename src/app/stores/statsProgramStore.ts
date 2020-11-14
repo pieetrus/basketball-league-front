@@ -106,7 +106,6 @@ export default class StatsProgramStore {
   @action createShot = async (shot: IShot) => {
     this.submitting = true;
     try {
-      this.submitting = false;
       let incident: IIncident = {
         flagged: false,
         incidentType: IncidentType.SHOT,
@@ -121,6 +120,9 @@ export default class StatsProgramStore {
       await this.hubConnection!.invoke("SendShot", shot).catch((err) =>
         console.log(err)
       );
+      runInAction(() => {
+        this.submitting = false;
+      });
     } catch (error) {
       runInAction("create shot error", () => {
         this.submitting = false;
@@ -176,11 +178,11 @@ export default class StatsProgramStore {
 
   @action setTeamPoints(isGuest: boolean, deletion: boolean, pts: number) {
     if (deletion) {
-      if (isGuest) this.teamGuestPts = this.teamGuestPts - pts;
-      else this.teamHomePts = this.teamHomePts - pts;
+      if (isGuest) this.teamGuestPts -= pts;
+      else this.teamHomePts -= pts;
     } else {
-      if (isGuest) this.teamGuestPts = this.teamGuestPts + pts;
-      else this.teamHomePts = this.teamHomePts + pts;
+      if (isGuest) this.teamGuestPts += pts;
+      else this.teamHomePts += pts;
     }
   }
 
@@ -512,7 +514,10 @@ export default class StatsProgramStore {
       await agent.Incidents.delete(id);
       runInAction("deleteing incident", () => {
         let incident: IIncident = this.incidentsRegistry.get(id);
-        if (incident.incidentType === IncidentType.SHOT)
+        if (
+          incident.incidentType === IncidentType.SHOT &&
+          incident.shot?.isAccurate
+        )
           this.setTeamPoints(incident.isGuest, true, incident.shot?.value!);
         if (incident.incidentType === IncidentType.TIMEOUT) {
           incident.isGuest
@@ -523,7 +528,18 @@ export default class StatsProgramStore {
           incident.isGuest
             ? (this.teamGuestFouls -= 1)
             : (this.teamHomeFouls -= 1);
+          if (
+            incident.foul?.freeThrows &&
+            incident.foul?.freeThrows?.accurateShots > 0
+          ) {
+            this.setTeamPoints(
+              !incident.isGuest,
+              true,
+              incident.foul?.freeThrows?.accurateShots
+            );
+          }
         }
+
         this.incidentsRegistry.delete(id);
         this.submitting = false;
         this.target = 0;
