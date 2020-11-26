@@ -16,7 +16,7 @@ function NavBar() {
           alt="logo"
           style={{ marginRight: 20, marginLeft: 30, height: 40, width: "auto" }}
         />
-        NBA
+        Basketball League
       </Menu.Item>
       {user?.role === AdminRole && (
         <Menu.Item name="MANAGE" as={NavLink} to="/manager" />

@@ -21,7 +21,7 @@ const HomePage = () => {
             alt="logo"
             style={{ marginBottom: 12 }}
           />
-          NBA
+          Basketball League
         </Header>
         {isLoggedIn && user ? (
           <>
@@ -36,7 +36,7 @@ const HomePage = () => {
           </>
         ) : (
           <>
-            <Header as="h2" inverted content="Welcome to NBA" />
+            <Header as="h2" inverted content="Welcome to Basketball League" />
             <Button
               onClick={() => {
                 openModal(<LoginForm />);

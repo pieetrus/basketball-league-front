@@ -33,14 +33,19 @@ const MatchElement: React.FC<{ match: IMatchDetailed }> = ({ match }) => {
           )}
           {match.started && !match.ended && (
             <Segment style={segmentStyle}>
-              <Segment>
-                {"Q" +
-                  match.lastIncidentQuater +
-                  "   " +
-                  match.lastIncidentMinutes +
-                  " : " +
-                  match.lastIncidentSeconds}
-              </Segment>
+              {match.lastIncidentMinutes && (
+                <Segment>
+                  {"Q" +
+                    match.lastIncidentQuater +
+                    "   " +
+                    match.lastIncidentMinutes +
+                    " : " +
+                    match.lastIncidentSeconds}
+                </Segment>
+              )}
+              {!match.lastIncidentMinutes && (
+                <Segment>{"Q" + 1 + "  10 : 00"}</Segment>
+              )}
             </Segment>
           )}
           <Segment style={segmentStyle}>
