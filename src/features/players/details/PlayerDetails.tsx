@@ -24,6 +24,8 @@ const PlayerDetails: React.FC<RouteComponentProps<DetailParams>> = ({
     loadingInitialPlayerSeason,
   } = rootStore.playerStore;
 
+  const { user } = rootStore.userStore;
+
   useEffect(() => {
     let id = Number(match.params.id);
     if (isNaN(id)) {
@@ -44,7 +46,7 @@ const PlayerDetails: React.FC<RouteComponentProps<DetailParams>> = ({
       <Grid>
         <Grid.Row>
           <Grid.Column width={10}>
-            <PlayerDetailedInfo player={player} />
+            <PlayerDetailedInfo player={player} user={user} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row style={{ marginTop: 160 }}>

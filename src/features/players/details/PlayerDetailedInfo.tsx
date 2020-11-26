@@ -1,8 +1,14 @@
 import React from "react";
-import { Segment, Grid, Icon } from "semantic-ui-react";
+import { Segment, Grid, Icon, Button } from "semantic-ui-react";
 import { IPlayer } from "../../../app/models/player";
 import { format } from "date-fns";
-const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
+import { IUser } from "../../../app/models/user";
+import { AdminRole } from "../../../app/common/global";
+import { Link } from "react-router-dom";
+const PlayerDetailedInfo: React.FC<{ player: IPlayer; user: IUser }> = ({
+  player,
+  user,
+}) => {
   return (
     <Segment.Group>
       <Segment attached="top">
@@ -35,6 +41,16 @@ const PlayerDetailedInfo: React.FC<{ player: IPlayer }> = ({ player }) => {
           </Grid.Column>
         </Grid>
       </Segment>
+      {user?.role === AdminRole && (
+        <Segment textAlign="center">
+          <Button
+            as={Link}
+            to={`/manager/player/${player.id}`}
+            color="orange"
+            content="Manage player"
+          />
+        </Segment>
+      )}
     </Segment.Group>
   );
 };
